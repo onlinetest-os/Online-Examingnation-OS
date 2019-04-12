@@ -1,228 +1,402 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="phion.onlineexam.dao.ExamMapper">
-  <resultMap id="BaseResultMap" type="phion.onlineexam.bean.Exam">
-    <id column="e_id" jdbcType="INTEGER" property="eId" />
-    <result column="tea_id" jdbcType="INTEGER" property="teaId" />
-    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
-    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
-    <result column="paper_path" jdbcType="VARCHAR" property="paperPath" />
-    <result column="paper_anwser_path" jdbcType="VARCHAR" property="paperAnwserPath" />
-  </resultMap>
-  <sql id="Example_Where_Clause">
-    <where>
-      <foreach collection="oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue">
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue">
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue">
-                  and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause">
-    <where>
-      <foreach collection="example.oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue">
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue">
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue">
-                  and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Base_Column_List">
-    e_id, tea_id, start_time, end_time, paper_path, paper_anwser_path
-  </sql>
-  <select id="selectByExample" parameterType="phion.onlineexam.bean.ExamExample" resultMap="BaseResultMap">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from tb_exam
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
-  </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from tb_exam
-    where e_id = #{eId,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from tb_exam
-    where e_id = #{eId,jdbcType=INTEGER}
-  </delete>
-  <delete id="deleteByExample" parameterType="phion.onlineexam.bean.ExamExample">
-    delete from tb_exam
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insert" parameterType="phion.onlineexam.bean.Exam">
-    insert into tb_exam (e_id, tea_id, start_time, 
-      end_time, paper_path, paper_anwser_path
-      )
-    values (#{eId,jdbcType=INTEGER}, #{teaId,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP}, 
-      #{endTime,jdbcType=TIMESTAMP}, #{paperPath,jdbcType=VARCHAR}, #{paperAnwserPath,jdbcType=VARCHAR}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="phion.onlineexam.bean.Exam">
-    insert into tb_exam
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="eId != null">
-        e_id,
-      </if>
-      <if test="teaId != null">
-        tea_id,
-      </if>
-      <if test="startTime != null">
-        start_time,
-      </if>
-      <if test="endTime != null">
-        end_time,
-      </if>
-      <if test="paperPath != null">
-        paper_path,
-      </if>
-      <if test="paperAnwserPath != null">
-        paper_anwser_path,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="eId != null">
-        #{eId,jdbcType=INTEGER},
-      </if>
-      <if test="teaId != null">
-        #{teaId,jdbcType=INTEGER},
-      </if>
-      <if test="startTime != null">
-        #{startTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="endTime != null">
-        #{endTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="paperPath != null">
-        #{paperPath,jdbcType=VARCHAR},
-      </if>
-      <if test="paperAnwserPath != null">
-        #{paperAnwserPath,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <select id="countByExample" parameterType="phion.onlineexam.bean.ExamExample" resultType="java.lang.Long">
-    select count(*) from tb_exam
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map">
-    update tb_exam
-    <set>
-      <if test="record.eId != null">
-        e_id = #{record.eId,jdbcType=INTEGER},
-      </if>
-      <if test="record.teaId != null">
-        tea_id = #{record.teaId,jdbcType=INTEGER},
-      </if>
-      <if test="record.startTime != null">
-        start_time = #{record.startTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.endTime != null">
-        end_time = #{record.endTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.paperPath != null">
-        paper_path = #{record.paperPath,jdbcType=VARCHAR},
-      </if>
-      <if test="record.paperAnwserPath != null">
-        paper_anwser_path = #{record.paperAnwserPath,jdbcType=VARCHAR},
-      </if>
-    </set>
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map">
-    update tb_exam
-    set e_id = #{record.eId,jdbcType=INTEGER},
-      tea_id = #{record.teaId,jdbcType=INTEGER},
-      start_time = #{record.startTime,jdbcType=TIMESTAMP},
-      end_time = #{record.endTime,jdbcType=TIMESTAMP},
-      paper_path = #{record.paperPath,jdbcType=VARCHAR},
-      paper_anwser_path = #{record.paperAnwserPath,jdbcType=VARCHAR}
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByPrimaryKeySelective" parameterType="phion.onlineexam.bean.Exam">
-    update tb_exam
-    <set>
-      <if test="teaId != null">
-        tea_id = #{teaId,jdbcType=INTEGER},
-      </if>
-      <if test="startTime != null">
-        start_time = #{startTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="endTime != null">
-        end_time = #{endTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="paperPath != null">
-        paper_path = #{paperPath,jdbcType=VARCHAR},
-      </if>
-      <if test="paperAnwserPath != null">
-        paper_anwser_path = #{paperAnwserPath,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where e_id = #{eId,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="phion.onlineexam.bean.Exam">
-    update tb_exam
-    set tea_id = #{teaId,jdbcType=INTEGER},
-      start_time = #{startTime,jdbcType=TIMESTAMP},
-      end_time = #{endTime,jdbcType=TIMESTAMP},
-      paper_path = #{paperPath,jdbcType=VARCHAR},
-      paper_anwser_path = #{paperAnwserPath,jdbcType=VARCHAR}
-    where e_id = #{eId,jdbcType=INTEGER}
-  </update>
+	<resultMap id="BaseResultMap"
+		type="phion.onlineexam.bean.Exam">
+		<id column="e_id" jdbcType="INTEGER" property="eId" />
+		<result column="tea_id" jdbcType="INTEGER" property="teaId" />
+		<result column="start_time" jdbcType="TIMESTAMP"
+			property="startTime" />
+		<result column="end_time" jdbcType="TIMESTAMP"
+			property="endTime" />
+		<result column="paper_path" jdbcType="VARCHAR"
+			property="paperPath" />
+		<result column="paper_anwser_path" jdbcType="VARCHAR"
+			property="paperAnwserPath" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+	</resultMap>
+	<resultMap id="WithExamInfoResultMap"
+		type="phion.onlineexam.bean.Exam">
+		<id column="e_id" jdbcType="INTEGER" property="eId" />
+		<result column="tea_id" jdbcType="INTEGER" property="teaId" />
+		<result column="start_time" jdbcType="TIMESTAMP"
+			property="startTime" />
+		<result column="end_time" jdbcType="TIMESTAMP"
+			property="endTime" />
+		<result column="paper_path" jdbcType="VARCHAR"
+			property="paperPath" />
+		<result column="paper_anwser_path" jdbcType="VARCHAR"
+			property="paperAnwserPath" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<association property="examInfo"
+			javaType="phion.onlineexam.bean.ExamInfo">
+			<id column="in_id" property="inId" />
+			<result column="e_id" property="eId" />
+			<result column="all_number" property="allNumber" />
+			<result column="is_download" property="isDownload" />
+		</association>
+	</resultMap>
+	
+	<resultMap id="WithStudentsResultMap"
+		type="phion.onlineexam.bean.Exam">
+		<id column="e_id" jdbcType="INTEGER" property="eId" />
+		<result column="tea_id" jdbcType="INTEGER" property="teaId" />
+		<result column="start_time" jdbcType="TIMESTAMP"
+			property="startTime" />
+			                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+		<result column="end_time" jdbcType="TIMESTAMP"
+			property="endTime" />
+		<result column="paper_path" jdbcType="VARCHAR"
+			property="paperPath" />
+		<result column="paper_anwser_path" jdbcType="VARCHAR"
+			property="paperAnwserPath" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<collection property="students"
+			ofType="phion.onlineexam.bean.Student">
+			<id column="stu_id" property="stuId" />
+			<result column="stu_number" property="stuNumber" />
+			<result column="stu_name" property="stuName" />
+			<result column="stu_password" property="stuPassword" />
+			<result column="ip" property="ip" />
+			<result column="commitInfo" property="commitinfo" />
+			<result column="stu_class" property="stuClass" />
+		</collection>
+	</resultMap>
+
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value"
+										item="listItem" open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value"
+										item="listItem" open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		e_id, tea_id, start_time, end_time, paper_path, paper_anwser_path, status
+	</sql>
+
+	<sql id="With_Exam_Info_Column_List">
+		e.e_id, e.tea_id, e.start_time, e.end_time, e.paper_path,
+		e.paper_anwser_path, e.status,
+		ei.in_id, ei.e_id, ei.all_number, ei.is_download
+	</sql>
+	<sql id="With_Student_Column_List">
+	    e.e_id, e.tea_id, e.start_time, e.end_time, e.paper_path,
+		e.paper_anwser_path, e.status,
+	    s.stu_id, s.stu_number, s.stu_name, s.stu_password, s.ip,
+	    s.commitInfo, s.stu_class
+  	</sql>
+
+	<!-- 批量查询考试，附带考试info -->
+	<!-- List<Exam> selectByExampleWithExamInfo(ExamExample example); -->
+	<select id="selectByExampleWithExamInfo"
+		parameterType="phion.onlineexam.bean.ExamExample"
+		resultMap="WithExamInfoResultMap">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="With_Exam_Info_Column_List" />
+		from tb_exam e
+		left join tb_exam_info ei on e.`e_id` = ei.`e_id`
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<!-- 主键查询考试，附带考试info -->
+	<!-- Exam selectByPrimaryKeyWithExamInfo(Integer eId); -->
+	<select id="selectByPrimaryKeyWithExamInfo"
+		parameterType="java.lang.Integer" resultMap="WithExamInfoResultMap">
+		select
+		<include refid="With_Exam_Info_Column_List" />
+		from tb_exam e
+		left join tb_exam_info ei on e.`e_id` = ei.`e_id`
+		where e.e_id = #{eId,jdbcType=INTEGER}
+	</select>
+
+	<!-- List<Exam> selectByPrimaryKeyWithStudent(ExamExample example); -->
+  <!-- 根据主键查询考试，并带有学生信息 -->
+  <!--此处采用 全连接 查询,可优化  -->
+  <select id="selectByPrimaryKeyWithStudent"
+		parameterType="java.lang.Integer" resultMap="WithStudentsResultMap">
+		select
+		<include refid="With_Student_Column_List" />
+		from tb_student s,tb_exam e ,tb_exam_arrange ea 
+		where s.stu_id = ea.stu_id 
+		and e.e_id = #{eId,jdbcType=INTEGER} 
+		and ea.e_id = #{eId,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectByExample"
+		parameterType="phion.onlineexam.bean.ExamExample"
+		resultMap="BaseResultMap">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from tb_exam
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_exam
+		where e_id = #{eId,jdbcType=INTEGER}
+	</select>
+
+
+	<!-- 有选择的查询 -->
+	<!-- List<Exam> selectByExampleWithExamInfoSelective(Exam record); -->
+	<select id="selectByExampleWithExamInfoSelective"
+		parameterType="phion.onlineexam.bean.Exam"
+		resultMap="BaseResultMap">
+		select * from tb_exam
+		 <trim prefix="WHERE" prefixOverrides="AND|OR" >
+			<if test="eId != null">
+				and e_id = #{eId,jdbcType=INTEGER}
+			</if>
+			<if test="teaId != null">
+				and tea_id = #{teaId,jdbcType=INTEGER}
+			</if>
+			<if test="startTime != null">
+				and start_time = #{startTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="endTime != null">
+				and end_time = #{endTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="paperPath != null">
+				and paper_path = #{paperPath,jdbcType=VARCHAR}
+			</if>
+			<if test="paperAnwserPath != null">
+				and paper_anwser_path = #{paperAnwserPath,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null">
+				and status = #{status,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</select>
+
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from tb_exam
+		where e_id = #{eId,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample"
+		parameterType="phion.onlineexam.bean.ExamExample">
+		delete from tb_exam
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="phion.onlineexam.bean.Exam">
+		insert into tb_exam (e_id, tea_id, start_time,
+		end_time, paper_path, paper_anwser_path,
+		status)
+		values (#{eId,jdbcType=INTEGER}, #{teaId,jdbcType=INTEGER},
+		#{startTime,jdbcType=TIMESTAMP},
+		#{endTime,jdbcType=TIMESTAMP}, #{paperPath,jdbcType=VARCHAR}, #{paperAnwserPath,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="phion.onlineexam.bean.Exam">
+		insert into tb_exam
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="eId != null">
+				e_id,
+			</if>
+			<if test="teaId != null">
+				tea_id,
+			</if>
+			<if test="startTime != null">
+				start_time,
+			</if>
+			<if test="endTime != null">
+				end_time,
+			</if>
+			<if test="paperPath != null">
+				paper_path,
+			</if>
+			<if test="paperAnwserPath != null">
+				paper_anwser_path,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="eId != null">
+				#{eId,jdbcType=INTEGER},
+			</if>
+			<if test="teaId != null">
+				#{teaId,jdbcType=INTEGER},
+			</if>
+			<if test="startTime != null">
+				#{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="paperPath != null">
+				#{paperPath,jdbcType=VARCHAR},
+			</if>
+			<if test="paperAnwserPath != null">
+				#{paperAnwserPath,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample"
+		parameterType="phion.onlineexam.bean.ExamExample"
+		resultType="java.lang.Long">
+		select count(*) from tb_exam
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update tb_exam
+		<set>
+			<if test="record.eId != null">
+				e_id = #{record.eId,jdbcType=INTEGER},
+			</if>
+			<if test="record.teaId != null">
+				tea_id = #{record.teaId,jdbcType=INTEGER},
+			</if>
+			<if test="record.startTime != null">
+				start_time = #{record.startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.endTime != null">
+				end_time = #{record.endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.paperPath != null">
+				paper_path = #{record.paperPath,jdbcType=VARCHAR},
+			</if>
+			<if test="record.paperAnwserPath != null">
+				paper_anwser_path = #{record.paperAnwserPath,jdbcType=VARCHAR},
+			</if>
+			<if test="record.status != null">
+				status = #{record.status,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update tb_exam
+		set e_id = #{record.eId,jdbcType=INTEGER},
+		tea_id = #{record.teaId,jdbcType=INTEGER},
+		start_time = #{record.startTime,jdbcType=TIMESTAMP},
+		end_time = #{record.endTime,jdbcType=TIMESTAMP},
+		paper_path = #{record.paperPath,jdbcType=VARCHAR},
+		paper_anwser_path = #{record.paperAnwserPath,jdbcType=VARCHAR},
+		status = #{record.status,jdbcType=VARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="phion.onlineexam.bean.Exam">
+		update tb_exam
+		<set>
+			<if test="teaId != null">
+				tea_id = #{teaId,jdbcType=INTEGER},
+			</if>
+			<if test="startTime != null">
+				start_time = #{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				end_time = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="paperPath != null">
+				paper_path = #{paperPath,jdbcType=VARCHAR},
+			</if>
+			<if test="paperAnwserPath != null">
+				paper_anwser_path = #{paperAnwserPath,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where e_id = #{eId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="phion.onlineexam.bean.Exam">
+		update tb_exam
+		set tea_id = #{teaId,jdbcType=INTEGER},
+		start_time = #{startTime,jdbcType=TIMESTAMP},
+		end_time = #{endTime,jdbcType=TIMESTAMP},
+		paper_path = #{paperPath,jdbcType=VARCHAR},
+		paper_anwser_path = #{paperAnwserPath,jdbcType=VARCHAR},
+		status = #{status,jdbcType=VARCHAR}
+		where e_id = #{eId,jdbcType=INTEGER}
+	</update>
 </mapper>

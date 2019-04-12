@@ -1,5 +1,7 @@
 package phion.onlineexam.bean;
 
+import java.util.List;
+
 public class Teacher {
     private Integer teaId;
 
@@ -10,8 +12,26 @@ public class Teacher {
     private String teaPassword;
 
     private Integer isAdmin;
+    
+    private List<Exam> exams;
+    
+    
+    public Teacher() {
+    	super();
+    }
 
-    public Integer getTeaId() {
+    public Teacher(Integer teaId, String teaNumber, String teaName, String teaPassword, Integer isAdmin,
+			List<Exam> exams) {
+		super();
+		this.teaId = teaId;
+		this.teaNumber = teaNumber;
+		this.teaName = teaName;
+		this.teaPassword = teaPassword;
+		this.isAdmin = isAdmin;
+		this.exams = exams;
+	}
+
+	public Integer getTeaId() {
         return teaId;
     }
 
@@ -50,4 +70,18 @@ public class Teacher {
     public void setIsAdmin(Integer isAdmin) {
         this.isAdmin = isAdmin;
     }
+
+	public List<Exam> getExams() {
+		return exams;
+	}
+
+	public void setExams(List<Exam> exams) {
+		this.exams = exams;
+	}
+
+	@Override
+	public String toString() {
+		return "Teacher [teaId=" + teaId + ", teaNumber=" + teaNumber + ", teaName=" + teaName + ", teaPassword="
+				+ teaPassword + ", isAdmin=" + isAdmin + ", exams=" + exams + "]";
+	}
 }

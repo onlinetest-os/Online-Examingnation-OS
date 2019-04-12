@@ -19,6 +19,14 @@ public interface TeacherMapper {
     List<Teacher> selectByExample(TeacherExample example);
 
     Teacher selectByPrimaryKey(Integer teaId);
+    
+    /**
+    * 按所给条件查询教师
+    * @param record
+    * @param example
+    * @return
+    */
+    List<Teacher> selectBySelective(@Param("record") Teacher record, @Param("example") TeacherExample example);
 
     int updateByExampleSelective(@Param("record") Teacher record, @Param("example") TeacherExample example);
 

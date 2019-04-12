@@ -4,6 +4,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import phion.onlineexam.bean.Student;
 import phion.onlineexam.bean.StudentExample;
+import phion.onlineexam.bean.Teacher;
+import phion.onlineexam.bean.TeacherExample;
 
 public interface StudentMapper {
     long countByExample(StudentExample example);
@@ -19,6 +21,14 @@ public interface StudentMapper {
     List<Student> selectByExample(StudentExample example);
 
     Student selectByPrimaryKey(Integer stuId);
+    
+    /**
+     * 按所给条件查询学生
+     * @param record
+     * @param example
+     * @return
+     */
+    List<Student> selectBySelective(@Param("record") Student record, @Param("example") StudentExample example);
 
     int updateByExampleSelective(@Param("record") Student record, @Param("example") StudentExample example);
 

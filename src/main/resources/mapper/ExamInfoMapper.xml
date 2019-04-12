@@ -104,6 +104,19 @@
       order by ${orderByClause}
     </if>
   </select>
+  
+  <!-- 通过eId查询考试信息 -->
+  <!-- ExamInfo selectByExamID(Integer eId); -->
+  <select id="selectByExamID" parameterType="java.lang.Integer" 
+  resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tb_exam_info
+    where e_id = #{eId,jdbcType=INTEGER}
+  </select>
+  
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />

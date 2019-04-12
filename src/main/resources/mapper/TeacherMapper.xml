@@ -33,7 +33,7 @@
               </choose>
             </foreach>
           </trim>
-        </if>
+      	</if>
       </foreach>
     </where>
   </sql>
@@ -62,7 +62,7 @@
               </choose>
             </foreach>
           </trim>
-        </if>
+      	</if>
       </foreach>
     </where>
   </sql>
@@ -89,6 +89,30 @@
     from tb_teacher
     where tea_id = #{teaId,jdbcType=INTEGER}
   </select>
+ 
+ <!--Teacher selectBySelective(@Param("record") Teacher record, @Param("example") TeacherExample example);-->
+ <!-- 根据所带参数查询教师 -->
+ <select id="selectBySelective" parameterType="map" resultMap="BaseResultMap">
+    select * from tb_teacher 
+    <trim prefix="WHERE" prefixOverrides="AND|OR" >
+      <if test="record.teaId != null">
+        and tea_id = #{record.teaId,jdbcType=INTEGER}
+      </if>
+      <if test="record.teaNumber != null">
+        and tea_number = #{record.teaNumber,jdbcType=VARCHAR}
+      </if>
+      <if test="record.teaName != null">
+        and tea_name = #{record.teaName,jdbcType=VARCHAR}
+      </if>
+      <if test="record.teaPassword != null">
+        and tea_password = #{record.teaPassword,jdbcType=VARCHAR}
+      </if>
+      <if test="record.isAdmin != null">
+        and is_admin = #{record.isAdmin,jdbcType=INTEGER}
+      </if>
+    </trim>
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tb_teacher
     where tea_id = #{teaId,jdbcType=INTEGER}
@@ -105,6 +129,7 @@
     values (#{teaId,jdbcType=INTEGER}, #{teaNumber,jdbcType=VARCHAR}, #{teaName,jdbcType=VARCHAR}, 
       #{teaPassword,jdbcType=VARCHAR}, #{isAdmin,jdbcType=INTEGER})
   </insert>
+  
   <insert id="insertSelective" parameterType="phion.onlineexam.bean.Teacher">
     insert into tb_teacher
     <trim prefix="(" suffix=")" suffixOverrides=",">

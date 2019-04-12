@@ -6,6 +6,13 @@
     <result column="stu_id" jdbcType="INTEGER" property="stuId" />
     <result column="e_id" jdbcType="INTEGER" property="eId" />
   </resultMap>
+  <resultMap id="WithStudentResultMap" type="phion.onlineexam.bean.ExamArrange">
+    <id column="arra_id" jdbcType="INTEGER" property="arraId" />
+    <result column="stu_id" jdbcType="INTEGER" property="stuId" />
+    <result column="e_id" jdbcType="INTEGER" property="eId" />
+    <association property="student"></association>
+  </resultMap>
+  
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -67,6 +74,7 @@
   <sql id="Base_Column_List">
     arra_id, stu_id, e_id
   </sql>
+  
   <select id="selectByExample" parameterType="phion.onlineexam.bean.ExamArrangeExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -81,6 +89,8 @@
       order by ${orderByClause}
     </if>
   </select>
+  
+  
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

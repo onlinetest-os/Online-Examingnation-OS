@@ -14,8 +14,27 @@ public class Student {
     private String commitinfo;
 
     private String stuClass;
+    
+    
+    public Student() {
+    	super();
+		// TODO Auto-generated constructor stub
+	}
+    
 
-    public Integer getStuId() {
+    public Student(Integer stuId, String stuNumber, String stuName, String stuPassword, String ip, String commitinfo,
+			String stuClass) {
+		super();
+		this.stuId = stuId;
+		this.stuNumber = stuNumber;
+		this.stuName = stuName;
+		this.stuPassword = stuPassword;
+		this.ip = ip;
+		this.commitinfo = commitinfo;
+		this.stuClass = stuClass;
+	}
+
+	public Integer getStuId() {
         return stuId;
     }
 
@@ -70,4 +89,12 @@ public class Student {
     public void setStuClass(String stuClass) {
         this.stuClass = stuClass == null ? null : stuClass.trim();
     }
+
+
+	@Override
+	public String toString() {
+		return "Student [stuId=" + stuId + ", stuNumber=" + stuNumber + ", stuName=" + stuName + ", stuPassword="
+				+ stuPassword + ", ip=" + ip + ", commitinfo=" + commitinfo + ", stuClass=" + stuClass + "]";
+	}
+    
 }

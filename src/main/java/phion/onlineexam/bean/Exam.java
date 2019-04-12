@@ -1,65 +1,151 @@
 package phion.onlineexam.bean;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import org.mybatis.generator.internal.util.StringUtility;
 
 public class Exam {
-    private Integer eId;
 
-    private Integer teaId;
 
-    private Date startTime;
+	private Integer eId;
 
-    private Date endTime;
+	private Integer teaId;
 
-    private String paperPath;
+	private Date startTime;
 
-    private String paperAnwserPath;
+	private Date endTime;
 
-    public Integer geteId() {
-        return eId;
-    }
+	private String paperPath;
 
-    public void seteId(Integer eId) {
-        this.eId = eId;
-    }
+	private String paperAnwserPath;
 
-    public Integer getTeaId() {
-        return teaId;
-    }
+	private String status;
 
-    public void setTeaId(Integer teaId) {
-        this.teaId = teaId;
-    }
+	private ExamInfo examInfo;
+	
+	private List<Student> students;
 
-    public Date getStartTime() {
-        return startTime;
-    }
+	public Exam() {
+		super();
+	}
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
+	public Exam(Integer eId, Integer teaId, Date startTime, Date endTime, String paperPath, String paperAnwserPath,
+			String status, ExamInfo examInfo) {
+		super();
+		this.eId = eId;
+		this.teaId = teaId;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.paperPath = paperPath;
+		this.paperAnwserPath = paperAnwserPath;
+		this.status = status;
+		this.examInfo = examInfo;
+	}
 
-    public Date getEndTime() {
-        return endTime;
-    }
+	public Integer geteId() {
+		return eId;
+	}
 
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
+	public void seteId(Integer eId) {
+		this.eId = eId;
+	}
 
-    public String getPaperPath() {
-        return paperPath;
-    }
+	public Integer getTeaId() {
+		return teaId;
+	}
 
-    public void setPaperPath(String paperPath) {
-        this.paperPath = paperPath == null ? null : paperPath.trim();
-    }
+	public void setTeaId(Integer teaId) {
+		this.teaId = teaId;
+	}
 
-    public String getPaperAnwserPath() {
-        return paperAnwserPath;
-    }
+	public Date getStartTime() {
+		return startTime;
+	}
 
-    public void setPaperAnwserPath(String paperAnwserPath) {
-        this.paperAnwserPath = paperAnwserPath == null ? null : paperAnwserPath.trim();
-    }
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getPaperPath() {
+		return paperPath;
+	}
+
+	public void setPaperPath(String paperPath) {
+		this.paperPath = paperPath == null ? null : paperPath.trim();
+	}
+
+	public String getPaperAnwserPath() {
+		return paperAnwserPath;
+	}
+
+	public void setPaperAnwserPath(String paperAnwserPath) {
+		this.paperAnwserPath = paperAnwserPath == null ? null : paperAnwserPath.trim();
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status == null ? null : status.trim();
+	}
+
+	public ExamInfo getExamInfo() {
+		return examInfo;
+	}
+
+	public void setExamInfo(ExamInfo examInfo) {
+		this.examInfo = examInfo;
+	}
+	
+	
+	public List<Student> getStudents() {
+		return students;
+	}
+
+	public void setStudents(List<Student> students) {
+		this.students = students;
+	}
+	
+	/**
+	 * 应考试学生数
+	 * @return
+	 */
+	public int getStudentsCount() {
+		if(students!=null) return students.size();
+		else return 0;
+	}
+	
+	/**
+	 * 已登录学生
+	 * @return
+	 */
+	public List<Student> getOnlineStudents() {
+		List<Student> onlineStudents = new ArrayList<Student>();
+		if(students!=null) {
+			for(Student s : students) {
+				onlineStudents.add(s);
+			}
+		}
+		return onlineStudents;
+	}
+	
+
+	@Override
+	public String toString() {
+		return "Exam [eId=" + eId + ", teaId=" + teaId + ", startTime=" + startTime + ", endTime=" + endTime
+				+ ", paperPath=" + paperPath + ", paperAnwserPath=" + paperAnwserPath + ", status=" + status
+				+ ", examInfo=" + examInfo + ", students=" + students + "]";
+	}
+
 }

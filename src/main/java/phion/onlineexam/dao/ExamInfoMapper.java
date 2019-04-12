@@ -21,6 +21,13 @@ public interface ExamInfoMapper {
     List<ExamInfo> selectByExample(ExamInfoExample example);
 
     ExamInfo selectByPrimaryKey(Integer inId);
+    
+    /**
+     * 通过eId查询考试信息
+     * @param eId
+     * @return
+     */
+    ExamInfo selectByExamID(Integer eId);
 
     int updateByExampleSelective(@Param("record") ExamInfo record, @Param("example") ExamInfoExample example);
 
