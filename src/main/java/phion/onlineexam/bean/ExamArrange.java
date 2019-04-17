@@ -1,14 +1,11 @@
 package phion.onlineexam.bean;
 
-import java.util.List;
-
 public class ExamArrange {
     private Integer arraId;
 
     private Integer stuId;
 
     private Integer eId;
-    
 
     public Integer getArraId() {
         return arraId;
@@ -33,10 +30,4 @@ public class ExamArrange {
     public void seteId(Integer eId) {
         this.eId = eId;
     }
-
-	@Override
-	public String toString() {
-		return "ExamArrange [arraId=" + arraId + ", stuId=" + stuId + ", eId=" + eId + "]";
-	}
-
 }

@@ -1,5 +1,7 @@
 package phion.onlineexam.test;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -12,12 +14,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import phion.onlineexam.bean.Exam;
 import phion.onlineexam.bean.ExamExample;
+import phion.onlineexam.bean.StaticResources;
 import phion.onlineexam.bean.Student;
 import phion.onlineexam.bean.Teacher;
 import phion.onlineexam.bean.TeacherExample;
 import phion.onlineexam.dao.ExamMapper;
 import phion.onlineexam.dao.StudentMapper;
 import phion.onlineexam.dao.TeacherMapper;
+import phion.onlineexam.service.impl.StudentServiceImpl;
+import phion.onlineexam.utils.DateUtil;
 
 /**
  * 测试dao层的工作
@@ -42,13 +47,12 @@ public class MapperTest {
 	
 	@Autowired
 	SqlSession sqlSession;
-	
-	
+
 	/**
 	 * 测试ExamMapper
 	 */
 	@SuppressWarnings("deprecation")
-	//@Test
+	@Test
 	public void testExamMapperCrud() {
 		/*	//1、创建SpringIOC容器
 		ApplicationContext ioc = new ClassPathXmlApplicationContext("applicationContext.xml");
@@ -57,12 +61,14 @@ public class MapperTest {
 		
 		//System.out.println(examMapper);
 		
-		/*//考试插入测试
-		examMapper.insertSelective(new Exam(null, null, new Date(2019,4,9,8,0,0),
-				new Date(1019,4,9,10,0,0), null, null, "running", null));
-		examMapper.insertSelective(new Exam(null, null, new Date(2019,4,10,8,0,0),
-				new Date(2019,4,10,10,0,0), null, null, "creating", null));
-		 */
+		//考试插入测试
+		LocalDateTime ld1 = DateUtil.getCurrentLocalDateTime().plusDays(1);
+		LocalDateTime ld2 = ld1.plusHours(2);
+		Date d1 = DateUtil.toDate(ld1);
+		Date d2 = DateUtil.toDate(ld2);
+		examMapper.insertSelective(new Exam(null, null,null, d1 , d2, null, null,StaticResources.READY_TODAY_EXAM,  null, null));
+		examMapper.insertSelective(new Exam(null, null,null, d1 , d2, null, null, StaticResources.CREATING_EXAM, null, null));
+		 
 		
 		/*//主键查询考试，带考试信息
 		Exam exam = examMapper.selectByPrimaryKeyWithExamInfo(1);
@@ -74,8 +80,8 @@ public class MapperTest {
 		}*/
 		
 		/*//有选择的查询考试
-		List<Exam> exams = examMapper.selectByExampleWithExamInfoSelective(new Exam(null, null,
-				null, null, null, null, "creating", null));
+		List<Exam> exams = examMapper.selectWithExamInfoSelective(new Exam(null, null,
+				null, null, null, null, null,"creating",  null, null));
 		for(Exam e : exams) {
 			System.out.println(e);
 		}*/

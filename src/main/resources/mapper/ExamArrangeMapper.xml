@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="phion.onlineexam.dao.ExamArrangeMapper">
-  <resultMap id="BaseResultMap" type="phion.onlineexam.bean.ExamArrange">
+<resultMap id="BaseResultMap" type="phion.onlineexam.bean.ExamArrange">
     <id column="arra_id" jdbcType="INTEGER" property="arraId" />
     <result column="stu_id" jdbcType="INTEGER" property="stuId" />
     <result column="e_id" jdbcType="INTEGER" property="eId" />
@@ -10,7 +10,7 @@
     <id column="arra_id" jdbcType="INTEGER" property="arraId" />
     <result column="stu_id" jdbcType="INTEGER" property="stuId" />
     <result column="e_id" jdbcType="INTEGER" property="eId" />
-    <association property="student"></association>
+    <association property="student" />
   </resultMap>
   
   <sql id="Example_Where_Clause">

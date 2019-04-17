@@ -15,14 +15,36 @@
 	
 	<!--配置视图解析器，方便页面返回  -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix" value="/WEB-INF/views/"></property>
+		<property name="prefix" value="/views/"></property>
 		<property name="suffix" value=".jsp"></property>
 	</bean>
 	
-	<!--两个标准配置  -->
+	<!--两个标准配置  -->	
 	<!-- 将springmvc不能处理的请求交给tomcat -->
 	<mvc:default-servlet-handler/>
 	<!-- 能支持springmvc更高级的一些功能，JSR303校验，快捷的ajax...映射动态请求 -->
 	<mvc:annotation-driven/>
-
+	
+	 <!-- 配置拦截器 -->
+	<mvc:interceptors>
+	
+		<mvc:interceptor> 
+			<!-- 拦截登录访问 -->
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/student_login" />
+			<mvc:exclude-mapping path="/teacher_login" />
+			<mvc:exclude-mapping path="/admin_login" />
+			<mvc:exclude-mapping path="/index.jsp" />
+			<mvc:exclude-mapping path="/" />
+			<mvc:exclude-mapping path="" />
+			<mvc:exclude-mapping path="/views/login.jsp" />
+			<mvc:exclude-mapping path="/**/*login.jsp" />
+			<mvc:exclude-mapping path="/test/**/*" />
+			
+			<!-- 资源文件访问权限 -->
+			<mvc:exclude-mapping path="/static/**" />
+								
+			<bean class="phion.onlineexam.interceptor.LoginInterceptor"></bean>			
+		</mvc:interceptor>
+</mvc:interceptors>
 </beans>

@@ -1,18 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-    pageEncoding="utf-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Insert title here</title>
-<!-- 引入jquery  -->
-<script type="text/javascript" src="static/js/jquery.min.js"></script>
-<!-- 引入样式 -->
-<link href="static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    pageEncoding="utf-8" isELIgnored="false"%>
+<%
+	application.setAttribute("APP_PATH", request.getContextPath());
+%>
+<!-- web路径：
+不以/开始的相对路径，找资源，以当前资源的路径为基准，经常容易出问题。
+以/开始的相对路径，找资源，以服务器的路径为标准(http://localhost:3306)；需要加上项目名
+		http://localhost:3306/OnlineExam
+ -->
+ <jsp:forward page="views/login.jsp"></jsp:forward>
 
-</head>
-<body>
-<button class="btn btn-success">成功</button>
-</body>
-</html>
+<%-- <jsp:forward page="test.html"></jsp:forward> --%>

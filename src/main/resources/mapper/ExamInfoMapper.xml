@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="phion.onlineexam.dao.ExamInfoMapper">
-  <resultMap id="BaseResultMap" type="phion.onlineexam.bean.ExamInfo">
+<resultMap id="BaseResultMap" type="phion.onlineexam.bean.ExamInfo">
     <id column="in_id" jdbcType="INTEGER" property="inId" />
     <result column="e_id" jdbcType="INTEGER" property="eId" />
     <result column="all_number" jdbcType="INTEGER" property="allNumber" />
@@ -107,8 +107,7 @@
   
   <!-- 通过eId查询考试信息 -->
   <!-- ExamInfo selectByExamID(Integer eId); -->
-  <select id="selectByExamID" parameterType="java.lang.Integer" 
-  resultMap="ResultMapWithBLOBs">
+  <select id="selectByExamID" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
     ,

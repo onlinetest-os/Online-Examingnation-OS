@@ -42,7 +42,7 @@ public interface ExamMapper {
      * @param record
      * @return
      */
-    List<Exam> selectByExampleWithExamInfoSelective(Exam record);
+    List<Exam> selectWithExamInfoSelective(Exam record);
     
     /**
      * 带学生信息的查询，返回某一场考试

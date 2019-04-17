@@ -165,6 +165,76 @@ public class ExamExample {
             return (Criteria) this;
         }
 
+        public Criteria andENameIsNull() {
+            addCriterion("e_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andENameIsNotNull() {
+            addCriterion("e_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andENameEqualTo(String value) {
+            addCriterion("e_name =", value, "eName");
+            return (Criteria) this;
+        }
+
+        public Criteria andENameNotEqualTo(String value) {
+            addCriterion("e_name <>", value, "eName");
+            return (Criteria) this;
+        }
+
+        public Criteria andENameGreaterThan(String value) {
+            addCriterion("e_name >", value, "eName");
+            return (Criteria) this;
+        }
+
+        public Criteria andENameGreaterThanOrEqualTo(String value) {
+            addCriterion("e_name >=", value, "eName");
+            return (Criteria) this;
+        }
+
+        public Criteria andENameLessThan(String value) {
+            addCriterion("e_name <", value, "eName");
+            return (Criteria) this;
+        }
+
+        public Criteria andENameLessThanOrEqualTo(String value) {
+            addCriterion("e_name <=", value, "eName");
+            return (Criteria) this;
+        }
+
+        public Criteria andENameLike(String value) {
+            addCriterion("e_name like", value, "eName");
+            return (Criteria) this;
+        }
+
+        public Criteria andENameNotLike(String value) {
+            addCriterion("e_name not like", value, "eName");
+            return (Criteria) this;
+        }
+
+        public Criteria andENameIn(List<String> values) {
+            addCriterion("e_name in", values, "eName");
+            return (Criteria) this;
+        }
+
+        public Criteria andENameNotIn(List<String> values) {
+            addCriterion("e_name not in", values, "eName");
+            return (Criteria) this;
+        }
+
+        public Criteria andENameBetween(String value1, String value2) {
+            addCriterion("e_name between", value1, value2, "eName");
+            return (Criteria) this;
+        }
+
+        public Criteria andENameNotBetween(String value1, String value2) {
+            addCriterion("e_name not between", value1, value2, "eName");
+            return (Criteria) this;
+        }
+
         public Criteria andTeaIdIsNull() {
             addCriterion("tea_id is null");
             return (Criteria) this;

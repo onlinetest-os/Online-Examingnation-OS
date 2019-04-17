@@ -50,4 +50,10 @@ public class ExamInfo {
     public void setInfo(String info) {
         this.info = info == null ? null : info.trim();
     }
+
+	@Override
+	public String toString() {
+		return "ExamInfo [inId=" + inId + ", eId=" + eId + ", allNumber=" + allNumber + ", isDownload=" + isDownload
+				+ ", info=" + info + "]";
+	}
 }
