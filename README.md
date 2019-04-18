@@ -1,6 +1,6 @@
 # Online-Examingnation-OS
 A System of Online Exam based java
-
+# 访问路径 http://www.martinyan.club/oe/
 #项目环境
 jdk 1.8 
 tomcat 7.0
