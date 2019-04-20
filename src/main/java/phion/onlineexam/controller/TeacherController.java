@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -60,7 +61,7 @@ public class TeacherController {
 	}
 	
 	/**
-	 * 访问主页
+	 * 访问主页(考前）
 	 * @return
 	 */
 	@RequestMapping("/teacher_main")
@@ -85,4 +86,92 @@ public class TeacherController {
 		mav.setViewName("redirect:/index.jsp");
 		return mav;
 	}
+	
+	/**
+	 * 新建考试
+	 */
+	@RequestMapping("/teacher_t_newExam")
+	public String toPageNewExam() {
+		return "teacher/t_newExam";
+	}
+
+	
+	/*
+	 *<li><a href="teacher_t_viewExam" target="main_right">查看考试</a></li>
+	<li><a href="teacher_t_addStudent" target="main_right">添加学生</a></li>
+	<li><a href="teacher_t_alertManage" target="main_right">通知管理</a></li>
+	<li><a href="teacher_t_IPRelease" target="main_right">IP解绑</a></li>
+	 */
+	
+	/**
+	 * 考中
+	 */
+	@RequestMapping("/teacher_t_kaozhong")
+	public String toPagekaozhong() {
+		return "teacher/t_kaozhong";
+	}
+	
+	/**
+	 *查看考试 页面
+	 */
+	@RequestMapping("/teacher_t_viewExam")
+	public String toPageViewExam() {
+		return "teacher/t_viewExam";
+	}
+	
+	/**
+	 *添加学生页面
+	 */
+	@RequestMapping("/teacher_t_addStudent")
+	public String toPageAddStudent() {
+		return "teacher/t_addStudent";
+	}
+	/**
+	 *通知管理页面
+	 */
+	@RequestMapping("/teacher_t_alertManage")
+	public String toPageAlertManage() {
+		return "teacher/t_alertManage";
+	}
+	
+	/**
+	 *IP解绑页面
+	 */
+	@RequestMapping("/teacher_t_IPRelease")
+	public String toPageIPRelease() {
+		return "teacher/t_IPRelease";
+	}
+	/*
+	 * <li><a href="teacher_t_answerDownload" target="main_right">下载答案</a></li>
+		<li><a href="teacher_t_examInfoExport" target="main_right">导出信息</a></li>
+		<li><a href="teacher_t_examClean" target="main_right">清理考试</a></li>
+
+	 */
+	
+	/**
+	 * 考后
+	 */
+	@RequestMapping("/teacher_t_kaohou")
+	public String toPagekaohou() {
+		return "teacher/t_kaohou";
+	}
+	
+	/**
+	 *下载答案页面
+	 */
+	@RequestMapping("/teacher_t_answerDownload")
+	public String toPageAnswerDownload() {
+		return "teacher/t_answerDownload";
+	}
+	
+	/**
+	 *导出信息页面
+	 */
+	@RequestMapping("/teacher_t_examInfoExport")
+	public String toPageExamInfoExport() {
+		return "teacher/t_examInfoExport";	
+	}
+	
+	
+	
 }

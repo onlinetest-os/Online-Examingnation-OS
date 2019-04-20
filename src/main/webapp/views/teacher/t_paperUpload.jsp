@@ -10,29 +10,29 @@
         <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
         <meta name="author" content="Coderthemes">
 
-        <link rel="shortcut icon" href="../assets/images/favicon_1.ico">
-        <link href="../assets/plugins/dropzone/dist/dropzone.css" rel="stylesheet" type="text/css">
-        <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-        <link href="../assets/css/core.css" rel="stylesheet" type="text/css">
-        <link href="../assets/css/icons.css" rel="stylesheet" type="text/css">
-        <link href="../assets/css/components.css" rel ="stylesheet" type="text/css">
-        <link href="../assets/css/pages.css" rel="stylesheet" type="text/css">
-        <link href="../assets/css/menu.css" rel="stylesheet" type="text/css">
-        <link href="../assets/css/responsive.css" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="${APP_PATH }/static/assets/images/favicon_1.ico">
+        <link href="${APP_PATH }/static/assets/plugins/dropzone/dist/dropzone.css" rel="stylesheet" type="text/css">
+        <link href="${APP_PATH }/static/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="${APP_PATH }/static/assets/css/core.css" rel="stylesheet" type="text/css">
+        <link href="${APP_PATH }/static/assets/css/icons.css" rel="stylesheet" type="text/css">
+        <link href="${APP_PATH }/static/assets/css/components.css" rel ="stylesheet" type="text/css">
+        <link href="${APP_PATH }/static/assets/css/pages.css" rel="stylesheet" type="text/css">
+        <link href="${APP_PATH }/static/assets/css/menu.css" rel="stylesheet" type="text/css">
+        <link href="${APP_PATH }/static/assets/css/responsive.css" rel="stylesheet" type="text/css">
 
-        <script src="../assets/js/modernizr.min.js"></script>
-        <script src="../assets/js/jquery.min.js"></script>
-        <script src="../assets/js/bootstrap.min.js"></script>
-        <script src="../assets/js/detect.js"></script>
-        <script src="../assets/js/fastclick.js"></script>
-        <script src="../assets/js/jquery.slimscroll.js"></script>
-        <script src="../assets/js/jquery.blockUI.js"></script>
-        <script src="../assets/js/waves.js"></script>
-        <script src="../assets/js/wow.min.js"></script>
-        <script src="../assets/js/jquery.nicescroll.js"></script>
-        <script src="../assets/js/jquery.scrollTo.min.js"></script>
-        <script src="../assets/js/jquery.app.js"></script>
-        <script src="../assets/plugins/dropzone/dist/dropzone.js"></script>
+        <script src="${APP_PATH }/static/assets/js/modernizr.min.js"></script>
+        <script src="${APP_PATH }/static/assets/js/jquery.min.js"></script>
+        <script src="${APP_PATH }/static/assets/js/bootstrap.min.js"></script>
+        <script src="${APP_PATH }/static/assets/js/detect.js"></script>
+        <script src="${APP_PATH }/static/assets/js/fastclick.js"></script>
+        <script src="${APP_PATH }/static/assets/js/jquery.slimscroll.js"></script>
+        <script src="${APP_PATH }/static/assets/js/jquery.blockUI.js"></script>
+        <script src="${APP_PATH }/static/assets/js/waves.js"></script>
+        <script src="${APP_PATH }/static/assets/js/wow.min.js"></script>
+        <script src="${APP_PATH }/static/assets/js/jquery.nicescroll.js"></script>
+        <script src="${APP_PATH }/static/assets/js/jquery.scrollTo.min.js"></script>
+        <script src="${APP_PATH }/static/assets/js/jquery.app.js"></script>
+        <script src="${APP_PATH }/static/assets/plugins/dropzone/dist/dropzone.js"></script>
 
 <style>
 .sc {

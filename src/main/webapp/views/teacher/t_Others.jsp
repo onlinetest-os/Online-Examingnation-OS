@@ -5,9 +5,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Insert title here</title>
-<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<script src="../assets/js/jquery.min.js"></script>
-<script src="../assets/js/bootstrap.min.js"></script>
+<link href="${APP_PATH }/static/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<script src="${APP_PATH }/static/assets/js/jquery.min.js"></script>
+<script src="${APP_PATH }/static/assets/js/bootstrap.min.js"></script>
 </head>
 <style>
 .iframe_right {

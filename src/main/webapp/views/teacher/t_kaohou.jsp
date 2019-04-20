@@ -5,9 +5,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Insert title here</title>
-<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<script src="../assets/js/jquery.min.js"></script>
-<script src="../assets/js/bootstrap.min.js"></script>
+<link href="${APP_PATH }/static/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<script src="${APP_PATH }/static/assets/js/jquery.min.js"></script>
+<script src="${APP_PATH }/static/assets/js/bootstrap.min.js"></script>
 </head>
 <style>
 .iframe_right {
@@ -27,9 +27,9 @@
 			<div class="col-md-2">
 				<ul class="nav nav-list">
 					<li class="nav-header">考后操作</li>
-					<li><a href="t_answerDownload.jsp" target="main_right">下载答案</a></li>
-					<li><a href="t_examInfoExport.jsp" target="main_right">导出信息</a></li>
-					<li><a href="t_examClean.jsp" target="main_right">清理考试</a></li>
+					<li><a href="teacher_t_answerDownload" target="main_right">下载答案</a></li>
+					<li><a href="teacher_t_examInfoExport" target="main_right">导出信息</a></li>
+					<li><a href="teacher_t_examClean" target="main_right">清理考试</a></li>
 				</ul>
 			</div>
 			<div class="col-md-10">

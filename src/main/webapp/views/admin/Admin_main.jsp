@@ -18,6 +18,7 @@
 </style>
 <body>
 	<%@include file="a_nav.jsp" %>
+	<a href="admin_get_teachers">测试查询</a>
 	<div>
 		<iframe id="frame" class="iframe_right"
 			style="width: 100%; margin-left: 5px;" src="" name="main_right"></iframe>

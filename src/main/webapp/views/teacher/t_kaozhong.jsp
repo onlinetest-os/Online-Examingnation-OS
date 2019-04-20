@@ -5,9 +5,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Insert title here</title>
-<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<script src="../assets/js/jquery.min.js"></script>
-<script src="../assets/js/bootstrap.min.js"></script>
+<link href="${APP_PATH }/static/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<script src="${APP_PATH }/static/assets/js/jquery.min.js"></script>
+<script src="${APP_PATH }/static/assets/js/bootstrap.min.js"></script>
 </head>
 <style>
 .iframe_right {
@@ -27,10 +27,10 @@
 			<div class="col-md-2">
 				<ul class="nav nav-list">
 					<li class="nav-header">考中操作</li>
-					<li><a href="t_viewExam.jsp" target="main_right">查看考试</a></li>
-					<li><a href="t_addStudent.jsp" target="main_right">添加学生</a></li>
-					<li><a href="t_alertManage.jsp" target="main_right">通知管理</a></li>
-					<li><a href="t_IPRelease.jsp" target="main_right">IP解绑</a></li>
+					<li><a href="teacher_t_viewExam" target="main_right">查看考试</a></li>
+					<li><a href="teacher_t_addStudent" target="main_right">添加学生</a></li>
+					<li><a href="teacher_t_alertManage" target="main_right">通知管理</a></li>
+					<li><a href="teacher_t_IPRelease" target="main_right">IP解绑</a></li>
 				</ul>
 			</div>
 			<div class="col-md-10">

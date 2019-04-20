@@ -52,7 +52,7 @@ public class MapperTest {
 	 * 测试ExamMapper
 	 */
 	@SuppressWarnings("deprecation")
-	@Test
+	//@Test
 	public void testExamMapperCrud() {
 		/*	//1、创建SpringIOC容器
 		ApplicationContext ioc = new ClassPathXmlApplicationContext("applicationContext.xml");
@@ -114,16 +114,19 @@ public class MapperTest {
 	/**
 	 * 测试TeacherMapper
 	 */
-	//@Test
+	@Test
 	public void testTeacherMapperCrud() {
-		/*//插入教师
-		for(int i = 0 ; i < 10 ; i++) {
-			teacherMapper.insertSelective(new Teacher(null, 10000000+i+"", "教师"+i, (int)Math.random()*100000+"", null, null));
+		//插入教师
+		for(int i = 10 ; i < 70 ; i++) {
+			teacherMapper.insertSelective(new Teacher(null, 10000000+i+"", "教师"+i, "111", null, null));
 		}
-		System.out.println("插入完成！");*/
-		/*//按条件查询教师
-		Teacher teacher = teacherMapper.selectBySelective(new Teacher(null, null, "教师"+6, "54das", null, null), null);
-		System.out.println(teacher);*/
+		System.out.println("插入完成！");
+		//按条件查询教师
+//		List<Teacher> teachers = teacherMapper.selectBySelective(new Teacher(), null);
+//		for(Teacher teacher:teachers) {
+//			System.out.println(teacher);
+//		}
+		
 		//按条件更新教师
 		//teacherMapper.updateByPrimaryKeySelective(new Teacher(1, null, "教师"+6, "ddddd", null, null));
 		 

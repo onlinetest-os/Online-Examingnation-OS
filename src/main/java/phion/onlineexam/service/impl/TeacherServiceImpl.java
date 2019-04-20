@@ -16,22 +16,21 @@ public class TeacherServiceImpl implements TeacherService {
 	@Autowired
 	TeacherMapper teacherMapper;
 	
-	public List<Teacher> queryTeacher(Teacher Teacher) {
-		List<Teacher> Teachers = teacherMapper.selectBySelective(Teacher, null);
+	public List<Teacher> queryTeacher(Teacher teacher) {
+		List<Teacher> Teachers = teacherMapper.selectBySelective(teacher, null);
 		return Teachers;
 	}
 
-	public void addTeacher(Teacher Teacher) {
+	public void addTeacher(Teacher teacher) {
+		teacherMapper.insert(teacher);
+	}
+
+	public void addTeachersBatch(List<Teacher> teachers) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void addTeachersBatch(List<Teacher> Teachers) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void updateTeacher(Teacher Teacher) {
+	public void updateTeacher(Teacher teacher) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -44,6 +43,11 @@ public class TeacherServiceImpl implements TeacherService {
 	@Override
 	public int queryTeacherCount(Teacher Teacher) {
 		return queryTeacher(Teacher).size();
+	}
+
+	@Override
+	public Teacher queryTeacherById(Integer teaId) {
+		return teacherMapper.selectByPrimaryKey(teaId);
 	}
 
 }

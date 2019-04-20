@@ -11,34 +11,40 @@ public interface TeacherService {
 	 * 查询教师
 	 * @return
 	 */
-	public List<Teacher> queryTeacher(Teacher Teacher);
+	public List<Teacher> queryTeacher(Teacher teacher);
+	
+	/**
+	 * 查询教师
+	 * @return
+	 */
+	public Teacher queryTeacherById(Integer teaId);
 	
 	/**
 	 * 查询教师数量
 	 * @return
 	 */
-	public int queryTeacherCount(Teacher Teacher);
+	public int queryTeacherCount(Teacher teacher);
 	
 	/**
 	 * 添加教师
 	 * @param Teacher
 	 * @return
 	 */
-	public void addTeacher(Teacher Teacher);
+	public void addTeacher(Teacher teacher);
 	
 	
 	/**
 	 * 批量添加教师
 	 * @param Teachers
 	 */
-	public void addTeachersBatch(List<Teacher> Teachers);
+	public void addTeachersBatch(List<Teacher> teachers);
 	
 	
 	/**
 	 * 更新教师信息
 	 * @param Teacher
 	 */
-	public void updateTeacher(Teacher Teacher);
+	public void updateTeacher(Teacher teacher);
 	
 	 
 	/**

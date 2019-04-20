@@ -5,9 +5,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Insert title here</title>
-<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<script src="../assets/js/jquery.min.js"></script>
-<script src="../assets/js/bootstrap.min.js"></script>
+<link href="${APP_PATH }/static/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<script src="${APP_PATH }/static/assets/js/jquery.min.js"></script>
+<script src="${APP_PATH }/static/assets/js/bootstrap.min.js"></script>
 <style type="text/css">
 *{max-height: 25px;margin-top: 10px;}
 .container {
@@ -35,24 +35,28 @@
 <div style="text-align: center;">
 	<form  action="" class="container" method="get">
 			<font class="items"></font>
-			<font class="items">考试名称</font><input class="items" type="text" name="exam_name" />
-					<font class="items">班级</font><select class="items">
-						<option>1</option>
-						<option>2</option>
-						<option>3</option>
-					</select>							
-					<font class="items">试卷</font><select class="items">
-						<option>1</option>
-						<option>2</option>
-						<option>3</option>
-					</select>			
+			<font class="items">考试名称</font>
+			<input class="items" type="text" name="exam_name" />
+					<font class="items">班级</font>
+					<input class="items" type="text" name="classNumber" />
+<!-- 					<select class="items"> -->
+<!-- 						<option>1</option> -->
+<!-- 						<option>2</option> -->
+<!-- 						<option>3</option> -->
+<!-- 					</select>						 -->
+<!-- 					<font class="items">试卷</font><select class="items"> -->
+<!-- 						<option>1</option> -->
+<!-- 						<option>2</option> -->
+<!-- 						<option>3</option> -->
+<!-- 					</select>			 -->
 					<font class="items">时长</font><font class="items"><select >
 						<option>1</option>
 						<option>1.5</option>
 						<option>2</option>
+						<option>2.5</option>
 					</select>小时</font>
 					<font class="items">开始</font><input class="items" id="meeting" type="datetime-local" value="2019-01-13" />		
-					<font class="items">结束</font><input class="items" id="meeting" type="datetime-local" value="2019-01-13" />		
+<!-- 					<font class="items">结束</font><input class="items" id="meeting" type="datetime-local" value="2019-01-13" />		 -->
 					<font class="items">自动开始</font><input class="items" type="checkbox" />			
 					<a class="items"></a><input class="items btn" style="margin-top: 0px;height:30px;" type="submit" value="OK" />		
 	</form>

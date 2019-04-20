@@ -27,11 +27,11 @@
 			<div class="col-md-2">
 				<ul class="nav nav-list">
 					<li class="nav-header">考前操作</li>
-					<li><a href="t_newExam.jsp" target="main_right">新建考试</a></li>
-					<li><a href="t_draftBox.jsp" target="main_right">草稿箱</a></li>
-					<li><a href="t_paperUpload.jsp" target="main_right">导入试卷</a></li>
-					<li><a href="t_registerImport.jsp" target="main_right">导入名单</a></li>
-					<li><a href="t_IPRelease.jsp" target="main_right">IP解绑</a></li>
+					<li><a href="teacher_t_newExam" target="main_right">新建考试</a></li>
+					<li><a href="teacher_t_draftBox" target="main_right">草稿箱</a></li>
+					<li><a href="teacher_t_paperUpload" target="main_right">导入试卷</a></li>
+					<li><a href="teacher_t_registerImport" target="main_right">导入名单</a></li>
+					<li><a href="teacher_t_IPRelease" target="main_right">IP解绑</a></li>
 				</ul>
 			</div>
 			<div class="col-md-10">

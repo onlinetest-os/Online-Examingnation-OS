@@ -26,16 +26,16 @@
 		</div>
 		<div>
 			<ul class="nav navbar-nav">
-				<li><a href="Teacher_main.jsp">考前</a></li>
-				<li><a href="t_kaozhong.jsp">考中</a></li>
-				<li><a href="t_kaohou.jsp">考后</a></li>
-				<li><a href="t_Others.jsp">其他事务</a></li>
+				<li><a href="teacher_main">考前</a></li>
+				<li><a href="teacher_t_kaozhong">考中</a></li>
+				<li><a href="teacher_t_kaohou">考后</a></li>
+				<li><a href="teacher_t_Others">其他事务</a></li>
 			</ul>
 		</div>
 		<ul class="nav pull-right" id="right">
 			<li><img src="${APP_PATH}/static/assets/images/users/avatar-1.jpg"
 				style="width: 50px; height: 50px; border-radius: 50%" /></li>
-			<li><a class="r" href="#"><strong>我的名字</strong></a></li>
+			<li><a class="r" href="${teacher.teaName}"><strong>我的名字</strong></a></li>
 			<li><a class="r" href="teacher_cancel">退出</a></li>
 		</ul>
 	</div>
