@@ -5,7 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import phion.onlineexam.bean.Teacher;
+import phion.onlineexam.bean.TeacherExample;
+import phion.onlineexam.bean.TeacherExample.Criteria;
 import phion.onlineexam.bean.Teacher;
 import phion.onlineexam.dao.TeacherMapper;
 import phion.onlineexam.service.TeacherService;
@@ -31,14 +34,14 @@ public class TeacherServiceImpl implements TeacherService {
 	}
 
 	public void updateTeacher(Teacher teacher) {
-		// TODO Auto-generated method stub
-		
+		teacherMapper.updateByPrimaryKey(teacher);
 	}
 
-	public void deleteTeacher(Integer stuId) {
-		// TODO Auto-generated method stub
+	public void deleteTeacher(Integer teaId) {
+		teacherMapper.deleteByPrimaryKey(teaId);
 		
 	}
+	
 
 	@Override
 	public int queryTeacherCount(Teacher Teacher) {
@@ -48,6 +51,16 @@ public class TeacherServiceImpl implements TeacherService {
 	@Override
 	public Teacher queryTeacherById(Integer teaId) {
 		return teacherMapper.selectByPrimaryKey(teaId);
+	}
+
+	@Override
+	public void deleteTeacherBatch(List<Integer> ids) {
+		// TODO Auto-generated method stub
+		TeacherExample example = new TeacherExample();
+		Criteria criteria = example.createCriteria();
+		//delete from xxx where emp_id in(1,2,3)
+		criteria.andTeaIdIn(ids);
+		teacherMapper.deleteByExample(example);
 	}
 
 }

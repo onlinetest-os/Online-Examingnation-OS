@@ -9,9 +9,12 @@
 <script src="${APP_PATH }/static/assets/js/jquery.min.js"></script>
 <script src="${APP_PATH }/static/assets/js/bootstrap.min.js"></script>
 <style type="text/css">
+.container::before{
+display:none;
+}
 .container {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: 1fr 1fr 1fr 1fr;
 	grid-template-rows: auto;
 	justify-items: center;
 }
@@ -74,7 +77,12 @@
 
 
 	<div class="container">
-		<font></font>
+		<p class="items btn">
+			<a style="color: white;" href="#">开始考试</a>
+		</p>
+		<p class="items btn">
+			<a style="color: white;" href="#">结束考试</a>
+		</p>
 		<p class="items btn">
 			<a style="color: white;" href="#">登录名单</a>
 		</p>

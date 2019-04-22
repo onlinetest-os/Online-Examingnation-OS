@@ -52,7 +52,7 @@ public class MapperTest {
 	 * 测试ExamMapper
 	 */
 	@SuppressWarnings("deprecation")
-	//@Test
+	@Test
 	public void testExamMapperCrud() {
 		/*	//1、创建SpringIOC容器
 		ApplicationContext ioc = new ClassPathXmlApplicationContext("applicationContext.xml");
@@ -62,12 +62,12 @@ public class MapperTest {
 		//System.out.println(examMapper);
 		
 		//考试插入测试
-		LocalDateTime ld1 = DateUtil.getCurrentLocalDateTime().plusDays(1);
-		LocalDateTime ld2 = ld1.plusHours(2);
-		Date d1 = DateUtil.toDate(ld1);
-		Date d2 = DateUtil.toDate(ld2);
-		examMapper.insertSelective(new Exam(null, null,null, d1 , d2, null, null,StaticResources.READY_TODAY_EXAM,  null, null));
-		examMapper.insertSelective(new Exam(null, null,null, d1 , d2, null, null, StaticResources.CREATING_EXAM, null, null));
+//		LocalDateTime ld1 = DateUtil.getCurrentLocalDateTime().plusDays(1);
+//		LocalDateTime ld2 = ld1.plusHours(2);
+//		Date d1 = DateUtil.toDate(ld1);
+//		Date d2 = DateUtil.toDate(ld2);
+//		examMapper.insertSelective(new Exam(null, null,null, d1 , d2, null, null,StaticResources.READY_TODAY_EXAM,  null, null));
+//		examMapper.insertSelective(new Exam(null, null,null, d1 , d2, null, null, StaticResources.CREATING_EXAM, null, null));
 		 
 		
 		/*//主键查询考试，带考试信息
@@ -90,6 +90,12 @@ public class MapperTest {
 		
 		System.out.println(e.getStudents().size());*/
 		
+		List<Exam> exams = examMapper.selectByExample(null);
+		for(Exam e : exams) {
+			Date startDate = e.getStartTime();
+			LocalDateTime localDate = DateUtil.toLocalDateTime(startDate);
+			System.out.println(localDate);
+		}
 	}
 	
 	
@@ -114,7 +120,7 @@ public class MapperTest {
 	/**
 	 * 测试TeacherMapper
 	 */
-	@Test
+	//@Test
 	public void testTeacherMapperCrud() {
 		//插入教师
 		for(int i = 10 ; i < 70 ; i++) {

@@ -17,29 +17,36 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import phion.onlineexam.bean.Msg;
+
 @RequestMapping("file")
 @Controller
 public class FileController {
 	
 	
 	 /**
-     * 文件上传功能
+	  * 文件上传功能
      * @param file
      * @return
      * @throws IOException 
      */
     @RequestMapping(value="/upload",method=RequestMethod.POST)
     @ResponseBody
-    public String upload(MultipartFile file,HttpServletRequest request) throws IOException{
-        String path = request.getSession().getServletContext().getRealPath("upload");
-        String fileName = file.getOriginalFilename();  
-        File dir = new File(path,fileName);        
-        if(!dir.exists()){
-            dir.mkdirs();
-        }
-        //MultipartFile自带的解析方法
-        file.transferTo(dir);
-        return "ok!";
+    public Msg upload(MultipartFile file,HttpServletRequest request,String path){
+        try {
+	    	String absPath = request.getSession().getServletContext().getRealPath(path);
+	        String fileName = file.getOriginalFilename();  
+	        File dir = new File(absPath,fileName);        
+	        if(!dir.exists()){
+	            dir.mkdirs();
+	        }
+	        //MultipartFile自带的解析方法
+	        file.transferTo(dir);
+	        System.out.println(absPath);
+        }catch (Exception e) {
+			return Msg.fail();
+		}
+        return Msg.success();
     }
     
     /**
@@ -51,7 +58,7 @@ public class FileController {
     @RequestMapping("/download")
     public void down(HttpServletRequest request,HttpServletResponse response) throws Exception{
         //模拟文件，myfile.txt为需要下载的文件
-        String fileName = request.getSession().getServletContext().getRealPath("download")+"/myfile.txt";
+        String fileName = request.getSession().getServletContext().getRealPath("test/download")+"/myfile.txt";
         //获取输入流
         InputStream bis = new BufferedInputStream(new FileInputStream(new File(fileName)));
         //假如以中文名下载的话

@@ -127,8 +127,8 @@ public class LoginInterceptor implements HandlerInterceptor {
 		}
 		
 		String stuNumber = student.getStuNumber();
-		String stuPassword = student.getStuPassword();
-		if (stuNumber == null || stuPassword == null) {
+		String stuName = student.getStuName();
+		if (stuNumber == null || stuName == null) {
 			response.sendRedirect(request.getContextPath() + "/index.jsp");
 			return false;
 		}

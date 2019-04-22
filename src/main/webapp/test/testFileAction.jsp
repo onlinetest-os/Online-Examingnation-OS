@@ -8,12 +8,12 @@
 </head>
 <body>
 <h1>测试文件上传或下载</h1>
-	<form action="http://localhost:8090/OnlineExam/test/file/upload" method="post" enctype="multipart/form-data">
+	<form action="http://localhost:8090/OnlineExam/file/test/upload" method="post" enctype="multipart/form-data">
 		选择文件:<input type="file" name="file" width="120px">
 		<input type="submit" value="上传">
 	</form>
 	<hr>
-	<form action="http://localhost:8090/OnlineExam/test/file/download" method="get">
+	<form action="http://localhost:8090/OnlineExam/file/test/download" method="get">
 		<input type="submit" value="下载">
 	</form>
 

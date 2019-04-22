@@ -43,11 +43,11 @@ public class StudentController {
 	@RequestMapping("/student_login")
 	@ResponseBody
 	public Msg login(@RequestParam(value="stuNumber",defaultValue="0")String stuNumber,
-			String stuPassword,HttpServletRequest request){
+			String stuName,HttpServletRequest request){
 		System.out.println(request.getRequestURI());
-		System.out.println(stuNumber+"---"+stuPassword);
+		System.out.println(stuNumber+"---"+stuName);
 		System.out.println("StudentController被访问");
-		Student studentLike = new Student(null,stuNumber,null,stuPassword,null,null,null);
+		Student studentLike = new Student(null,stuNumber,stuName,null,null,null,null);
 		List<Student> students = studentService.queryStudent(studentLike);
 		if(students.size()<=0) return Msg.fail();
 		HttpSession session = request.getSession();
@@ -79,7 +79,7 @@ public class StudentController {
 //		Student student = (Student) session.getAttribute("student");
 //		System.out.println(student);
 //		if(student==null||student.getStuId()==null) return new ModelAndView("redirect:/");
-		List<Exam> exams = examService.queryExam(new Exam(StaticResources.READY_TODAY_EXAM));
+		List<Exam> exams = examService.queryExamWithExamInfo(new Exam(StaticResources.READY_TODAY_EXAM));
 		List<Map<String , Object>> examsInfos = new ArrayList<Map<String , Object>>();
 		//把简单的经过格式化处理的信息放到界面
 		examsInfos = DataChangeUtil.getSimpleExams(exams);

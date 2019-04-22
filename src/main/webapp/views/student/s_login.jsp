@@ -47,14 +47,14 @@
 					<div class="form-group">
 						<div class="col-xs-12">
 							<input id="stuNumber" class="form-control input-lg" type="text"
-								required="" placeholder="Username">
+								required="" placeholder="学号">
 						</div>
 					</div>
 
 					<div class="form-group">
 						<div class="col-xs-12">
-							<input id="stuPassword" class="form-control input-lg"
-								type="password" required="" placeholder="Password">
+							<input id="stuName" class="form-control input-lg"
+								type="text" required="" placeholder="姓名">
 						</div>
 					</div>
 					<div class="form-group text-center m-t-40">
@@ -105,13 +105,13 @@
 		//alert("发送ajax請求！");
 		//发送请求，核对学生信息
 		var stuNumber = $("#stuNumber").val();
-		var stuPassword = $("#stuPassword").val();
+		var stuName = $("#stuName").val();
 		$.ajax({
 			url : "${APP_PATH}/student_login",
 			type : "POST",
 			data : {
 				stuNumber : stuNumber,
-				stuPassword : stuPassword
+				stuName : stuName
 			},
 			success : function(result) {
 				//1、登录成功，跳转页面
@@ -120,7 +120,7 @@
 					var url = "${APP_PATH}/student_main";
 					window.open(url, '_self');
 				} else {
-					alert("账号或密码错误！");
+					alert("学号或姓名错误！");
 				}
 			}
 		});

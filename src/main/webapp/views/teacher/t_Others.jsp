@@ -21,13 +21,12 @@
 </style>
 <body>
 	<%@include file="t_nav.jsp" %>
-
 <div class="container-fluid">
 		<div class="row-fluid">
 			<div class="col-md-2">
 				<ul class="nav nav-list">
 					<li class="nav-header">其他事务</li>
-					<li><a href="#" target="main_right">考试草稿箱</a></li>
+					<li><a href="t_stuEdit.jsp" target="main_right">修改学生信息</a></li>
 				</ul>
 			</div>
 			<div class="col-md-10">

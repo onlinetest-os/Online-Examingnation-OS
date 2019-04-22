@@ -49,6 +49,14 @@ public class Exam {
 		super();
 		this.status = status;
 	}
+	public Exam (Integer eId,String paperPath,
+			String paperAnwserPath) {
+		super();
+		this.eId = eId;
+		this.paperPath = paperPath;
+		this.paperAnwserPath = paperAnwserPath;
+	}
+	
 
 
 	public Exam(Integer eId, String eName, Integer teaId, Date startTime, Date endTime, String paperPath,

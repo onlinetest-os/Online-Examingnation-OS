@@ -53,6 +53,12 @@ public interface TeacherService {
 	 */
 	public void deleteTeacher(Integer stuId);
 	
+	/**
+	 * 批量删除教师
+	 * @param stuId
+	 */
+	public void deleteTeacherBatch(List<Integer> ids);
+	
 	
 	
 }

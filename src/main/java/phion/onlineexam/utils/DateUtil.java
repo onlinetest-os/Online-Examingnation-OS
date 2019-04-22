@@ -2,6 +2,7 @@ package phion.onlineexam.utils;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -60,9 +61,28 @@ public class DateUtil {
     }
     
     /**
-     * 解析时间字符串，返回LocalDateTime
+     * 解析时间字符串yyyy-MM-dd HH:mm:ss，返回LocalDateTime
      */
     public static LocalDateTime getLocalDateTimeByDateString(String dateString) {
+    	DateTimeFormatter formatter =  
+				 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    	return LocalDateTime.parse(dateString, formatter);
+    }
+    /**
+     * 解析时间字符串yyyy-MM-ddTHH:mm，返回LocalDateTime
+     */
+    public static LocalDateTime getLocalDateTimeByDateString2(String dateStringWithT) {
+    	String dateString = dateStringWithT.replace('T', ' ');
+    	DateTimeFormatter formatter =  
+				 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    	return LocalDateTime.parse(dateString, formatter);
+    }
+    
+    /**
+     * 解析时间字符串yyyy-MM-ddTHH:mm:ss，返回LocalDateTime
+     */
+    public static LocalDateTime getLocalDateTimeByDateString3(String dateStringWithT) {
+    	String dateString = dateStringWithT.replace('T', ' ');
     	DateTimeFormatter formatter =  
 				 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     	return LocalDateTime.parse(dateString, formatter);
@@ -96,5 +116,29 @@ public class DateUtil {
 //		System.out.println(localDateTime);
 //		System.out.println(toDate(localDateTime));
 //		System.out.println(toLocalDateTime(toDate(localDateTime)));
+		String dateString1 = "2019-04-17T21:37:17";
+		String dateString2 = "2019-04-17T22:37:17";
+		String dateString3 = "2019-04-18T21:37:17";
+		String date1 = dateString1.replace('T', ' ');
+		String date2 = dateString1.replace('T', ' ');
+		String date3 = dateString1.replace('T', ' ');
+		Duration duration= getDuration(dateString1, dateString2);
+		System.out.println(duration.toMinutes());
+	}
+	/**
+	 * 返回格式为yyyy-MM-ddTHH:mm的字符串的LocalDateTime的duration
+	 * @param dateStr1
+	 * @param dateStr2
+	 * @return
+	 */
+	public static Duration getDuration(String dateStr1,String dateStr2) {
+		LocalDateTime date1 = getLocalDateTimeByDateString3(dateStr1);
+		LocalDateTime date2 = getLocalDateTimeByDateString3(dateStr2);
+		return Duration.between(date1, date2);
+	}
+	
+	public static int Minus(String dateStr1,String dateStr2) {
+		Duration duration = getDuration(dateStr1, dateStr2);
+		return (int) duration.toMinutes();
 	}
 }

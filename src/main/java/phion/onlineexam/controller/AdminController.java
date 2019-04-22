@@ -1,5 +1,6 @@
 package phion.onlineexam.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -204,4 +205,44 @@ public class AdminController {
 		return Msg.success().add("teacher", teacher);
 	}
 	
+	/**
+	 * 更新教师信息
+	 */
+	@RequestMapping("/admin_update_teacher")
+	@ResponseBody
+	public Msg updateTeacher(Teacher teacher) {
+		System.out.println("将要更新的员工数据："+teacher);
+		teacherService.updateTeacher(teacher);;
+		return Msg.success();
+	}
+	
+	/**
+	 * 删除教师
+	 */
+	@RequestMapping("/admin_delete_teacher")
+	@ResponseBody
+	public Msg updateTeacher(@RequestParam(value="teaId",defaultValue="-1")Integer teaId) {
+		System.out.println("要删除的id是："+teaId);
+		teacherService.deleteTeacher(teaId);;
+		return Msg.success().setMsg("删除成功！");
+	}
+	
+	/**
+	 * 批量删除教师
+	 */
+	@RequestMapping("/admin_delete_teachers")
+	@ResponseBody
+	public Msg updateTeachers(@RequestParam(value="del_idstr",defaultValue="")String del_idstr) {
+		System.out.println("要删除的id有："+del_idstr);
+		if(del_idstr.length()==0) return Msg.fail().setMsg("没有任何需要删除的教师被选中！");
+		
+		List<Integer> del_ids = new ArrayList<Integer>();
+		String[] str_ids = del_idstr.split("-");
+		//组装id的集合
+		for (String string : str_ids) {
+			del_ids.add(Integer.parseInt(string));
+		}
+		teacherService.deleteTeacherBatch(del_ids);
+		return Msg.success().setMsg("删除成功！");
+	}
 }
