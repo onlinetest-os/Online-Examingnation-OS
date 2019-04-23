@@ -329,6 +329,7 @@ public class TeacherController {
 		return "teacher/t_kaozhong";
 	}
 	
+	
 	/**
 	 *查看考试 页面
 	 */
@@ -357,8 +358,25 @@ public class TeacherController {
 	 */
 	@RequestMapping("/teacher_t_IPRelease")
 	public String toPageIPRelease() {
+		
 		return "teacher/t_IPRelease";
 	}
+	
+	/**
+	 * teacher_release_student_ip
+	 * 
+	 */
+	@RequestMapping("/teacher_release_student_ip")
+	@ResponseBody
+	public Msg releaseIP(@RequestParam(value="stuId",defaultValue="-1")Integer stuId) {
+		if(stuId==-1) return Msg.fail();
+		Student student = studentService.queryStudentById(stuId);
+		student.setIp(null);
+		studentService.updateStudent(student);
+		return Msg.success().setMsg("ip已解绑！");
+	}
+	
+	
 	/*
 	 * <li><a href="teacher_t_answerDownload" target="main_right">下载答案</a></li>
 		<li><a href="teacher_t_examInfoExport" target="main_right">导出信息</a></li>
