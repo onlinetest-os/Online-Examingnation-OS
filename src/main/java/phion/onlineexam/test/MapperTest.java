@@ -112,7 +112,7 @@ public class MapperTest {
 	/**
 	 * 测试StudentMapper
 	 */
-	@Test
+	//@Test
 	public void testStudentMapperCrud() {
 		/*StudentMapper mapper = sqlSession.getMapper(StudentMapper.class);
 		for(int i = 0 ; i < 1000 ; i++) {

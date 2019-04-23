@@ -25,6 +25,7 @@ import phion.onlineexam.service.ExamService;
 import phion.onlineexam.service.StudentService;
 import phion.onlineexam.utils.DataChangeUtil;
 import phion.onlineexam.utils.DateUtil;
+import phion.onlineexam.utils.IPHelper;
 
 @Controller
 @RequestMapping("")
@@ -47,15 +48,32 @@ public class StudentController {
 		System.out.println(request.getRequestURI());
 		System.out.println(stuNumber+"---"+stuName);
 		System.out.println("StudentController被访问");
+		
 		Student studentLike = new Student(null,stuNumber,stuName,null,null,null,null);
 		List<Student> students = studentService.queryStudent(studentLike);
-		if(students.size()<=0) return Msg.fail();
+		//校验信息
+		if(students.size()<=0) return Msg.fail().setMsg("姓名错误或学号错误!");
+		Student student = students.get(0);
+		System.out.println(student);
+		//如果ip不为空，则比较当前ip
+		if(student.getIp()!=null) {
+			String ip = IPHelper.getRemoteHost(request);
+			if(!ip.equals(student.getIp())) 
+				return Msg.fail().setMsg("ip已锁定，请联系教师！");
+		} 
+		
+		//设置ip
+		student.setIp(IPHelper.getRemoteHost(request));
+		//ip绑定
+		studentService.updateStudent(student);
+		
 		HttpSession session = request.getSession();
-		System.out.println(students.get(0));
+		System.out.println(student);
+		
 		//声明登录类型为学生，方便拦截器判断
 		session.setAttribute("role", "student");
-		session.setAttribute("student", students.get(0));
-		return Msg.success().add("student", students.get(0));
+		session.setAttribute("student", student);
+		return Msg.success().add("student", student);
 	}
 	
 	/**

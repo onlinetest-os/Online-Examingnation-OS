@@ -120,7 +120,7 @@
 					var url = "${APP_PATH}/student_main";
 					window.open(url, '_self');
 				} else {
-					alert("学号或姓名错误！");
+					alert(result.msg);
 				}
 			}
 		});
