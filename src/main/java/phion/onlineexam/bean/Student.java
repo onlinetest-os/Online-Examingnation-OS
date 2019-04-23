@@ -22,7 +22,16 @@ public class Student {
 	}
     
 
-    public Student(Integer stuId, String stuNumber, String stuName, String stuPassword, String ip, String commitinfo,
+    public Student(String stuNumber, String stuName, String ip, String stuClass) {
+		super();
+		this.stuNumber = stuNumber;
+		this.stuName = stuName;
+		this.ip = ip;
+		this.stuClass = stuClass;
+	}
+
+
+	public Student(Integer stuId, String stuNumber, String stuName, String stuPassword, String ip, String commitinfo,
 			String stuClass) {
 		super();
 		this.stuId = stuId;

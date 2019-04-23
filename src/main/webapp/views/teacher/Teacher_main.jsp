@@ -38,7 +38,7 @@
 			</div>
 			<div class="col-md-10">
 				<iframe id="frame" class="iframe_right"
-					style="width: 950px; margin-left: 5px;" src="" name="main_right"></iframe>
+					style="width: 950px;  margin-left: 5px;" src="" name="main_right"></iframe>
 			</div>
 		</div>
 	</div>

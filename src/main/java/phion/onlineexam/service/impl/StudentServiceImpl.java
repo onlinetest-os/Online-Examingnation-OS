@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import phion.onlineexam.bean.Student;
+import phion.onlineexam.bean.StudentExample;
+import phion.onlineexam.bean.StudentExample.Criteria;
 import phion.onlineexam.dao.StudentMapper;
 import phion.onlineexam.service.StudentService;
 
@@ -26,7 +28,7 @@ public class StudentServiceImpl implements StudentService{
 	}
 
 	public void addStudent(Student student) {
-		// TODO Auto-generated method stub
+		studentMapper.insert(student);
 		
 	}
 
@@ -36,12 +38,38 @@ public class StudentServiceImpl implements StudentService{
 	}
 
 	public void updateStudent(Student student) {
-		// TODO Auto-generated method stub
+		studentMapper.updateByPrimaryKey(student);
 		
 	}
 
-	public void deleteStudent(Integer stuId) {
+	public void deleteStudentById(Integer stuId) {
+		studentMapper.deleteByPrimaryKey(stuId);
+		
+	}
+
+	@Override
+	public List<Student> queryStudentByEId(Integer eId) {
+		return studentMapper.selectByEId(eId);
+	}
+
+	@Override
+	public int queryStudentCount(Student student) {
+		return queryStudent(student).size();
+	}
+
+	@Override
+	public Student queryStudentById(Integer stuId) {
+		return studentMapper.selectByPrimaryKey(stuId);
+	}
+
+	@Override
+	public void deleteStudentBatch(List<Integer> ids) {
 		// TODO Auto-generated method stub
+		StudentExample example = new StudentExample();
+		Criteria criteria = example.createCriteria();
+		//delete from xxx where emp_id in(1,2,3)
+		criteria.andStuIdIn(ids);
+		studentMapper.deleteByExample(example);
 		
 	}
 

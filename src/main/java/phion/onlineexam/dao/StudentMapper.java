@@ -30,6 +30,14 @@ public interface StudentMapper {
      */
     List<Student> selectBySelective(@Param("record") Student record, @Param("example") StudentExample example);
 
+    /**
+     * 根据考试id联合考试安排表查询学生
+     * @param record
+     * @param example
+     * @return
+     */
+    List<Student> selectByEId(@Param("eId") Integer eId);
+    
     int updateByExampleSelective(@Param("record") Student record, @Param("example") StudentExample example);
 
     int updateByExample(@Param("record") Student record, @Param("example") StudentExample example);

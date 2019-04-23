@@ -8,22 +8,31 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+
 import phion.onlineexam.bean.Exam;
+import phion.onlineexam.bean.ExamArrange;
 import phion.onlineexam.bean.Msg;
 import phion.onlineexam.bean.StaticResources;
 import phion.onlineexam.bean.Student;
 import phion.onlineexam.bean.Teacher;
+import phion.onlineexam.service.ExamArrangeService;
 import phion.onlineexam.service.ExamService;
+import phion.onlineexam.service.StudentService;
 import phion.onlineexam.service.TeacherService;
 import phion.onlineexam.utils.DataChangeUtil;
 import phion.onlineexam.utils.DateUtil;
@@ -36,8 +45,15 @@ public class TeacherController {
 
 	@Autowired
 	TeacherService teacherService;
+	
 	@Autowired
 	ExamService examService;
+	
+	@Autowired
+	StudentService studentService;
+	
+	@Autowired
+	ExamArrangeService examArrangeService;
 
 	/**
 	 * 教师登录
@@ -116,7 +132,9 @@ public class TeacherController {
 	 * 草稿箱
 	 */
 	@RequestMapping("/teacher_t_draftBox")
-	public String toPageDraftBox() {
+	public String toPageDraftBox(Model model) {
+		List<Exam> exams = examService.queryExamWithExamInfo(new Exam(StaticResources.CREATING_EXAM));
+		model.addAttribute("exams",exams);
 		return "teacher/t_draftBox";
 	}
 	
@@ -168,15 +186,133 @@ public class TeacherController {
 	@RequestMapping("/teacher_t_stuList")
 	public String toPageStuList(String eId,Model model) {
 		//取出考试
-		Exam exam = examService.selectByPrimaryKeyWithStudent
+		/*Exam exam = examService.selectByPrimaryKeyWithStudent
 				(Integer.parseInt(eId));
 		System.out.println(exam);
 		List<Student> students = exam.getStudents();
 		model.addAttribute("students",students);
-		model.addAttribute("eName",exam.geteName());
+		model.addAttribute("eName",exam.geteName());*/
+		model.addAttribute("eId",eId);
 		return "teacher/t_stuList";
 	}
+	/**
+	 * 查询学生
+	 * 此处计划直接获取考试所携带的学生
+	 * 但由于创建考试功能尚未完善
+	 * 暂时采用从学生表查询
+	 */
+	@RequestMapping("/teacher_get_students")
+	@ResponseBody
+	public Msg getStudents(@RequestParam(value="pn",defaultValue="1")Integer pn,
+			Integer eId) {
+		System.out.println("访问查询学生");
+		//Exam exam = examService.selectByPrimaryKeyWithStudent(eId);
+		Map<String, Object> map = new HashMap<>();
+		//这不是一个分页查询
+		//引入Pagehelper
+		//在查询之前只需要调用,传入页码，以及每页的大小
+		PageHelper.startPage(pn,5);
+		//startPage后面紧跟的查询就是一个分页查询
+		List<Student> students = studentService.queryStudentByEId(eId);
+		for(Student student:students) {
+			System.out.println(student);
+		}
+		// 使用pageInfo包装查询后的结果，只需要将pageInfo交给页面就行了。
+		// 封装了详细的分页信息,包括有我们查询出来的数据，传入连续显示的页数
+		PageInfo<Student> page = new PageInfo<Student>(students,5); 
+		System.out.println("总页码："+page.getPages());
+		System.out.println("总记录数："+page.getTotal());
+		return Msg.success().add("pageInfo",page);
+	}
 	
+	/**
+	 * 校验学号
+	 */
+	@RequestMapping("/teacher_check_student")
+	@ResponseBody
+	public Msg checkStudent(@RequestParam(value="stuNumber",defaultValue="000")String stuNumber) {
+		int count = studentService.queryStudentCount(new Student(stuNumber,null,null,null));
+		if(count>0) return Msg.fail().add("va_msg", "该学号学生已存在！");
+		return Msg.success();
+	}
+	
+	/**
+	 * teacher_save_student
+	 * 保存学生
+	 */
+	@RequestMapping("/teacher_save_student")
+	@ResponseBody
+	public Msg checkStudent(@Valid Student student,BindingResult result,Integer eId) {
+		if(result.hasErrors()){
+			//校验失败，应该返回失败，在模态框中显示校验失败的错误信息
+			Map<String, Object> map = new HashMap<String, Object>();
+			List<FieldError> errors = result.getFieldErrors();
+			for (FieldError fieldError : errors) {
+				System.out.println("错误的字段名："+fieldError.getField());
+				System.out.println("错误信息："+fieldError.getDefaultMessage());
+				map.put(fieldError.getField(), fieldError.getDefaultMessage());
+			}
+			return Msg.fail().add("errorFields", map);
+		}else{
+			studentService.addStudent(student);
+			int stuId = studentService.queryStudent(student).get(0).getStuId();
+			examArrangeService.addExamArrange(new ExamArrange(null,stuId,eId));
+			return Msg.success();
+		}
+	}
+	
+	/**
+	 * 根据id查询单个学生
+	 */
+	@RequestMapping("/teacher_get_student")
+	@ResponseBody
+	public Msg getStudent(@RequestParam(value="stuId",defaultValue="-1")Integer stuId) {
+		//根据id查询单个学生
+		Student student = studentService.queryStudentById(stuId);
+		System.out.println("student:"+student);
+		return Msg.success().add("student", student);
+	}
+	
+	/**
+	 * 更新学生信息
+	 */
+	@RequestMapping("/teacher_update_student")
+	@ResponseBody
+	public Msg updateStudent(Student student) {
+		System.out.println("将要更新的员工数据："+student);
+		studentService.updateStudent(student);
+		return Msg.success();
+	}
+	
+	/**
+	 * 删除学生
+	 */
+	@RequestMapping("/teacher_delete_student")
+	@ResponseBody
+	public Msg updateStudent(@RequestParam(value="stuId",defaultValue="-1")Integer stuId) {
+		System.out.println("要删除的id是："+stuId);
+		studentService.deleteStudentById(stuId);;
+		return Msg.success().setMsg("删除成功！");
+	}
+	
+	/**
+	 * 批量删除学生
+	 */
+	@RequestMapping("/teacher_delete_students")
+	@ResponseBody
+	public Msg updateStudents(@RequestParam(value="del_idstr",defaultValue="")String del_idstr) {
+		System.out.println("要删除的id有："+del_idstr);
+		if(del_idstr.length()==0) return Msg.fail().setMsg("没有任何需要删除的学生被选中！");
+		
+		List<Integer> del_ids = new ArrayList<Integer>();
+		String[] str_ids = del_idstr.split("-");
+		//组装id的集合
+		for (String string : str_ids) {
+			del_ids.add(Integer.parseInt(string));
+		}
+		studentService.deleteStudentBatch(del_ids);
+		return Msg.success().setMsg("删除成功！");
+	}
 	
 	/*
 	 *<li><a href="teacher_t_viewExam" target="main_right">查看考试</a></li>

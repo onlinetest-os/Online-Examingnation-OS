@@ -6,8 +6,20 @@ public class ExamArrange {
     private Integer stuId;
 
     private Integer eId;
+    
 
-    public Integer getArraId() {
+    public ExamArrange() {
+		super();
+	}
+
+	public ExamArrange(Integer arraId, Integer stuId, Integer eId) {
+		super();
+		this.arraId = arraId;
+		this.stuId = stuId;
+		this.eId = eId;
+	}
+
+	public Integer getArraId() {
         return arraId;
     }
 
@@ -30,4 +42,11 @@ public class ExamArrange {
     public void seteId(Integer eId) {
         this.eId = eId;
     }
+
+	@Override
+	public String toString() {
+		return "ExamArrange [arraId=" + arraId + ", stuId=" + stuId + ", eId=" + eId + "]";
+	}
+    
+    
 }

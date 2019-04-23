@@ -137,6 +137,8 @@ public class AdminController {
 		// 使用pageInfo包装查询后的结果，只需要将pageInfo交给页面就行了。
 		// 封装了详细的分页信息,包括有我们查询出来的数据，传入连续显示的页数
 		PageInfo<Teacher> page = new PageInfo<Teacher>(teachers,5); 
+		System.out.println("总页码："+page.getPages());
+		System.out.println("总记录数："+page.getTotal());
 		return Msg.success().add("pageInfo",page);
 	}
 	

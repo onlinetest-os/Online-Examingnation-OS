@@ -3,6 +3,7 @@ package phion.onlineexam.service;
 import java.util.List;
 
 import phion.onlineexam.bean.Student;
+import phion.onlineexam.bean.Teacher;
 
 public interface StudentService {
 	
@@ -11,6 +12,18 @@ public interface StudentService {
 	 * @return
 	 */
 	public List<Student> queryStudent(Student student);
+	
+	/**
+	 * 根据学生id查询学生
+	 * @return
+	 */
+	public Student queryStudentById(Integer stuId);
+	
+	/**
+	 * 根据考试id查询学生
+	 * @return
+	 */
+	public List<Student> queryStudentByEId(Integer eId);
 	
 	
 	/**
@@ -46,7 +59,19 @@ public interface StudentService {
 	 * 根据主键删除学生
 	 * @param stuId
 	 */
-	public void deleteStudent(Integer stuId);
+	public void deleteStudentById(Integer stuId);
 	
+	/**
+	 * 批量删除学生
+	 * @param stuId
+	 */
+	public void deleteStudentBatch(List<Integer> ids);
+	
+	
+	/**
+	 * 查询学生数量
+	 * @return
+	 */
+	public int queryStudentCount(Student student);
 	
 }

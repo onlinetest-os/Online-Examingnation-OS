@@ -13,11 +13,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import phion.onlineexam.bean.Exam;
+import phion.onlineexam.bean.ExamArrange;
 import phion.onlineexam.bean.ExamExample;
+import phion.onlineexam.bean.ExamInfo;
 import phion.onlineexam.bean.StaticResources;
 import phion.onlineexam.bean.Student;
 import phion.onlineexam.bean.Teacher;
 import phion.onlineexam.bean.TeacherExample;
+import phion.onlineexam.dao.ExamArrangeMapper;
+import phion.onlineexam.dao.ExamInfoMapper;
 import phion.onlineexam.dao.ExamMapper;
 import phion.onlineexam.dao.StudentMapper;
 import phion.onlineexam.dao.TeacherMapper;
@@ -48,11 +52,17 @@ public class MapperTest {
 	@Autowired
 	SqlSession sqlSession;
 
+	@Autowired
+	ExamInfoMapper examInfoMapper;
+	
+
+	@Autowired
+	ExamArrangeMapper examArrangeMapper;
 	/**
 	 * 测试ExamMapper
 	 */
 	@SuppressWarnings("deprecation")
-	@Test
+	//@Test
 	public void testExamMapperCrud() {
 		/*	//1、创建SpringIOC容器
 		ApplicationContext ioc = new ClassPathXmlApplicationContext("applicationContext.xml");
@@ -102,7 +112,7 @@ public class MapperTest {
 	/**
 	 * 测试StudentMapper
 	 */
-	//@Test
+	@Test
 	public void testStudentMapperCrud() {
 		/*StudentMapper mapper = sqlSession.getMapper(StudentMapper.class);
 		for(int i = 0 ; i < 1000 ; i++) {
@@ -115,6 +125,11 @@ public class MapperTest {
 		for(Student s : students) {
 			System.out.println(s);
 		}*/
+		//按考试id查询学生
+		List<Student> students = studentMapper.selectByEId(1);
+		for(Student s : students) {
+			System.out.println(s);
+		}
 	}
 	
 	/**
@@ -136,5 +151,24 @@ public class MapperTest {
 		//按条件更新教师
 		//teacherMapper.updateByPrimaryKeySelective(new Teacher(1, null, "教师"+6, "ddddd", null, null));
 		 
+	}
+	
+	/**
+	 * 测试ExamArrangeMapper
+	 */
+	//@Test
+	public void testExamArrangeMapperCrud() {
+		//插入考试安排到考试1
+		ExamArrangeMapper mapper = sqlSession.getMapper(ExamArrangeMapper.class);
+		for(int i = 0 ; i < 100 ; i++) {
+			 mapper.insert(new ExamArrange(null,10+i,1));
+		}
+		System.out.println("批量完成！");
+		
+		//查询考试安排
+		List<ExamArrange> arranges = examArrangeMapper.selectByExample(null);
+		 for(ExamArrange arrange:arranges) {
+			 System.out.println(arrange);
+		 }
 	}
 }

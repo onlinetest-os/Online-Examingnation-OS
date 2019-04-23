@@ -45,12 +45,12 @@ ul.pagination li a {
 						<tr>
 							<th>编号</th>
 							<th>考试名称</th>
-							<th>创建人</th>
+							<th>考试时间</th>
 							<th>操作</th>
 						</tr>
 					</thead>
 					<tbody>
-						<form action="t_examEdit.jsp" method="get">
+						<form action="teacher_t_examEdit" method="get">
 							<tr>
 								<td>1</td>
 								<td>TB - Monthly</td>

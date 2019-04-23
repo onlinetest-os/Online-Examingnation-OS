@@ -71,6 +71,10 @@
   <sql id="Base_Column_List">
     stu_id, stu_number, stu_name, stu_password, ip, commitInfo, stu_class
   </sql>
+   <sql id="From_Exam_Arrange_Column_List">
+    ts.stu_id, stu_number, stu_name, stu_password, ip, commitInfo, stu_class
+  </sql>
+  
   <select id="selectByExample" parameterType="phion.onlineexam.bean.StudentExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -121,6 +125,15 @@
   </trim>
   </select>
   
+	<!--根据考试id联合考试安排表查询学生 -->
+	<!-- List<Student> selectByEId(@Param("eId") Integer eId); -->
+  <select id="selectByEId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select 
+	<include refid="From_Exam_Arrange_Column_List" />
+ 	from tb_student ts,tb_exam_arrange tea
+ 	where tea.e_id = #{eId,jdbcType=INTEGER} 
+ 	and tea.stu_id = ts.stu_id
+  </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tb_student
