@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.FileHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -15,17 +16,24 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import phion.onlineexam.bean.Exam;
+import phion.onlineexam.bean.ExamArrange;
 import phion.onlineexam.bean.Msg;
 import phion.onlineexam.bean.StaticResources;
 import phion.onlineexam.bean.Student;
+import phion.onlineexam.bean.Teacher;
+import phion.onlineexam.service.ExamArrangeService;
 import phion.onlineexam.service.ExamService;
 import phion.onlineexam.service.StudentService;
+import phion.onlineexam.service.TeacherService;
 import phion.onlineexam.utils.DataChangeUtil;
 import phion.onlineexam.utils.DateUtil;
+import phion.onlineexam.utils.FileHelper;
 import phion.onlineexam.utils.IPHelper;
+import phion.onlineexam.utils.PathHelper;
 
 @Controller
 @RequestMapping("")
@@ -35,7 +43,15 @@ public class StudentController {
 	StudentService studentService;
 	
 	@Autowired
+	TeacherService teacherService;
+	
+	@Autowired
 	ExamService examService;
+	
+	@Autowired
+	ExamArrangeService examArrangeService;
+	
+	
 
 	/**
 	 * 学生登录
@@ -48,15 +64,15 @@ public class StudentController {
 		System.out.println(request.getRequestURI());
 		System.out.println(stuNumber+"---"+stuName);
 		System.out.println("StudentController被访问");
-		
+		//只要学生在数据库纯在即可登录
 		Student studentLike = new Student(null,stuNumber,stuName,null,null,null,null);
 		List<Student> students = studentService.queryStudent(studentLike);
 		//校验信息
 		if(students.size()<=0) return Msg.fail().setMsg("姓名错误或学号错误!");
-		Student student = students.get(0);
+		Student student = students.get(0); 
 		System.out.println(student);
 		//如果ip不为空，则比较当前ip
-		if(student.getIp()!=null) {
+		if(student.getIp()!=null&&!student.getIp().equals("")) {
 			String ip = IPHelper.getRemoteHost(request);
 			if(!ip.equals(student.getIp())) 
 				return Msg.fail().setMsg("ip已锁定，请联系教师！");
@@ -113,22 +129,99 @@ public class StudentController {
 		return mav;
 	}
 	
-	/**
+	/**如果考试id和学生id在考试安排表中有记录，学生即可查看考试详情
+	 * 如果
 	 * 访问考试详情
 	 */
-	@RequestMapping("/student_toExamDetail")
-	public ModelAndView toExamDetail(HttpSession session,HttpServletRequest request) {
-		//取出考试
-		List<Exam> exams = (List<Exam>) session.getAttribute("exams");
-		System.out.println(exams.size());
-		if(exams!=null&&exams.size()>0) {
-			Exam exam = exams.get(Integer.parseInt(request.getParameter("index")));
-			ModelAndView mav = new ModelAndView();
-			mav.addObject(exams);
-			mav.setViewName("student/s_examPage");
+	@RequestMapping("/student_begin_exam")
+	public ModelAndView toExamBegin(Integer eId,Integer stuId) {
+		System.out.println("访问考试详情！");
+		Exam exam = examService.queryById(eId);
+		int count = examArrangeService.queryExamArrangeCount(new ExamArrange(null,stuId,eId));
+		ModelAndView mav = new ModelAndView();
+		if(count>0) {
 			System.out.println(exam);
-			return mav;
+			mav.addObject("exam",exam);
 		}
-		return null;
+		mav.setViewName("student/s_examBegin");
+		return mav;
 	}
+	
+	/**
+	 * student_s_anwserUpload
+	 * 上传考试答案頁面
+	 * 
+	 */
+	@RequestMapping("/student_s_anwserUpload")
+	public String toPageAnwserUpload(Integer eId,Integer stuId,Model model) {
+		Student student = studentService.queryStudentById(stuId);
+		model.addAttribute("student",student);
+		model.addAttribute("eId",eId);
+		System.out.println("eId:"+eId);
+		return "student/s_anwserUpload";
+	}
+
+	/**
+	 * student_uploadAnwser
+	 * 上传考试答案
+	 */
+	@RequestMapping("/student_uploadAnwser")
+	@ResponseBody
+	public Msg upload(@RequestParam("file")MultipartFile file,HttpServletRequest request) {
+		if(file==null) return Msg.fail().setMsg("没有任何文件上传！");
+		System.out.println("上传文件名："+file.getOriginalFilename());
+		MultipartFile anwserFile = file;
+		
+		
+        //学生班级
+        //String stuClass = request.getParameter("stuClass");
+        //System.out.println(stuClass);
+        
+        //学号
+        String stuNumber = request.getParameter("stuNumber");
+        System.out.println(stuNumber);
+        //学生姓名
+        String stuName = request.getParameter("stuName");
+        System.out.println(stuName);
+        //考试Id
+        Integer eId = Integer.parseInt(request.getParameter("eId"));
+        System.out.println(eId);
+        Exam exam = examService.queryById(eId);
+        System.out.println(exam);
+        //(exam==null) return Msg.fail();
+        //考试名称
+        //String eName = exam.geteName();
+        //System.out.println(eName);
+        
+        //教师id  
+        //Integer teaId = exam.getTeaId();
+        //System.out.println(teaId);
+        //教师姓名
+       // String teaName = teacherService.queryTeacherById(teaId).getTeaName();
+        
+		//获取考生文件路径
+		String studentAnwserPath = PathHelper.getStudentPaperAnwserPath(stuNumber, stuName);
+		//获取考试答案路径
+		//String anwserPath = PathHelper.getPaperAnwserPath(eId, teaId, teaName, stuClass, eName);
+		String papaerAnwserPath = exam.getPaperAnwserPath();
+		
+		System.out.println(studentAnwserPath);
+		System.out.println(papaerAnwserPath);
+		
+		
+		//上传路径
+		String path = new StringBuilder().append(papaerAnwserPath)
+										.append(studentAnwserPath)
+										.toString();
+		FileHelper.upload(anwserFile, request, path);
+		return Msg.success().setMsg("上传成功！");
+	}
+	
 }
+
+
+
+
+
+
+

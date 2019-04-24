@@ -18,4 +18,9 @@ public class ExamArrangeServiceImpl implements ExamArrangeService{
 		examArrangeMapper.insert(examArrange);
 	}
 
+	@Override
+	public int queryExamArrangeCount(ExamArrange examArrange) {
+		return examArrangeMapper.selectByExampleSelective(examArrange, null).size();
+	}
+
 }

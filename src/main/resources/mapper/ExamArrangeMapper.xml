@@ -89,7 +89,22 @@
       order by ${orderByClause}
     </if>
   </select>
-  
+<!--   List<ExamArrange> selectByExampleSelective(@Param("record") ExamArrange record, @Param("example") ExamArrangeExample example); -->
+    <select id="selectByExampleSelective" parameterType="map" resultMap="BaseResultMap">
+    select * from tb_exam_arrange
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+    <if test="record.arraId != null">
+       and arra_id = #{record.arraId,jdbcType=INTEGER}
+      </if>
+      <if test="record.stuId != null">
+       and stu_id = #{record.stuId,jdbcType=INTEGER}
+      </if>
+      <if test="record.eId != null">
+       and e_id = #{record.eId,jdbcType=INTEGER}
+      </if>
+    </trim>
+    
+  </select>
   
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 

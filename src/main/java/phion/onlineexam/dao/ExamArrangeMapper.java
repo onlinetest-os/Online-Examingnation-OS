@@ -19,7 +19,15 @@ public interface ExamArrangeMapper {
     List<ExamArrange> selectByExample(ExamArrangeExample example);
 
     ExamArrange selectByPrimaryKey(Integer arraId);
-
+    
+    /**
+     * 根据考试安排有选择的查询记录
+     * @param record
+     * @param example
+     * @return
+     */
+    List<ExamArrange> selectByExampleSelective(@Param("record") ExamArrange record, @Param("example") ExamArrangeExample example);
+    
     int updateByExampleSelective(@Param("record") ExamArrange record, @Param("example") ExamArrangeExample example);
 
     int updateByExample(@Param("record") ExamArrange record, @Param("example") ExamArrangeExample example);

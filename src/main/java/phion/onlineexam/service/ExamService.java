@@ -38,6 +38,13 @@ public interface ExamService {
 	 */
 	public Exam selectByPrimaryKey(Integer eId);
 	
+	/**
+	 * 根据主键查询考试 query
+	 * @param eId
+	 * @return
+	 */
+	public Exam queryById(Integer eId);
+	
 	
 	public void addExam(Exam exam);
 	

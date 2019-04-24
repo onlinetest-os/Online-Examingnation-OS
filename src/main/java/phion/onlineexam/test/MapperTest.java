@@ -156,17 +156,22 @@ public class MapperTest {
 	/**
 	 * 测试ExamArrangeMapper
 	 */
-	//@Test
+	@Test
 	public void testExamArrangeMapperCrud() {
 		//插入考试安排到考试1
-		ExamArrangeMapper mapper = sqlSession.getMapper(ExamArrangeMapper.class);
+		/*ExamArrangeMapper mapper = sqlSession.getMapper(ExamArrangeMapper.class);
 		for(int i = 0 ; i < 100 ; i++) {
 			 mapper.insert(new ExamArrange(null,10+i,1));
 		}
 		System.out.println("批量完成！");
-		
+		*/
 		//查询考试安排
-		List<ExamArrange> arranges = examArrangeMapper.selectByExample(null);
+	/*	List<ExamArrange> arranges = examArrangeMapper.selectByExample(null);
+		 for(ExamArrange arrange:arranges) {
+			 System.out.println(arrange);
+		 }*/
+		
+		List<ExamArrange> arranges = examArrangeMapper.selectByExampleSelective(new ExamArrange(null,1,1), null);
 		 for(ExamArrange arrange:arranges) {
 			 System.out.println(arrange);
 		 }

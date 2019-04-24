@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Insert title here</title>
+<title>今天的考试</title>
 
 <style type="text/css">
 .container {
@@ -54,7 +54,7 @@
 						
 					</p>
 					<p>
-						<a class="btn" href="student_toExamDetail?eId=${exam.eId }&index=${st.count}"><font class="font">浏览</font></a>
+						<a class="btn" href="student_begin_exam?eId=${exam.eId }&stuId=${student.stuId}"><font class="font">参加考试</font></a>
 					</p>
 				</div>
 			</c:forEach>

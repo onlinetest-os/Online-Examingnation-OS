@@ -49,10 +49,10 @@ public class PathHelper {
 	 * @param tName
 	 * @return
 	 */
-	public static String getStudentPaperAnwserPath(String stuNumebr
+	public static String getStudentPaperAnwserPath(String stuNumber
 			,String stuName) {
 		StringBuilder sbPath = new StringBuilder();
-		sbPath.append(stuNumebr).append("_")
+		sbPath.append(stuNumber).append("_")
 				.append(stuName).append(File.separator);
 				
 		return sbPath.toString();
