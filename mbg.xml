@@ -15,7 +15,7 @@
 
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
 			connectionURL="jdbc:mysql://58.87.113.82:3306/online_exam_ms"
-			userId="root" password="root">
+			userId="root" password="phion_1998!root.">
 		</jdbcConnection>
 
 		<javaTypeResolver>

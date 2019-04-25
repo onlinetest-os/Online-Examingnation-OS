@@ -53,13 +53,12 @@
 						<p>
 							<a class="btn" href="teacher_t_examEdit"><font class="font">编辑</font></a>
 							<a class="btn" href="teacher_t_stuList?eId=${exam.eId }"><font class="font">学生列表</font></a>
-							<button class="btn">开始</button>
 							<input class="btn" type="submit" value="删除">
 						</p>
 						</form>
 					</div>
 				</c:forEach>
 			</c:if>
-		
+	</div>
 </body>
 </html>

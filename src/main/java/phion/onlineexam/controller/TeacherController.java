@@ -122,7 +122,16 @@ public class TeacherController {
 	 * 新建考试
 	 */
 	@RequestMapping("/teacher_t_newExam")
-	public String toPageNewExam() {
+	public String toPageNewExam(HttpServletRequest request,Model model) {
+		String type = request.getParameter("type");
+		String eId = request.getParameter("eId");
+		System.out.println("type:"+type);
+		if(type.equals("edit")) {
+			model.addAttribute("isEdit", true);
+			model.addAttribute("eId",Integer.parseInt(eId));
+		}else if(type.equals("new")) {
+			//do nothing
+		}
 		return "teacher/t_newExam";
 	}
 	
@@ -162,7 +171,13 @@ public class TeacherController {
 	 * 我的考试
 	 */
 	@RequestMapping("/teacher_t_examListMine")
-	public String toPageExamListMine() {
+	public String toPageExamListMine(HttpSession session,Model model) {
+		//1、查询该账号老师创建的考试
+		Teacher teacher = (Teacher) session.getAttribute("teacher");
+		List<Exam> exams = examService.queryExamWithExamInfo(new Exam(null,teacher.getTeaId(),null));
+		model.addAttribute("exams", exams);
+		List<Map<String, Object>> examsInfos = DataChangeUtil.getSimpleExams(exams);
+		model.addAttribute("examsInfos", examsInfos);
 		return "teacher/t_examListMine";
 	}
 	
@@ -172,13 +187,7 @@ public class TeacherController {
 							
 	 */
 	
-	/**
-	 * 编辑考试
-	 */
-	@RequestMapping("/teacher_t_examEdit")
-	public String toPageExamEdit() {
-		return "teacher/t_examEdit";
-	}
+
 	
 	/**
 	 * 学生管理
@@ -242,7 +251,7 @@ public class TeacherController {
 	 */
 	@RequestMapping("/teacher_save_student")
 	@ResponseBody
-	public Msg checkStudent(@Valid Student student,BindingResult result,Integer eId) {
+	public Msg saveStudent(@Valid Student student,BindingResult result,Integer eId) {
 		if(result.hasErrors()){
 			//校验失败，应该返回失败，在模态框中显示校验失败的错误信息
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -494,16 +503,24 @@ public class TeacherController {
         //教师姓名
         String teaName = teacher.getTeaName();
         
-        
-
+        String isEdit = request.getParameter("isEdit");
+        System.out.println("isEdit:"+isEdit);
 
     	//保存信息到数据库
     	Exam exam= new Exam(null,eName,teaId,DateUtil.toDate(startTime)
     			,DateUtil.toDate(endTime),null,null,
     			StaticResources.READY_EXAM,null,null);
-    	examService.addExam(exam);
-    	exam = examService.queryExamWithExamInfo(exam).get(0);
-    	//考试id
+    	if(!isEdit.equals("true")) {
+    		examService.addExam(exam);
+    		exam = examService.queryExamWithExamInfo(exam).get(0);
+    	}else {
+    		String eIdStr = request.getParameter("eId");
+    		Integer eId = Integer.parseInt(eIdStr);
+    		System.out.println(eId);
+    		exam.seteId(eId);
+    		examService.updateExam(exam);
+    	}
+    	//考试id,创建考试时要先插入数据库才会自动生成id
     	Integer eId = exam.geteId();
     	//上传试卷
     	String paperPath = PathHelper.getPaperPath(eId,teaId,

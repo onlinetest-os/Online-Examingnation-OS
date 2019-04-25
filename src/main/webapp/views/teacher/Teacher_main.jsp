@@ -30,7 +30,7 @@
 			<div class="col-md-2">
 				<ul class="nav nav-list">
 					<li class="nav-header">考前操作</li>
-					<li><a href="teacher_t_newExam" target="main_right">新建考试</a></li>
+					<li><a href="teacher_t_newExam?type=new" target="main_right">新建考试</a></li>
 					<li><a href="teacher_t_draftBox" target="main_right">草稿箱</a></li>
 					<li><a href="teacher_t_examListMine" target="main_right">我的考试</a></li>
 					<li><a href="teacher_t_examListAll" target="main_right">所有考试</a></li>

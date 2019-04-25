@@ -1,6 +1,7 @@
 <%@page import="phion.onlineexam.bean.StaticResources"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
+	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -67,6 +68,10 @@
 </head>
 
 <body>
+
+	<c:if test="${isEdit}">
+		正在编辑考试...
+	</c:if >
 	<div>
 
 		<form action="teacher_check_exam" method="post"
@@ -99,7 +104,6 @@
 			
 			<input type="button" class="items btn" id="save_as_exam_btn" value="发布考试" />
 		</form>
-
 	</div>
 <script type="text/javascript">
 	var formdata;
@@ -112,6 +116,8 @@
 		formdata.append("stuClass",$("#stuClass").val());
 		formdata.append("startTimeStr",$("#startTime").val());
 		formdata.append("endTimeStr",$("#endTime").val());
+		formdata.append("isEdit","${isEdit}");
+		formdata.append("eId","${eId}")
 		//formdata.append("studentOrder");
 		//2、验证并保存考试
 		$.ajax({

@@ -36,13 +36,25 @@ public class Exam {
 		super();
 		this.eId = eId;
 	}
+    
+    
+    /**
+     * 可以方便的根据教师id,考试转态查询
+     * @param eId
+     * @param teaId
+     */
+	public Exam(Integer eId, Integer teaId,String status) {
+		super();
+		this.eId = eId;
+		this.teaId = teaId;
+		this.status = status;
+	}
 
 
 	public Exam(Date startTime) {
 		super();
 		this.startTime = startTime;
 	}
-
 
 
 	public Exam(String status) {
