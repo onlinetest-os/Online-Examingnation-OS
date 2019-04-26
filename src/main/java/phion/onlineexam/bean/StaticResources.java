@@ -47,4 +47,10 @@ public class StaticResources {
 	
 	//默认管理员密码
 	public static String ADMIN_PASSWORD = "admin";
+	
+	//考试已下载
+	public static int IS_DOWNLOAD = 1;
+	
+	//考试未下载
+	public static int IS_NOT_DOWNLOAD = 0;
 }

@@ -21,6 +21,8 @@ import phion.onlineexam.bean.Msg;
  *
  */
 public class FileHelper {
+	
+	
 	 /**
 	  * 文件上传功能
     * @param file
@@ -72,4 +74,49 @@ public class FileHelper {
        }
        out.close();
    }
+   
+   
+   /**
+     * 删除某个路径下的文件与文件夹
+    * 
+    */
+   public static void deleteFile(HttpServletRequest request, String path) {
+	   String absPath = request.getSession().getServletContext().getRealPath(path);
+
+	   System.out.println("absPath:"+absPath);
+	   File file = new File(absPath);
+	   cycleDelete(file);
+   }
+   /**
+    * 循环删除文件或文件夹
+    * @param file
+    * 
+    */
+   public static void cycleDelete(File file) {
+		if(!file.exists()) {
+			System.out.println("文件不存在!");
+		}
+		if(file.isFile()) {
+			System.out.println("文件："+file.getPath());
+			file.delete();
+			System.out.println("----删除文件："+file.getName()+"------");
+		}
+		if(file.isDirectory()) {
+			System.out.println("文件夹："+file.getPath());
+			File[] fs = file.listFiles();
+			for(File f : fs) {
+				cycleDelete(f);
+			}
+			if(file.delete()) {
+				System.out.println("----删除文件夹："+file.getName()+"------");
+			}else {
+				System.out.println("文件夹删除失败");
+			}
+		}
+	}
+   	
+   public static void main(String[] args) {
+	   
+   }
+   
 }

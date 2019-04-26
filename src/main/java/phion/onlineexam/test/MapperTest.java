@@ -80,14 +80,14 @@ public class MapperTest {
 //		examMapper.insertSelective(new Exam(null, null,null, d1 , d2, null, null, StaticResources.CREATING_EXAM, null, null));
 		 
 		
-		/*//主键查询考试，带考试信息
-		Exam exam = examMapper.selectByPrimaryKeyWithExamInfo(1);
-		System.out.println(exam.toString());
+		//主键查询考试，带考试信息
+		/*Exam exam = examMapper.selectByPrimaryKeyWithExamInfo(1);
+		System.out.println(exam.toString());*/
 		//主键查询所有考试，带考试信息
 		List<Exam> exams = examMapper.selectByExampleWithExamInfo(null);
 		for(Exam e : exams) {
 			System.out.println(e);
-		}*/
+		}
 		
 		/*//有选择的查询考试
 		List<Exam> exams = examMapper.selectWithExamInfoSelective(new Exam(null, null,
@@ -99,13 +99,13 @@ public class MapperTest {
 		Exam e = examMapper.selectByPrimaryKeyWithStudent(1);
 		
 		System.out.println(e.getStudents().size());*/
-		
+		/*
 		List<Exam> exams = examMapper.selectByExample(null);
 		for(Exam e : exams) {
 			Date startDate = e.getStartTime();
 			LocalDateTime localDate = DateUtil.toLocalDateTime(startDate);
 			System.out.println(localDate);
-		}
+		}*/
 	}
 	
 	
@@ -176,4 +176,23 @@ public class MapperTest {
 			 System.out.println(arrange);
 		 }
 	}
+	
+	/**
+	 * 测试考试信息表的操作
+	 */
+	//@Test
+	public void examInfoMapperTest() {
+		//补全所有考试的考试安排
+		ExamInfoMapper mapper = sqlSession.getMapper(ExamInfoMapper.class);
+		List<Exam> exams = examMapper.selectByExample(null);
+		for(Exam e:exams) {
+			int eId = e.geteId();
+			ExamInfo info = mapper.selectByExamID(eId);
+			if(info==null) {
+				mapper.insert(new ExamInfo(null,eId));
+			}
+		}
+		System.out.println("插入完成！");
+	}
+	
 }

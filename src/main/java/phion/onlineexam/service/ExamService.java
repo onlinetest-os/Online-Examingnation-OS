@@ -23,6 +23,13 @@ public interface ExamService {
 	 */
 	public List<Exam> queryExamWithExamInfo(Exam exam);
 	
+	/**
+	 * 用考试Id，做有选择的查询,附带考试信息
+	 * @param exam
+	 * @return
+	 */
+	public Exam queryExamWithExamInfoByEId(Integer eId);
+	
 
 	/**
 	 * 根据主键查询考试，并带有学生信息 

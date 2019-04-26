@@ -203,32 +203,35 @@
 	<select id="selectWithExamInfoSelective"
 		parameterType="phion.onlineexam.bean.Exam"
 		resultMap="WithExamInfoResultMap">
-		select * from tb_exam
+		select 
+		<include refid="With_Exam_Info_Column_List" />
+		from tb_exam e
+		left join tb_exam_info ei on e.`e_id` = ei.`e_id`
 		<trim prefix="WHERE" prefixOverrides="AND|OR">
 			<if test="eId != null">
-				and e_id = #{eId,jdbcType=INTEGER}
+				and e.e_id = #{eId,jdbcType=INTEGER}
 			</if>
 			<if test="eName != null">
-				and e_name = #{eName,jdbcType=INTEGER}
+				and e.e_name = #{eName,jdbcType=INTEGER}
 			</if>
 			<if test="teaId != null">
-				and tea_id = #{teaId,jdbcType=INTEGER}
+				and e.tea_id = #{teaId,jdbcType=INTEGER}
 			</if>
 			<if test="startTime != null">
-				and start_time = #{startTime,jdbcType=TIMESTAMP}
+				and e.start_time = #{startTime,jdbcType=TIMESTAMP}
 			</if>
 			<if test="endTime != null">
-				and end_time = #{endTime,jdbcType=TIMESTAMP}
+				and e.end_time = #{endTime,jdbcType=TIMESTAMP}
 			</if>
 			<if test="paperPath != null">
-				and paper_path = #{paperPath,jdbcType=VARCHAR}
+				and e.paper_path = #{paperPath,jdbcType=VARCHAR}
 			</if>
 			<if test="paperAnwserPath != null">
-				and paper_anwser_path =
+				and e.paper_anwser_path =
 				#{paperAnwserPath,jdbcType=VARCHAR}
 			</if>
 			<if test="status != null">
-				and status = #{status,jdbcType=VARCHAR}
+				and e.status = #{status,jdbcType=VARCHAR}
 			</if>
 		</trim>
 	</select>

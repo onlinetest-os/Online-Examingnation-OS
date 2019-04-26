@@ -10,8 +10,29 @@ public class ExamInfo {
     private Integer isDownload;
 
     private String info;
+    
 
-    public Integer getInId() {
+    public ExamInfo() {
+		super();
+	}
+    
+
+	public ExamInfo(Integer inId, Integer eId) {
+		super();
+		this.inId = inId;
+		this.eId = eId;
+	}
+
+	public ExamInfo(Integer inId, Integer eId, Integer allNumber, Integer isDownload, String info) {
+		super();
+		this.inId = inId;
+		this.eId = eId;
+		this.allNumber = allNumber;
+		this.isDownload = isDownload;
+		this.info = info;
+	}
+
+	public Integer getInId() {
         return inId;
     }
 

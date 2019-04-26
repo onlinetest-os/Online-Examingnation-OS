@@ -39,7 +39,7 @@
 	<div class="container">
 		
 			<c:if test="${exams==null}">
-				<div>今天暂无考试！</div>
+				<div>暂无考试！</div>
 			</c:if>
 			<c:if test="${exams!=null}" >
 				<c:forEach items="${examsInfos}" var="exam" varStatus="st">
@@ -51,9 +51,7 @@
 							${exam.startTime}到${exam.endTime}
 						</p>
 						<p>
-							<a class="btn" href="teacher_t_examEdit"><font class="font">编辑</font></a>
-							<a class="btn" href="teacher_t_stuList?eId=${exam.eId }"><font class="font">学生列表</font></a>
-							<input class="btn" type="submit" value="删除">
+
 						</p>
 						</form>
 					</div>

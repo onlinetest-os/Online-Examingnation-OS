@@ -66,4 +66,9 @@ public class ExamServiceImpl implements ExamService{
 	public Exam queryById(Integer eId) {
 		return selectByPrimaryKey(eId);
 	}
+
+	@Override
+	public Exam queryExamWithExamInfoByEId(Integer eId) {
+		return queryExamWithExamInfo(new Exam(eId)).get(0);
+	}
 }

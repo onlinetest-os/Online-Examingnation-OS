@@ -9,7 +9,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.xml.transform.sax.SAXTransformerFactory;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,11 +28,13 @@ import com.github.pagehelper.PageInfo;
 
 import phion.onlineexam.bean.Exam;
 import phion.onlineexam.bean.ExamArrange;
+import phion.onlineexam.bean.ExamInfo;
 import phion.onlineexam.bean.Msg;
 import phion.onlineexam.bean.StaticResources;
 import phion.onlineexam.bean.Student;
 import phion.onlineexam.bean.Teacher;
 import phion.onlineexam.service.ExamArrangeService;
+import phion.onlineexam.service.ExamInfoService;
 import phion.onlineexam.service.ExamService;
 import phion.onlineexam.service.StudentService;
 import phion.onlineexam.service.TeacherService;
@@ -54,6 +58,9 @@ public class TeacherController {
 	
 	@Autowired
 	ExamArrangeService examArrangeService;
+	
+	@Autowired
+	ExamInfoService examInfoService;
 
 	/**
 	 * 教师登录
@@ -164,6 +171,7 @@ public class TeacherController {
 			model.addAttribute("exams", exams);
 		}
 		model.addAttribute("exams", exams);
+		
 		return "teacher/t_examListAll";
 	}
 	
@@ -176,10 +184,14 @@ public class TeacherController {
 		Teacher teacher = (Teacher) session.getAttribute("teacher");
 		List<Exam> exams = examService.queryExamWithExamInfo(new Exam(null,teacher.getTeaId(),null));
 		model.addAttribute("exams", exams);
+		
 		List<Map<String, Object>> examsInfos = DataChangeUtil.getSimpleExams(exams);
 		model.addAttribute("examsInfos", examsInfos);
+		
 		return "teacher/t_examListMine";
 	}
+	
+	
 	
 	/*
 	 * <a class="btn" href="teacher_t_examEdit"><font class="font">编辑</font></a>
@@ -418,6 +430,52 @@ public class TeacherController {
 	}
 	
 	
+	/**
+	 * 清理考试
+	 * 答案下载完成后（is_download为true），
+	 * 教师如果有权限，可以清理考试，
+	 * 清理包括答案与试卷，答案与试卷。
+	 */
+	@RequestMapping("teacher_clear_exam")
+	@ResponseBody
+	public Msg clearExam(HttpServletRequest request,Integer eId) {
+		System.out.println("清理考试中...");
+		Exam exam = examService.queryExamWithExamInfoByEId(eId);
+		//1、判断是否已下载 
+		int isDownload = StaticResources.IS_NOT_DOWNLOAD;
+		ExamInfo info = null;
+		if(exam.getExamInfo()!=null) {
+			info = exam.getExamInfo();
+			System.out.println(eId);
+			System.out.println(info);
+			isDownload = info.getIsDownload();
+			if(isDownload==StaticResources.IS_NOT_DOWNLOAD)
+				return Msg.fail().setMsg("考试还未下载，不能清理！");
+		}
+		//2、判断是否有权限清理
+		//读取配置文件
+		boolean havePower = Boolean.TRUE;
+		if(!havePower) return Msg.fail().setMsg("没有权限删除，请联系管理员！");
+		
+		//3、清理答案与试卷
+		String paperAnwserPath = exam.getPaperAnwserPath();
+		String paperPath = exam.getPaperPath();
+		System.out.println("答案路径："+paperAnwserPath);
+		System.out.println("试卷路径："+paperPath);
+		
+		FileHelper.deleteFile(request, paperAnwserPath);
+		FileHelper.deleteFile(request, paperPath);
+		
+		
+		return Msg.success().setMsg("清理完成！");
+	}
+	
+	
+	/**
+	 * 删除考试
+	 */
+	
+	
 
 	/**
 	 * 其他事务
@@ -469,6 +527,9 @@ public class TeacherController {
 	
 	/**
 	 * 保存考试
+	 * 1、保存考试，包括考试表的信息，
+	 * 2、同时插入学生信息到学生表与考试安排表
+	 * 3、创建于考试表对应的考试信息表记录
 	 */
 	@RequestMapping("/teacher_save_exam")
 	@ResponseBody
@@ -511,9 +572,11 @@ public class TeacherController {
     			,DateUtil.toDate(endTime),null,null,
     			StaticResources.READY_EXAM,null,null);
     	if(!isEdit.equals("true")) {
+    		//新建考试
     		examService.addExam(exam);
     		exam = examService.queryExamWithExamInfo(exam).get(0);
     	}else {
+    		//更新考试
     		String eIdStr = request.getParameter("eId");
     		Integer eId = Integer.parseInt(eIdStr);
     		System.out.println(eId);
@@ -533,9 +596,12 @@ public class TeacherController {
     	//更新考试信息	
     	examService.updateExam(new Exam(eId,paperPath,paparAnwserPath));
         
-    	//解析学生名单，并保存到学生表
+    	//生成考试安排表记录
+    	examInfoService.addExamInfo(new ExamInfo(null,eId));
+    	
+    	//解析学生名单，并保存到学生表，考试安排表
         parseStudentOrder(studentOrder);
-    
+          
         return Msg.success().setMsg("创建考试成功！");
 	}
 
