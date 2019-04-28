@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -46,20 +47,22 @@ display:none;
 	padding: 5px;
 }
 </style>
+
 </head>
 <body>
 
-	<div class="bar">
+	<c:if test="${allNum!=null}">
+		<div class="bar">
 		<h3>在线比例</h3>
 		<div class="progress">
 			<div
 				class="progress-bar progress-bar-info progress-bar-striped active"
-				role="progressbar" aria-valuenow="60" aria-valuemin="0"
-				aria-valuemax="100" style="width: 60%">
-				50
+				role="progressbar" aria-valuenow="${submitNum}" aria-valuemin="0"
+				aria-valuemax="${allNum}" style="width: ${onlineNum }%">
 			</div>
 		</div>
 
+	在线：${onlineNum }人 &nbsp; 离线：${allNum-onlineNum }人
 	</div>
 
 	<div class="bar">
@@ -67,28 +70,50 @@ display:none;
 		<div class="progress">
 			<div
 				class="progress-bar progress-bar-info progress-bar-striped active"
-				role="progressbar" aria-valuenow="60" aria-valuemin="0"
-				aria-valuemax="100" style="width: 60%">
-				60
+				role="progressbar" aria-valuenow="${submitNum}" aria-valuemin="0"
+				aria-valuemax="${allNum}" style="width: ${submitNum}%">
+				
 			</div>
 		</div>
-
+	已提交：${submitNum}人 &nbsp; 未提交：${allNum-submitNum }人
 	</div>
 
 
 	<div class="container">
 		<p class="items btn">
-			<a style="color: white;" href="#">开始考试</a>
+			<a style="color: white;"  id="startBtn">开始考试</a>
 		</p>
 		<p class="items btn">
-			<a style="color: white;" href="#">结束考试</a>
+			<a style="color: white;"  id="endBtn">结束考试</a>
 		</p>
 		<p class="items btn">
-			<a style="color: white;" href="#">登录名单</a>
+			<a style="color: white;" href="teacher_showLoginOrder?eId=${eId}" 
+			id="loginOrderBtn">登录名单</a>
 		</p>
 		<p class="items btn">
-			<a style="color: white;" href="#">提交名单</a>
+			<a style="color: white;" href="teacher_showSubmitOrder?eId=${eId}" 
+			id="submitOrderBtn">提交名单</a>
 		</p>
 	</div>
+	</c:if> 
+	<script type="text/javascript">
+		//开始考试
+		$("#startBtn").click(function() {
+			alert("start");
+		});
+		//结束考试
+		$("#endBtn").click(function() {
+			alert("end");
+		});
+		//登录名单
+		$("#loginOrderBtn").click(function() {
+			//alert("loginOrder");
+		});
+		//提交名单
+		$("#submitOrderBtn").click(function() {
+			//alert("submitOrder");
+		});
+	</script>
+	
 </body>
 </html>

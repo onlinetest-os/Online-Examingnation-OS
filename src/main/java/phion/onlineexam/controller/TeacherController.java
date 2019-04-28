@@ -225,7 +225,7 @@ public class TeacherController {
 	@RequestMapping("/teacher_get_students")
 	@ResponseBody
 	public Msg getStudents(@RequestParam(value="pn",defaultValue="1")Integer pn,
-			Integer eId) {
+			Integer eId,HttpServletRequest request) {
 		System.out.println("访问查询学生");
 		//Exam exam = examService.selectByPrimaryKeyWithStudent(eId);
 		Map<String, Object> map = new HashMap<>();
@@ -233,11 +233,34 @@ public class TeacherController {
 		//引入Pagehelper
 		//在查询之前只需要调用,传入页码，以及每页的大小
 		PageHelper.startPage(pn,5);
+		
+		String type = request.getParameter("type");
+		List<Student> students =null;
+		
 		//startPage后面紧跟的查询就是一个分页查询
-		List<Student> students = studentService.queryStudentByEId(eId);
-		for(Student student:students) {
-			System.out.println(student);
+		//此处判断查询类型
+		switch(type) {
+			case "notSubmited":
+				System.out.println("notSubmited:"+type);
+				students = studentService.queryStudentByEIdWithNullCommitinfo(eId);
+				break;
+			case "submited":
+				System.out.println("submited:"+type);
+				students = studentService.queryStudentByEIdWithNotNullCommitinfo(eId);
+				break;
+			case "online":
+				System.out.println("online:"+type);
+				students = studentService.queryStudentByEIdWithNotNullIp(eId);
+				break;
+			case "outline":
+				System.out.println("outline:"+type);
+				students = studentService.queryStudentByEIdWithNullIp(eId);
+				break;
+			default:
+				students = studentService.queryStudentByEId(eId);
 		}
+		System.out.println("type:"+type);
+		System.out.println("eId:"+eId);
 		// 使用pageInfo包装查询后的结果，只需要将pageInfo交给页面就行了。
 		// 封装了详细的分页信息,包括有我们查询出来的数据，传入连续显示的页数
 		PageInfo<Student> page = new PageInfo<Student>(students,5); 
@@ -353,11 +376,104 @@ public class TeacherController {
 	
 	/**
 	 *查看考试 页面
+	 *教师可在考试期间查看考试情况，
+	 *包括应考试学生数，
+	 *已登录学生数和未登录学生数，及详细情况。
+	 *已提交和未提交学生数及详细情况。
 	 */
 	@RequestMapping("/teacher_t_viewExam")
-	public String toPageViewExam() {
+	public String toPageViewExam(Integer teaId,Model model) {
+		//传入的信息
+		Map<String ,Object> result = new HashMap<>();
+		
+		//考试Id
+		Integer eId;
+		
+		//查询当前考试
+		List<Exam> exams = examService.queryExamWithExamInfo
+				(new Exam(null,teaId,StaticResources.RUNNING_EXAM));
+		if(exams.size()<=0) {
+			result.put("allNum", "");
+			model.addAllAttributes(result);
+			return "teacher/t_viewExam";
+		}
+		eId = exams.get(0).geteId();
+		
+		//学生总数
+		int allNum = 0;
+		//在线人数
+		int onlineNum = 0;
+		//提交人数
+		int submitNum = 0;
+		
+		//本场考试全体考生
+		Exam exam = examService.selectByPrimaryKeyWithStudent(eId);
+		List<Student> students = exam.getStudents();
+		
+		//考试信息
+		ExamInfo info = examInfoService.queryExamInfoByeId(eId);
+		allNum = info.getAllNumber();
+		
+		//如果考试信息表未记录，则更新考试信息表
+		if(allNum == 0) {
+			allNum = students.size();
+			//更新
+			info.setAllNumber(allNum);
+			examInfoService.updateExamBySelective(info);
+		}
+		
+		//查询在线人数与提交人数
+		for(Student s:students) {
+			if(s.getIp()!=null)
+				onlineNum++;
+			if(s.getCommitinfo()!=null)
+				submitNum++;
+		}
+		
+		result.put("allNum", allNum);
+		result.put("onlineNum", onlineNum);
+		result.put("submitNum", submitNum);
+		result.put("eId", eId);
+		//返回给视图
+		model.addAllAttributes(result);
+		
 		return "teacher/t_viewExam";
 	}
+	/**
+	 * teacher_start_exam
+	 * 开始考试
+	 */
+	
+	
+	/**
+	 * teacher_end_exam
+	 * 结束考试
+	 */
+	
+	
+	/**
+	 * teacher_showLoginOrder
+	 * 查看登录名单
+	 */
+	@RequestMapping("teacher_showLoginOrder")
+	public String toPageShowLoginOrder(Integer eId,Model model) {
+		model.addAttribute("eId",eId );
+		System.out.println(eId);
+		return "teacher/t_showLoginOrder";
+	}
+	
+	
+	/**
+	 * teacher_showLoginOrder
+	 * 查看提交名单
+	 */
+	@RequestMapping("teacher_showSubmitOrder")
+	public String toPageShowSubmitOrder(Integer eId,Model model) {
+		model.addAttribute("eId",eId );
+		System.out.println(eId);
+		return "teacher/t_showSubmitOrder";
+	}
+	
 	
 	/**
 	 *添加学生页面
@@ -366,6 +482,7 @@ public class TeacherController {
 	public String toPageAddStudent() {
 		return "teacher/t_addStudent";
 	}
+	
 	/**
 	 *通知管理页面
 	 */

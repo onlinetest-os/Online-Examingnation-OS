@@ -38,6 +38,47 @@ public interface StudentMapper {
      */
     List<Student> selectByEId(@Param("eId") Integer eId);
     
+    /**
+     * 根据考试id联合考试安排表有有选择的查询学生
+     * @param record
+     * @param example
+     * @return
+     */
+    List<Student> selectByEIdSelective(@Param("eId") Integer eId,@Param("record") Student record);
+    
+    
+    /**
+     * 根据考试id联合考试安排表查询已提交的学生学生
+     * @param record
+     * @param example
+     * @return
+     */
+    List<Student> selectByEIdWithNotNullCommitinfo(@Param("eId") Integer eId);
+    
+    /**
+     * 根据考试id联合考试安排表查询未提交的学生学生
+     * @param record
+     * @param example
+     * @return
+     */
+    List<Student> selectByEIdWithNullCommitinfo(@Param("eId") Integer eId);
+    
+    /**
+     * 根据考试id联合考试安排表查询已登录的学生学生
+     * @param record
+     * @param example
+     * @return
+     */
+    List<Student> selectByEIdWithNotNullIp(@Param("eId") Integer eId);
+    
+    /**
+     * 根据考试id联合考试安排表查询未登录的学生学生
+     * @param record
+     * @param example
+     * @return
+     */
+    List<Student> selectByEIdWithNullIp(@Param("eId") Integer eId);
+    
     int updateByExampleSelective(@Param("record") Student record, @Param("example") StudentExample example);
 
     int updateByExample(@Param("record") Student record, @Param("example") StudentExample example);

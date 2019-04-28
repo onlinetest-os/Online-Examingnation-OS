@@ -73,4 +73,29 @@ public class StudentServiceImpl implements StudentService{
 		
 	}
 
+	@Override
+	public List<Student> queryStudentByEIdSelective(Integer eId, Student student) {
+		return studentMapper.selectByEIdSelective(eId, student);
+	}
+
+	@Override
+	public List<Student> queryStudentByEIdWithNotNullCommitinfo(Integer eId) {
+		return studentMapper.selectByEIdWithNotNullCommitinfo(eId);
+	}
+
+	@Override
+	public List<Student> queryStudentByEIdWithNullCommitinfo(Integer eId) {
+		return studentMapper.selectByEIdWithNullCommitinfo(eId);
+	}
+
+	@Override
+	public List<Student> queryStudentByEIdWithNotNullIp(Integer eId) {
+		return studentMapper.selectByEIdWithNotNullIp(eId);
+	}
+
+	@Override
+	public List<Student> queryStudentByEIdWithNullIp(Integer eId) {
+		return studentMapper.selectByEIdWithNullIp(eId);
+	}
+
 }

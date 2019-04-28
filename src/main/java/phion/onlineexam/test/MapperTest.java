@@ -121,12 +121,18 @@ public class MapperTest {
 		}
 		System.out.println("批量完成！");*/
 		//按条件查询学生
-		/*List<Student> students = studentMapper.selectBySelective(new Student(null,null,null,"222",null,null,null), null);
+		/*List<Student> students = studentMapper.selectBySelective(new Student(null,null,null,null,null,"",null), null);
 		for(Student s : students) {
 			System.out.println(s);
 		}*/
 		//按考试id查询学生
-		List<Student> students = studentMapper.selectByEId(1);
+		/*List<Student> students = studentMapper.selectByEId(1);
+		for(Student s : students) {
+			System.out.println(s);
+		}*/
+		
+		//按考试id有选择的查询学生
+		List<Student> students = studentMapper.selectByEIdWithNotNullCommitinfo(1);
 		for(Student s : students) {
 			System.out.println(s);
 		}
@@ -156,15 +162,15 @@ public class MapperTest {
 	/**
 	 * 测试ExamArrangeMapper
 	 */
-	@Test
-	public void testExamArrangeMapperCrud() {
-		//插入考试安排到考试1
-		/*ExamArrangeMapper mapper = sqlSession.getMapper(ExamArrangeMapper.class);
-		for(int i = 0 ; i < 100 ; i++) {
-			 mapper.insert(new ExamArrange(null,10+i,1));
+	 //@Test
+	 public void testExamArrangeMapperCrud() {
+		//插入考试安排到考试2
+		ExamArrangeMapper mapper = sqlSession.getMapper(ExamArrangeMapper.class);
+		for(int i = 100 ; i < 200 ; i++) {
+			 mapper.insert(new ExamArrange(null,10+i,2));
 		}
 		System.out.println("批量完成！");
-		*/
+		
 		//查询考试安排
 	/*	List<ExamArrange> arranges = examArrangeMapper.selectByExample(null);
 		 for(ExamArrange arrange:arranges) {
@@ -182,7 +188,7 @@ public class MapperTest {
 	 */
 	//@Test
 	public void examInfoMapperTest() {
-		//补全所有考试的考试安排
+		//补全所有考试的考试信息
 		ExamInfoMapper mapper = sqlSession.getMapper(ExamInfoMapper.class);
 		List<Exam> exams = examMapper.selectByExample(null);
 		for(Exam e:exams) {

@@ -25,6 +25,38 @@ public interface StudentService {
 	 */
 	public List<Student> queryStudentByEId(Integer eId);
 	
+	/**
+	 * 根据考试id查询已提交的学生
+	 * @return
+	 */
+	public List<Student> queryStudentByEIdWithNotNullCommitinfo(Integer eId);
+	
+	/**
+	 * 根据考试id查询未提交的学生
+	 * @return
+	 */
+	public List<Student> queryStudentByEIdWithNullCommitinfo(Integer eId);
+	
+	
+	/**
+	 * 根据考试id查询已登录的学生
+	 * @return
+	 */
+	public List<Student> queryStudentByEIdWithNotNullIp(Integer eId);
+	
+	/**
+	 * 根据考试id查询未登录的学生
+	 * @return
+	 */
+	public List<Student> queryStudentByEIdWithNullIp(Integer eId);
+	
+	
+	/**
+	 * 根据考试id有选择的查询学生
+	 * @return
+	 */
+	public List<Student> queryStudentByEIdSelective(Integer eId,Student student);
+	
 	
 	/**
 	 * 解除学生ip锁定

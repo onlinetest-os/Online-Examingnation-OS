@@ -1,85 +1,93 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-	pageEncoding="utf-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+    pageEncoding="utf-8"%>
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
 <title>Insert title here</title>
+<link href="${APP_PATH}/static/assets/css/core.css" rel="stylesheet" type="text/css">
+<link href="${APP_PATH}/static/assets/css/icons.css" rel="stylesheet" type="text/css">
+<link href="${APP_PATH}/static/assets/css/components.css" rel="stylesheet" type="text/css">
+<link href="${APP_PATH}/static/assets/css/pages.css" rel="stylesheet" type="text/css">
+<link href="${APP_PATH}/static/assets/css/menu.css" rel="stylesheet" type="text/css">
+<link href="${APP_PATH}/static/assets/css/responsive.css" rel="stylesheet" type="text/css">
+
+<script src="${APP_PATH}/static/assets/js/modernizr.min.js"></script>
+
 <link href="${APP_PATH }/static/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 <script src="${APP_PATH }/static/assets/js/jquery.min.js"></script>
 <script src="${APP_PATH }/static/assets/js/bootstrap.min.js"></script>
-<style type="text/css">
-.btn {
-	color: white;
-	text-decoration: none;
-	cusor: pointer;
-	background: #0066ff;
-	border-radius: 4px;
-	padding: 5px;
-}
-ul.pagination {
-	display: inline-block;
-	padding: 0;
-	margin: 0;
-}
-
-ul.pagination li {
-	display: inline;
-}
-
-ul.pagination li a {
-	color: black;
-	float: left;
-	padding: 8px 16px;
-	text-decoration: none;
-}
-</style>
 </head>
 <body>
-	<!-- 搭建显示页面 -->
-	<div class="container">
-		<!-- 标题 -->
-		<!-- 按钮 -->
-		<!-- 显示表格数据 -->
-		<div class="row">
-			<div class="col-md-12">
-				<table class="table table-hover" id="stus_table">
-					<thead>
-						<tr>
-							<th><input type="checkbox" id="check_all" /></th>
-							<th>#</th>
-							<th>姓名</th>
-							<th>学号</th>
-							<th>班级</th>
-							<th>ip</th>
-							<th>操作</th>
-						</tr>
-					</thead>
-					<tbody>
-
-					</tbody>
-				</table>
+<div class="col-md-6">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">提交名单</h3>
+        </div>
+        <div class="panel-body">
+	        <!-- 标题 -->
+			<!-- 按钮 -->
+			<div class="row">
+				<div class="col-md-4 col-md-offset-8">
+					已提交<input type='checkbox' class="check_box" id="submitedCbx"/>
+					未提交<input type='checkbox' class="check_box" id="notSubmitedCbx"/>
+				</div>
 			</div>
-		</div>
+			<!-- 显示表格数据 -->
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <table id="stus_table" class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>姓名</th>
+                                <th>学号</th>
+                                <th>班级</th>
+                                <th>状态</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- 显示分页信息 -->
+			<div class="row">
+				<!--分页文字信息  -->
+				<div class="col-md-6" id="page_info_area"></div>
+				<!-- 分页条信息 -->
+				<div class="col-md-6" id="page_nav_area"></div>
+			</div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
 
-		<!-- 显示分页信息 -->
-		<div class="row">
-			<!--分页文字信息  -->
-			<div class="col-md-6" id="page_info_area"></div>
-			<!-- 分页条信息 -->
-			<div class="col-md-6" id="page_nav_area"></div>
-		</div>
-	<script type="text/javascript">
+		
 		var totalRecord,currentPage;
+		var type;
 		//1、页面加载完成以后，直接去发送ajax请求,要到分页数据
 		$(function(){
 			//去首页
 			to_page(1);
 		});
-		//此处暂时只获取id为1的考试的学生用于测试
+		
 		function to_page(pn){
+			var submited = $("#submitedCbx").prop("checked");
+			var notSubmited=$("#notSubmitedCbx").prop("checked");
+			if(submited && !notSubmited){
+				type = "submited";
+			}else if(!submited && notSubmited){
+				type = "notSubmited";
+			}else{
+				type="all";
+			}
+			//alert("${eId}");
+			alert(type);
 			$.ajax({
-				url:"${APP_PATH}/teacher_get_students?eId=1",
+				url:"${APP_PATH}/teacher_get_students?eId=${eId}&type="+type,
 				data:"pn="+pn,
 				type:"GET",
 				success:function(result){
@@ -99,33 +107,39 @@ ul.pagination li a {
 			$("#stus_table tbody").empty();
 			var stus = result.extend.pageInfo.list;
 			$.each(stus,function(index,item){
-				var checkBoxTd = $("<td><input type='checkbox' class='check_item'/></td>");
 				var stuIdTd = $("<td></td>").append(item.stuId);
 				var stuNameTd = $("<td></td>").append(item.stuName);
 				var stuNumberTd = $("<td></td>").append(item.stuNumber);
 				var stuClassTd = $("<td></td>").append(item.stuClass);
-				var ipTd = $("<td></td>").append(item.ip);
-				/**
-				<button class="">
-				<span class="" aria-hidden="true"></span>
-									编辑
-								</button>
-				*/
-				var editBtn = $("<button></button>").addClass("btn btn-primary btn-sm edit_btn")
-								.append($("<span></span>").addClass("glyphicon glyphicon-pencil")).append("解绑");
-				//为解绑 按钮添加一个自定义的属性，来表示当前学生id
-				editBtn.attr("edit-id",item.stuId);
-				var btnTd = $("<td></td>").append(editBtn);
-				//var delBtn = 
+				var commitinfoTd = $("<td></td>").append(item.commitinfo==null?"未提交":"已提交");
+//		 	<tr class="success">
+//	 	         <td>9</td>
+//	 	         <td>Column content</td>
+//	 	         <td>Column content</td>
+//	 	         <td>Column content</td>
+//	 	         <td>提交</td>
+//	       </tr>
 				//append方法执行完成以后还是返回原来的元素
-				$("<tr></tr>").append(checkBoxTd)
+				//alert(item.commitinfo);
+				//alert(item.commitinfo=="");
+				if(item.commitinfo==null){
+					$("<tr></tr>")
 					.append(stuIdTd)
 					.append(stuNameTd)
 					.append(stuNumberTd)
 					.append(stuClassTd)
-					.append(ipTd)
-					.append(btnTd)
+					.append(commitinfoTd)
 					.appendTo("#stus_table tbody");
+				}else{
+					$("<tr></tr>").addClass("success")
+					.append(stuIdTd)
+					.append(stuNameTd)
+					.append(stuNumberTd)
+					.append(stuClassTd)
+					.append(commitinfoTd)
+					.appendTo("#stus_table tbody");
+				}
+				
 			});
 		}
 		//解析显示分页信息
@@ -209,25 +223,10 @@ ul.pagination li a {
 			$(ele).find(".help-block").text("");
 		}
 		
-		//点击解绑，解绑学生ip
-		//1、我们是按钮创建之前就绑定了click，所以绑定不上。
-		//1）、可以在创建按钮的时候绑定。    2）、绑定点击.live()
-		//jquery新版没有live，使用on进行替代
-		$(document).on("click",".edit_btn",function(){
-			/* if($("#ipTd").val()==null||$("#ipTd").val()==undefined){
-				alert("该学生ip未绑定，无需解绑！");
-				return;
-			} */
-			//发送ajax请求，解绑ip
-			$.ajax({
-				url:"${APP_PATH}/teacher_release_student_ip?stuId="+$(this).attr("edit-id"),
-				type:"GET",
-				success:function(result){
-					alert(result.msg);
-					to_page(currentPage);
-				}
-			});
+		$(".check_box").change(function() {
+			to_page(currentPage);
 		});
-	</script>
-</body>
+		
+</script>
+
 </html>

@@ -135,6 +135,93 @@
  	and tea.stu_id = ts.stu_id
   </select>
   
+  
+  <!--根据考试id联合考试安排表查询已提交学生 -->
+	<!-- List<Student> selectByEIdWithNotNullCommitinfo(@Param("eId") Integer eId); -->
+  <select id="selectByEIdWithNotNullCommitinfo" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select 
+	<include refid="From_Exam_Arrange_Column_List" />
+ 	from tb_student ts,tb_exam_arrange tea
+ 	where tea.e_id = #{eId,jdbcType=INTEGER} 
+ 	and tea.stu_id = ts.stu_id
+ 	and ts.commitInfo is not null
+  </select>
+  
+  <!--根据考试id联合考试安排表查询已未提交学生 -->
+	<!-- List<Student> selectByEIdWithNullCommitinfo(@Param("eId") Integer eId); -->
+  <select id="selectByEIdWithNullCommitinfo" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select 
+	<include refid="From_Exam_Arrange_Column_List" />
+ 	from tb_student ts,tb_exam_arrange tea
+ 	where tea.e_id = #{eId,jdbcType=INTEGER} 
+ 	and tea.stu_id = ts.stu_id
+ 	and ts.commitInfo is null
+  </select>
+  
+   <!--根据考试id联合考试安排表查询已登录学生 -->
+	<!-- List<Student> selectByEIdWithNotNullIp(@Param("eId") Integer eId); -->
+  <select id="selectByEIdWithNotNullIp" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select 
+	<include refid="From_Exam_Arrange_Column_List" />
+ 	from tb_student ts,tb_exam_arrange tea
+ 	where tea.e_id = #{eId,jdbcType=INTEGER} 
+ 	and tea.stu_id = ts.stu_id
+ 	and ts.commitInfo is not null
+  </select>
+  
+  <!--根据考试id联合考试安排表查询已未登录学生 -->
+	<!-- List<Student> selectByEIdWithNullIp(@Param("eId") Integer eId); -->
+  <select id="selectByEIdWithNullIp" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select 
+	<include refid="From_Exam_Arrange_Column_List" />
+ 	from tb_student ts,tb_exam_arrange tea
+ 	where tea.e_id = #{eId,jdbcType=INTEGER} 
+ 	and tea.stu_id = ts.stu_id
+ 	and ts.commitInfo is null
+  </select>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <!--根据考试id联合考试安排表有选择的查询学生 -->
+	<!-- List<Student> selectByEIdSelective(@Param("eId") Integer eId,Student record); -->
+  <select id="selectByEIdSelective" parameterType="map" resultMap="BaseResultMap">
+  	select 
+	<include refid="From_Exam_Arrange_Column_List" />
+ 	from tb_student ts,tb_exam_arrange tea
+ 	<trim prefix="where" prefixOverrides="and|or">
+  		<if test="record.stuId != null">
+        and ts.stu_id = #{record.stuId,jdbcType=INTEGER}
+	      </if>
+	      <if test="record.stuNumber != null">
+	        and ts.stu_number = #{record.stuNumber,jdbcType=VARCHAR}
+	      </if>
+	      <if test="record.stuName != null">
+	        and ts.stu_name = #{record.stuName,jdbcType=VARCHAR}
+	      </if>
+	      <if test="record.stuPassword != null">
+	        and ts.stu_password = #{record.stuPassword,jdbcType=VARCHAR}
+	      </if>
+	      <if test="record.ip != null">
+	        and ts.ip = #{record.ip,jdbcType=VARCHAR}
+	      </if>
+	      <if test="record.commitinfo != null">
+	       and  ts.commitInfo = #{record.commitinfo,jdbcType=VARCHAR}
+	      </if>
+	      <if test="record.stuClass != null">
+	        and ts.stu_class = #{record.stuClass,jdbcType=VARCHAR}
+	      </if>
+	    and tea.e_id = #{eId,jdbcType=INTEGER} 
+ 		and tea.stu_id = ts.stu_id
+  </trim>
+  </select>
+  
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tb_student
     where stu_id = #{stuId,jdbcType=INTEGER}
