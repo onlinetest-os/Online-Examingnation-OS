@@ -235,6 +235,10 @@ public class TeacherController {
 		PageHelper.startPage(pn,5);
 		
 		String type = request.getParameter("type");
+		if(type==null) {
+			//默认为查询全部
+			type = "all";
+		}
 		List<Student> students =null;
 		
 		//startPage后面紧跟的查询就是一个分页查询
