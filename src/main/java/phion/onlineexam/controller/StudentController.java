@@ -129,16 +129,24 @@ public class StudentController {
 		return mav;
 	}
 	
-	/**如果考试id和学生id在考试安排表中有记录，学生即可查看考试详情
+	/**如果考试id和学生id在考试安排表中有记录，
+	 * 学生即可查看考试详情
 	 * 如果
 	 * 访问考试详情
 	 */
 	@RequestMapping("/student_begin_exam")
 	public ModelAndView toExamBegin(Integer eId,Integer stuId) {
 		System.out.println("访问考试详情！");
-		Exam exam = examService.queryById(eId);
-		int count = examArrangeService.queryExamArrangeCount(new ExamArrange(null,stuId,eId));
 		ModelAndView mav = new ModelAndView();
+		//查询已经开始的考试
+		Exam exam = examService.queryById(eId);
+		if(!exam.getStatus().equals(StaticResources.RUNNING_EXAM)) {
+			mav.setViewName("student/s_examBegin");
+			return mav;
+		}
+		
+		int count = examArrangeService.queryExamArrangeCount(new ExamArrange(null,stuId,eId));
+		
 		if(count>0) {
 			System.out.println(exam);
 			mav.addObject("exam",exam);
