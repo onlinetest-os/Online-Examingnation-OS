@@ -443,13 +443,34 @@ public class TeacherController {
 	 * teacher_start_exam
 	 * 开始考试
 	 */
+	@RequestMapping("teacher_start_exam")
+	@ResponseBody
+	public Msg startExam(Integer eId) {
+		Exam exam = examService.queryById(eId);
+		
+		//设置状态为开始考试
+		exam.setStatus(StaticResources.RUNNING_EXAM);
+		examService.updateExam(exam);
+		
+		return Msg.success().setMsg("考试开始成功！");
+	}
 	
 	
 	/**
 	 * teacher_end_exam
 	 * 结束考试
 	 */
-	
+	@RequestMapping("teacher_end_exam")
+	@ResponseBody
+	public Msg endExam(Integer eId) {
+		Exam exam = examService.queryById(eId);
+		
+		//设置状态为考完考试
+		exam.setStatus(StaticResources.COMPLETE_EXAM);
+		examService.updateExam(exam);
+		
+		return Msg.success().setMsg("考试结束成功！");
+	}
 	
 	/**
 	 * teacher_showLoginOrder

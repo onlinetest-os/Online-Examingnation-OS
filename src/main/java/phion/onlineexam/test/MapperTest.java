@@ -201,4 +201,15 @@ public class MapperTest {
 		System.out.println("插入完成！");
 	}
 	
+	
+	
+	/**
+	 * 执行一些数据库操作
+	 */
+	@Test
+	public void  mytest() {
+		Exam exam = examMapper.selectByPrimaryKey(1);
+		exam.setStatus(StaticResources.RUNNING_EXAM);
+		examMapper.updateByPrimaryKey(exam);
+	}
 }
