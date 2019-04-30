@@ -36,7 +36,9 @@
 </style>
 </head>
 <body>
-
+		<script type="text/javascript">
+			alert("${examsInfos}");
+		</script>
 
 	<div class="container">
 		<c:if test="${exams==null}">

@@ -55,7 +55,7 @@
 						</p>
 						<p>
 								
-							<a class="btn" href="teacher_t_examEdit"><font class="font">编辑</font></a>
+							<a class="btn" href="teacher_t_newExam?type=edit&eId=${exam.eId }"><font class="font">编辑</font></a>
 							<a class="btn" href="teacher_t_stuList?eId=${exam.eId }"><font class="font">学生列表</font></a>
 							<input  class="deleteBtn btn" type="button" id-attr="${exam.eId }" name-attr="${exam.eName }" value="删除">
 							<input  class="clearBtn btn" type="button" id-attr="${exam.eId }" name-attr="${exam.eName }" value="清理">

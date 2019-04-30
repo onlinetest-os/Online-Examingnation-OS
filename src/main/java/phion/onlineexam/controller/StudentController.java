@@ -114,9 +114,16 @@ public class StudentController {
 //		System.out.println(student);
 //		if(student==null||student.getStuId()==null) return new ModelAndView("redirect:/");
 		List<Exam> exams = examService.queryExamWithExamInfo(new Exam(StaticResources.READY_TODAY_EXAM));
+		List<Exam> nowExams = examService.queryExamWithExamInfo(new Exam(StaticResources.RUNNING_EXAM));
 		List<Map<String , Object>> examsInfos = new ArrayList<Map<String , Object>>();
+		
+		
 		//把简单的经过格式化处理的信息放到界面
 		examsInfos = DataChangeUtil.getSimpleExams(exams);
+		
+		//加入正在进行的考试
+		examsInfos.add(DataChangeUtil.getSimpleExams(nowExams).get(0));
+		
 		
 		ModelAndView mav = new ModelAndView();
 		if(exams.size()>0) {

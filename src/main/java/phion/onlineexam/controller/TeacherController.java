@@ -679,8 +679,8 @@ public class TeacherController {
 			HttpServletRequest request) {
 		System.out.println("------保存考试--------");
 		// 获得原始文件名  
-        String papaerName = paper.getOriginalFilename();  
-        System.out.println("试卷名称:" + papaerName);
+        String paperName = paper.getOriginalFilename();  
+        System.out.println("试卷名称:" + paperName);
         String studentOrderName = studentOrder.getOriginalFilename();  
         System.out.println("学生名单名称:" + studentOrderName);
         
@@ -709,42 +709,88 @@ public class TeacherController {
         String isEdit = request.getParameter("isEdit");
         System.out.println("isEdit:"+isEdit);
 
+        
+        
+        
     	//保存信息到数据库
-    	Exam exam= new Exam(null,eName,teaId,DateUtil.toDate(startTime)
-    			,DateUtil.toDate(endTime),null,null,
-    			StaticResources.READY_EXAM,null,null);
+
     	if(!isEdit.equals("true")) {
     		//新建考试
+        	Exam exam= new Exam(null,eName,teaId,DateUtil.toDate(startTime)
+        			,DateUtil.toDate(endTime),null,null,
+        			StaticResources.READY_EXAM,null,null);
     		examService.addExam(exam);
     		exam = examService.queryExamWithExamInfo(exam).get(0);
+    		
+    		//考试id,创建考试时要先插入数据库才会自动生成id
+        	Integer eId = exam.geteId();
+        	
+        	//如果有试卷
+        	if(!paperName.equals("")) {
+        		
+        		//上传试卷
+            	String paperPath = PathHelper.getPaperPath(eId,teaId,
+            			teaName,stuClass,eName);
+            	boolean result = FileHelper.upload(paper, request, paperPath);
+        		System.out.println("上传结果："+result);
+            	String paparAnwserPath = PathHelper.getPaperAnwserPath(eId, 
+            			teaId, teaName, stuClass, eName);
+        		
+        		//更新考试信息	
+            	examService.updateExam(new Exam(eId,paperPath,paparAnwserPath));
+        	}	
+        	
+        	//生成考试安排表记录
+        	examInfoService.addExamInfo(new ExamInfo(null,eId));
+        	
+        	//如果有学生名单
+        	if(!studentOrderName.equals("")) {
+        		//解析学生名单，并保存到学生表，考试安排表
+                parseStudentOrder(studentOrder);
+        	}
+        	
+        	return Msg.success().setMsg("创建考试成功！");
     	}else {
-    		//更新考试
+
     		String eIdStr = request.getParameter("eId");
     		Integer eId = Integer.parseInt(eIdStr);
     		System.out.println(eId);
-    		exam.seteId(eId);
-    		examService.updateExam(exam);
-    	}
-    	//考试id,创建考试时要先插入数据库才会自动生成id
-    	Integer eId = exam.geteId();
-    	//上传试卷
-    	String paperPath = PathHelper.getPaperPath(eId,teaId,
-    			teaName,stuClass,eName);
-    	boolean result = FileHelper.upload(paper, request, paperPath);
-		System.out.println("上传结果："+result);
-    	String paparAnwserPath = PathHelper.getPaperAnwserPath(eId, 
-    			teaId, teaName, stuClass, eName);
+    		
+    		//更新考试
+    		Exam exam = examService.queryById(eId);
+    		eName = exam.geteName();
+    		
+    		if(!paperName.equals("")) {
+    			//删除原来的试卷
     			
-    	//更新考试信息	
-    	examService.updateExam(new Exam(eId,paperPath,paparAnwserPath));
-        
-    	//生成考试安排表记录
-    	examInfoService.addExamInfo(new ExamInfo(null,eId));
+    			
+    			//上传试卷
+            	String paperPath = PathHelper.getPaperPath(eId,teaId,
+            			teaName,stuClass,eName);
+            	boolean result = FileHelper.upload(paper, request, paperPath);
+        		System.out.println("上传结果："+result);
+            	String paparAnwserPath = PathHelper.getPaperAnwserPath(eId, 
+            			teaId, teaName, stuClass, eName);
+    			
+        		//更新试卷	
+            	examService.updateExam(new Exam(eId,paperPath,paparAnwserPath));
+
+    		}
+    			
+    		//如果有学生名单
+    		if(!studentOrderName.equals("")) {
+    			//删除原来的学生名单
+    			
+        		//解析学生名单，并保存到学生表，考试安排表
+                parseStudentOrder(studentOrder);
+                
+        	}
+    		
+    		return Msg.success().setMsg("更新考试成功！");
+    	}
     	
-    	//解析学生名单，并保存到学生表，考试安排表
-        parseStudentOrder(studentOrder);
-          
-        return Msg.success().setMsg("创建考试成功！");
+         
+        
 	}
 
 	/**
