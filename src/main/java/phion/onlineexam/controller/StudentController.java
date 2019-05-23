@@ -228,7 +228,7 @@ public class StudentController {
 		String path = new StringBuilder().append(papaerAnwserPath)
 										.append(studentAnwserPath)
 										.toString();
-		FileHelper.upload(anwserFile, request, path);
+		FileHelper.upload(anwserFile, request, path,null);
 		return Msg.success().setMsg("上传成功！");
 	}
 	

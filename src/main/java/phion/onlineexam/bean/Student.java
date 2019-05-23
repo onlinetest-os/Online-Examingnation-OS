@@ -21,6 +21,14 @@ public class Student {
 		// TODO Auto-generated constructor stub
 	}
     
+    public Student(String stuNumber, String stuName, String stuClass) {
+		super();
+		this.stuNumber = stuNumber;
+		this.stuName = stuName;
+		this.stuClass = stuClass;
+	}
+
+    
 
     public Student(String stuNumber, String stuName, String ip, String stuClass) {
 		super();

@@ -1,5 +1,6 @@
 package phion.onlineexam.controller;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import javax.validation.Valid;
 import javax.xml.transform.sax.SAXTransformerFactory;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +35,7 @@ import phion.onlineexam.bean.Msg;
 import phion.onlineexam.bean.StaticResources;
 import phion.onlineexam.bean.Student;
 import phion.onlineexam.bean.Teacher;
+import phion.onlineexam.dao.StudentMapper;
 import phion.onlineexam.service.ExamArrangeService;
 import phion.onlineexam.service.ExamInfoService;
 import phion.onlineexam.service.ExamService;
@@ -40,6 +43,7 @@ import phion.onlineexam.service.StudentService;
 import phion.onlineexam.service.TeacherService;
 import phion.onlineexam.utils.DataChangeUtil;
 import phion.onlineexam.utils.DateUtil;
+import phion.onlineexam.utils.ExcelHelper;
 import phion.onlineexam.utils.FileHelper;
 import phion.onlineexam.utils.PathHelper;
 
@@ -715,6 +719,7 @@ public class TeacherController {
     	//保存信息到数据库
 
     	if(!isEdit.equals("true")) {
+    		System.out.println(StaticResources.TEACHERLOG+"新建考试！");
     		//新建考试
         	Exam exam= new Exam(null,eName,teaId,DateUtil.toDate(startTime)
         			,DateUtil.toDate(endTime),null,null,
@@ -731,27 +736,32 @@ public class TeacherController {
         		//上传试卷
             	String paperPath = PathHelper.getPaperPath(eId,teaId,
             			teaName,stuClass,eName);
-            	boolean result = FileHelper.upload(paper, request, paperPath);
+            	boolean result = FileHelper.upload(paper, request, paperPath,StaticResources.NEW_FILE_NAME);
         		System.out.println("上传结果："+result);
             	String paparAnwserPath = PathHelper.getPaperAnwserPath(eId, 
             			teaId, teaName, stuClass, eName);
-        		
         		//更新考试信息	
             	examService.updateExam(new Exam(eId,paperPath,paparAnwserPath));
         	}	
         	
-        	//生成考试安排表记录
-        	examInfoService.addExamInfo(new ExamInfo(null,eId));
+        	ExamInfo info = examInfoService.queryExamInfoByeId(eId);
+        	if(info==null) {
+        		//生成考试安排表记录
+        		examInfoService.addExamInfo(new ExamInfo(null,eId));
+        		System.out.println(StaticResources.TEACHERLOG+"生成考试info！");
+        	}else {
+        		System.out.println(StaticResources.TEACHERLOG+info);
+        	}
         	
         	//如果有学生名单
         	if(!studentOrderName.equals("")) {
         		//解析学生名单，并保存到学生表，考试安排表
-                parseStudentOrder(studentOrder);
+                parseStudentOrder(studentOrder,eId);
         	}
         	
         	return Msg.success().setMsg("创建考试成功！");
     	}else {
-
+    		System.out.println(StaticResources.TEACHERLOG+"更新考试！");
     		String eIdStr = request.getParameter("eId");
     		Integer eId = Integer.parseInt(eIdStr);
     		System.out.println(eId);
@@ -767,7 +777,7 @@ public class TeacherController {
     			//上传试卷
             	String paperPath = PathHelper.getPaperPath(eId,teaId,
             			teaName,stuClass,eName);
-            	boolean result = FileHelper.upload(paper, request, paperPath);
+            	boolean result = FileHelper.upload(paper, request, paperPath,StaticResources.NEW_FILE_NAME);
         		System.out.println("上传结果："+result);
             	String paparAnwserPath = PathHelper.getPaperAnwserPath(eId, 
             			teaId, teaName, stuClass, eName);
@@ -776,13 +786,23 @@ public class TeacherController {
             	examService.updateExam(new Exam(eId,paperPath,paparAnwserPath));
 
     		}
+    		
+    		ExamInfo info = examInfoService.queryExamInfoByeId(eId);
+        	if(info==null) {
+        		//生成考试信息表记录
+        		examInfoService.addExamInfo(new ExamInfo(null,eId));
+        		System.out.println(StaticResources.TEACHERLOG+"生成考试info！");
+        	}else {
+        		System.out.println(StaticResources.TEACHERLOG+info);
+        	}
     			
     		//如果有学生名单
     		if(!studentOrderName.equals("")) {
-    			//删除原来的学生名单
+    			//删除本场考试原来的学生信息
+    			deleteStudentsWithEId(eId);
     			
         		//解析学生名单，并保存到学生表，考试安排表
-                parseStudentOrder(studentOrder);
+                parseStudentOrder(studentOrder,eId);
                 
         	}
     		
@@ -794,13 +814,51 @@ public class TeacherController {
 	}
 
 	/**
+	 * 根据考试id删除所有学生及考试安排表的信息
+	 */
+	private void deleteStudentsWithEId(int eId) {
+		//删除学生表学生
+		List<Student> students = studentService.queryStudentByEId(eId);
+		List<Integer> ids = new ArrayList<>();
+		for(Student s :students) ids.add(s.getStuId());
+		studentService.deleteStudentBatch(ids);
+		
+		//删除考试表信息
+		examArrangeService.deleteExamArrangesByEId(eId);
+	}
+
+	/**
 	 * 解析文件，保存学生到数据库
 	 * @param studentOrder
 	 */
-	public void parseStudentOrder(MultipartFile studentOrder) {
+	public void parseStudentOrder(MultipartFile studentOrder,int eId) {
+		List<Student> students = new ArrayList<Student>();
 		
+		//读入excel,读取学生信息
+		try {
+			students = ExcelHelper.getDataAsStudent(FileHelper.M2F(studentOrder));
+		} catch (IOException e) {
+			System.out.println(StaticResources.TEACHERLOG+"读取学生excel出错！");
+			e.printStackTrace();
+		}
+		
+		if(students.size() == 0) return;
+		
+		List<Integer> stuIds = new ArrayList<>();
+		
+		//插入学生表
+		studentService.addStudentsBatch(students);
+		//插入之后学生才有id
+		for(Student s: students) {
+			stuIds.add(studentService.queryStudent(s).get(0).getStuId());
+		} 
+		
+		//更新考试安排表
+		List<ExamArrange> examArranges = new ArrayList<>();
+		for(Integer stuId: stuIds)
+			examArranges.add(new ExamArrange(null,stuId,eId));
+		examArrangeService.addExamArrangeBatch(examArranges);
 		
 	}
-	
 	
 }

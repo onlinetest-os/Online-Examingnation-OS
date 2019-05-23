@@ -110,8 +110,6 @@
   <select id="selectByExamID" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
     from tb_exam_info
     where e_id = #{eId,jdbcType=INTEGER}
   </select>

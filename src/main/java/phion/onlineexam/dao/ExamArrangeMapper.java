@@ -11,6 +11,11 @@ public interface ExamArrangeMapper {
     int deleteByExample(ExamArrangeExample example);
 
     int deleteByPrimaryKey(Integer arraId);
+    
+    /*
+     * 根据考试id删除信息
+     */
+    int deleteByEId(Integer eId);
 
     int insert(ExamArrange record);
 

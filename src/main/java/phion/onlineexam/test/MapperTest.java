@@ -162,14 +162,14 @@ public class MapperTest {
 	/**
 	 * 测试ExamArrangeMapper
 	 */
-	 //@Test
+	 @Test
 	 public void testExamArrangeMapperCrud() {
 		//插入考试安排到考试2
-		ExamArrangeMapper mapper = sqlSession.getMapper(ExamArrangeMapper.class);
+		/*ExamArrangeMapper mapper = sqlSession.getMapper(ExamArrangeMapper.class);
 		for(int i = 100 ; i < 200 ; i++) {
 			 mapper.insert(new ExamArrange(null,10+i,2));
 		}
-		System.out.println("批量完成！");
+		System.out.println("批量完成！");*/
 		
 		//查询考试安排
 	/*	List<ExamArrange> arranges = examArrangeMapper.selectByExample(null);
@@ -177,11 +177,15 @@ public class MapperTest {
 			 System.out.println(arrange);
 		 }*/
 		
-		List<ExamArrange> arranges = examArrangeMapper.selectByExampleSelective(new ExamArrange(null,1,1), null);
+		/*List<ExamArrange> arranges = examArrangeMapper.selectByExampleSelective(new ExamArrange(null,1,1), null);
 		 for(ExamArrange arrange:arranges) {
 			 System.out.println(arrange);
-		 }
-	}
+		 }*/
+		 
+		//测试根据考试id删除
+		 examArrangeMapper.deleteByEId(3);
+		 System.out.println("删除完成！");
+	 }
 	
 	/**
 	 * 测试考试信息表的操作
@@ -190,7 +194,7 @@ public class MapperTest {
 	public void examInfoMapperTest() {
 		//补全所有考试的考试信息
 		ExamInfoMapper mapper = sqlSession.getMapper(ExamInfoMapper.class);
-		List<Exam> exams = examMapper.selectByExample(null);
+		/*List<Exam> exams = examMapper.selectByExample(null);
 		for(Exam e:exams) {
 			int eId = e.geteId();
 			ExamInfo info = mapper.selectByExamID(eId);
@@ -198,7 +202,10 @@ public class MapperTest {
 				mapper.insert(new ExamInfo(null,eId));
 			}
 		}
-		System.out.println("插入完成！");
+		System.out.println("插入完成！");*/
+		/*ExamInfo info  = mapper.selectByExamID(19);
+		System.out.println(info);*/
+
 	}
 	
 	
@@ -206,16 +213,18 @@ public class MapperTest {
 	/**
 	 * 执行一些数据库操作
 	 */
-	@Test
+	//@Test
 	public void  mytest() {
-		Exam exam = examMapper.selectByPrimaryKey(1);
+		/*Exam exam = examMapper.selectByPrimaryKey(1);
 		exam.setStatus(StaticResources.RUNNING_EXAM);
-		examMapper.updateByPrimaryKey(exam);
+		examMapper.updateByPrimaryKey(exam);*/
 		
 	/*	List<Exam> nowExams = examMapper.selectWithExamInfoSelective
 				(new Exam(StaticResources.RUNNING_EXAM));
 		for(Exam exam:nowExams) {
 			System.out.println(exam);
 		}*/
+		
+		System.out.println(examInfoMapper.selectByExamID(1));
 	}
 }

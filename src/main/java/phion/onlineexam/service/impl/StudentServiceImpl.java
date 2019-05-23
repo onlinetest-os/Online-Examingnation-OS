@@ -2,6 +2,8 @@ package phion.onlineexam.service.impl;
 
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,10 @@ import phion.onlineexam.service.StudentService;
 @Service
 public class StudentServiceImpl implements StudentService{
 	
+
+	@Autowired
+	SqlSession sqlSession;
+	
 	@Autowired
 	StudentMapper studentMapper;
 
@@ -23,7 +29,7 @@ public class StudentServiceImpl implements StudentService{
 	}
 
 	public void removeIPLockFromStudent(Integer StuId) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -31,10 +37,14 @@ public class StudentServiceImpl implements StudentService{
 		studentMapper.insert(student);
 		
 	}
-
+	/**
+	 * 	批量增加学生
+	 */
 	public void addStudentsBatch(List<Student> students) {
-		// TODO Auto-generated method stub
-		
+		StudentMapper mapper = sqlSession.getMapper(StudentMapper.class);
+		for(Student student : students) {
+			mapper.insert(student);
+		}
 	}
 
 	public void updateStudent(Student student) {
@@ -46,7 +56,7 @@ public class StudentServiceImpl implements StudentService{
 		studentMapper.deleteByPrimaryKey(stuId);
 		
 	}
-
+	
 	@Override
 	public List<Student> queryStudentByEId(Integer eId) {
 		return studentMapper.selectByEId(eId);

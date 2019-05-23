@@ -112,16 +112,26 @@
     from tb_exam_arrange
     where arra_id = #{arraId,jdbcType=INTEGER}
   </select>
+  
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tb_exam_arrange
     where arra_id = #{arraId,jdbcType=INTEGER}
   </delete>
+  
+  <!-- int deleteByEId(Integer eId); -->
+  <delete id="deleteByEId" parameterType="java.lang.Integer">
+    delete from tb_exam_arrange
+    where e_id = #{eId,jdbcType=INTEGER}
+  </delete>
+  
   <delete id="deleteByExample" parameterType="phion.onlineexam.bean.ExamArrangeExample">
     delete from tb_exam_arrange
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
+  
   <insert id="insert" parameterType="phion.onlineexam.bean.ExamArrange">
     insert into tb_exam_arrange (arra_id, stu_id, e_id
       )

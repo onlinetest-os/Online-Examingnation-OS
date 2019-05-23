@@ -109,6 +109,14 @@
 	var formdata;
 	//正式保存考试
 	$("#save_as_exam_btn").click(function(){
+		var flag = false;
+		<c:if test="${isEdit}">
+			 var msg = "更新考试表将删除原来的学生信息，是否继续？"; 
+			 if (confirm(msg)==true){ 
+			   	flag=true; 
+			 }
+		</c:if >
+		if(!flag) return;
 		alert("save btn");
 		//1、获取当前已有考试的值
 		formdata = new FormData(document.getElementById("form1"));
