@@ -3,6 +3,7 @@ package d.phion.test;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -12,6 +13,7 @@ import phion.onlineexam.bean.Exam;
 import phion.onlineexam.bean.StaticResources;
 import phion.onlineexam.controller.TaskController;
 import phion.onlineexam.service.ExamService;
+import phion.onlineexam.utils.ConfigHelper;
 import phion.onlineexam.utils.DateUtil;
 
 @Component
@@ -41,9 +43,12 @@ public class MyFirstTask {
 				service.updateExam(e);
 			}
 		}
-		
-		//更新自动开启考试
-		openExam();
+		Map config = ConfigHelper.getConfig();
+		String autoStartExam = (String) config.get(StaticResources.AUTO_START_EXAM);
+		if(autoStartExam.equals("true")) {
+			//更新自动开启考试
+			openExam();
+		}
     }
 	
 	/**

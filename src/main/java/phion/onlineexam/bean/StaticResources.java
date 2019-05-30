@@ -61,9 +61,22 @@ public class StaticResources {
 	public static final String NEW_FILE_NAME = "testPaper.txt";
 	
 	//系统定时任务的表达式
-	public static final String SYSTEM_DAILY_TASK_CRON = "0 0 0 1/1 * ? *";
+	public static final String SYSTEM_DAILY_TASK_CRON = "0 0 0 1/1 * ?";
 	
 	//测试用cron
 	public static final String TEST_SYSTEM_DAILY_TASK_CRON = "0/5 * * * * ?";
+	
+	/**
+	 *  配置文件key
+	 */
+	
+	//是否自动开启考试
+	public static final String AUTO_START_EXAM = "autoStartExam";
+	
+	//最大上传文件大小
+	public static final String MAX_UPLOAD_SIZE = "maxUploadSize";
+	
+	//手动开启考试的范围
+	public static final String MANUAL_START_EXAM_RANGE = "manualStartExamRange";
 	
 }

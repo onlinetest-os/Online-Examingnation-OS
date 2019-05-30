@@ -164,8 +164,13 @@
 		    <version>2.9.9</version>
 		</dependency>
 		
-		
-
+		<!--dom4j xml处理库  -->
+		<!-- https://mvnrepository.com/artifact/dom4j/dom4j -->
+		<dependency>
+		    <groupId>dom4j</groupId>
+		    <artifactId>dom4j</artifactId>
+		    <version>1.6.1</version>
+		</dependency>
 	</dependencies>
 
 </project>
