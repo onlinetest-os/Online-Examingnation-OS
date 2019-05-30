@@ -4,11 +4,14 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,7 +48,7 @@ public class FileHelper {
 			}
 			// MultipartFile自带的解析方法
 			file.transferTo(dir);
-			System.out.println(absPath);
+			System.out.println("上传文件---->路径：："+absPath);
 		} catch (Exception e) {
 			return false;
 		}
@@ -60,17 +63,34 @@ public class FileHelper {
 	 * @throws Exception
 	 */
 
-	public static void down(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		// 模拟文件，myfile.txt为需要下载的文件
-		String fileName = request.getSession().getServletContext().getRealPath("test/download") + "/myfile.txt";
+	public static Msg download(HttpServletRequest request, HttpServletResponse response,String folderPath,String fileName) throws Exception {
+		folderPath = request.getSession().getServletContext().getRealPath(File.separator)+folderPath;
+		System.out.println("folderPath:"+folderPath);
+		File folder = new File(folderPath);
+		
+		//检查文件夹是否存在
+		if (!folder.isDirectory()) {
+		    folder.mkdirs();
+		    System.out.println("创建文件夹:"+folder.getAbsolutePath());
+		    return Msg.fail().setMsg("文件目录不存在!");
+		}
+		
+		//检查文件是否存在
+		System.out.println("filepath:"+folderPath+fileName);
+		File file = new File(folderPath+fileName);
+		if(!file.exists()) {
+			System.out.println("下载文件：文件不存在！");
+			return Msg.fail().setMsg("文件不存在!");
+		}
+		
 		// 获取输入流
-		InputStream bis = new BufferedInputStream(new FileInputStream(new File(fileName)));
+		InputStream bis = new BufferedInputStream(new FileInputStream(file));
 		// 假如以中文名下载的话
-		String filename = "下载文件.txt";
+		//String filename = "下载文件.txt";
 		// 转码，免得文件名中文乱码
-		filename = URLEncoder.encode(filename, "UTF-8");
+		fileName = URLEncoder.encode(fileName, "UTF-8");
 		// 设置文件下载头
-		response.addHeader("Content-Disposition", "attachment;filename=" + filename);
+		response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
 		// 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
 		response.setContentType("multipart/form-data");
 		BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
@@ -80,7 +100,56 @@ public class FileHelper {
 			out.flush();
 		}
 		out.close();
+		return Msg.success();
 	}
+	
+	/**
+	 * 下载压缩文件夹
+	 * @throws IOException 
+	 */
+	
+	public static Msg downloadZip(HttpServletRequest request, HttpServletResponse response,String folderPath) throws IOException {
+		folderPath = request.getSession().getServletContext().getRealPath(File.separator)+folderPath;
+		System.out.println("folderPath:"+folderPath);
+		File folder = new File(folderPath);
+		
+		//检查文件夹是否存在
+		while (!folder.isDirectory()) {
+		    folder.mkdirs();
+		}
+		
+		
+		String rootPath = request.getSession().getServletContext().getRealPath(File.separator);
+		//创建临时文件夹用于存放压缩文件
+		 File temDir = new File(rootPath + "/" + UUID.randomUUID().toString().replaceAll("-", ""));
+		 if(!temDir.exists()){
+			  temDir.mkdirs();
+		 }
+		 
+		 //生成需要下载的文件，存放在临时文件夹内
+		 File srcFile = folder;
+		 File desFile = new File(temDir.getAbsolutePath()+File.separator+srcFile.getName()+".zip");
+		 FileOutputStream fos = new FileOutputStream(desFile);
+		 ZipUtils.toZip(srcFile.getAbsolutePath(), fos, true);
+		 
+		// 设置文件下载头
+		response.addHeader("Content-Disposition", "attachment;filename=datas.zip");
+		// 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
+		response.setContentType("multipart/form-data");
+		
+		ZipUtils.toZip(temDir.getAbsolutePath(), response.getOutputStream(),true);
+
+		//删除临时文件和文件夹
+		File[] listFiles = temDir.listFiles();
+        for (int i = 0; i < listFiles.length; i++) {
+            listFiles[i].delete();
+        }
+        temDir.delete();
+        
+        
+        return Msg.success();
+	}
+	
 
 	/**
 	 * 删除某个路径下的文件与文件夹
@@ -135,6 +204,11 @@ public class FileHelper {
 		return f;
 	}
 
+	/**
+	 * 输入流转换为文件
+	 * @param ins
+	 * @param file
+	 */
 	public static void inputStreamToFile(InputStream ins, File file) {
 		try {
 			OutputStream os = new FileOutputStream(file);
@@ -149,9 +223,22 @@ public class FileHelper {
 			e.printStackTrace();
 		}
 	}
-
+	
+	/**
+	 * 获得utf8字符串
+	 * @param str
+	 * @return
+	 * @throws IOException
+	 */
+	public static String getUTF8String(String str) throws IOException{
+		byte[] bytes;
+		bytes = str.getBytes();
+		String temp = new String(bytes,"utf8");
+		return temp;
+	}
+	
 	public static void main(String[] args) {
-
+		
 	}
 
 }

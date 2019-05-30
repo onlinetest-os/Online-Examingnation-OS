@@ -66,7 +66,7 @@
 		<div class="btn-group btn-group-justified m-b-10"
 			style="float: right;">
 			<a class="btn btn-primary waves-effect waves-light" role="button"
-				href="student_s_paperDownload">下载试卷 »</a> <a
+				href="student_s_paperDownload?eId=${exam.eId}">下载试卷 »</a> <a
 				class="btn btn-warning waves-effect waves-light" role="button"
 				href="student_s_anwserUpload?eId=${exam.eId} ">上传答案 »</a> <a
 				class="btn btn-danger waves-effect waves-light" role="button"

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.xml.transform.sax.SAXTransformerFactory;
@@ -74,6 +75,7 @@ public class TeacherController {
 	@ResponseBody
 	public Msg login(@RequestParam(value="teaNumber",defaultValue="0")String teaNumber,
 			String teaPassword,HttpServletRequest request){
+
 //		if(teaNumber==null||teaPassword==null) return Msg.fail();
 		System.out.println(teaNumber+"---"+teaPassword);
 		System.out.println("TeacherController被访问");
@@ -88,6 +90,13 @@ public class TeacherController {
 		session.setAttribute("role", "teacher");
 		session.setAttribute("teacher", teachers.get(0));
 		return Msg.success().add("teacher", teachers.get(0));
+	}
+	
+	/**
+	 * 开启考试
+	 */
+	public void openExam() {
+		TaskController.getInstance().updateExamBegin(examService);
 	}
 	
 	/**
@@ -563,9 +572,35 @@ public class TeacherController {
 	 *下载答案页面
 	 */
 	@RequestMapping("/teacher_t_answerDownload")
-	public String toPageAnswerDownload() {
+	public String toPageAnswerDownload(HttpSession session,Model model) {
+		System.out.println("下载答案页面");
+		Teacher teacher = (Teacher) session.getAttribute("teacher");
+		int teaId = teacher.getTeaId();
+		Exam parse = new Exam(null,teaId,StaticResources.COMPLETE_EXAM);
+		List<Exam> exams = examService.queryExamWithExamInfo(parse);
+		System.out.println("教师id"+teaId);
+		System.out.println(exams);
+		model.addAttribute("exams", exams);
 		return "teacher/t_answerDownload";
 	}
+	
+	/**
+	 * 下载学生提交的答案
+	 */
+	@RequestMapping("/teacher_t_getAnwsers")
+	public void getAnwsers(int eId,HttpServletResponse response,
+			HttpServletRequest request) {
+		Exam exam = examService.queryById(eId);
+		String folderPath = exam.getPaperAnwserPath();
+		try {
+			FileHelper.downloadZip(request, response, folderPath);
+		} catch (IOException e) {
+			System.out.println("下载学生答案失败！");
+			e.printStackTrace();
+		}
+		System.out.println("下载学生答案成功！");
+	}
+	
 	
 	/**
 	 *导出信息页面
@@ -612,6 +647,8 @@ public class TeacherController {
 		FileHelper.deleteFile(request, paperAnwserPath);
 		FileHelper.deleteFile(request, paperPath);
 		
+		//4、清理考试安排表，学生表
+		deleteStudentsWithEId(eId);
 		
 		return Msg.success().setMsg("清理完成！");
 	}
@@ -759,6 +796,8 @@ public class TeacherController {
                 parseStudentOrder(studentOrder,eId);
         	}
         	
+        	//更新启动考试
+       	 	openExam();
         	return Msg.success().setMsg("创建考试成功！");
     	}else {
     		System.out.println(StaticResources.TEACHERLOG+"更新考试！");
@@ -805,7 +844,8 @@ public class TeacherController {
                 parseStudentOrder(studentOrder,eId);
                 
         	}
-    		
+    		//更新启动考试
+       	 	openExam();
     		return Msg.success().setMsg("更新考试成功！");
     	}
     	
@@ -821,10 +861,14 @@ public class TeacherController {
 		List<Student> students = studentService.queryStudentByEId(eId);
 		List<Integer> ids = new ArrayList<>();
 		for(Student s :students) ids.add(s.getStuId());
-		studentService.deleteStudentBatch(ids);
-		
+		if(ids.size()>0) {
+			studentService.deleteStudentBatch(ids);
+			System.out.println("删除之前的学生成功！");
+		}		
 		//删除考试表信息
 		examArrangeService.deleteExamArrangesByEId(eId);
+		System.out.println("删除考试表信息成功！");
+		
 	}
 
 	/**

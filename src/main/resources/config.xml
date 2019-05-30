@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+       <system-asste>
+      	 	<!-- 上传文件大小，最大为5m -->
+       		<max-upload-size>1024*1024*1024*5</max-upload-size>
+       		<!--  -->
+       		
+       </system-asste>
+</config>

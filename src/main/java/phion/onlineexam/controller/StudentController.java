@@ -1,5 +1,6 @@
 package phion.onlineexam.controller;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Map;
 import java.util.logging.FileHandler;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +23,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import phion.onlineexam.bean.Exam;
 import phion.onlineexam.bean.ExamArrange;
+import phion.onlineexam.bean.ExamInfo;
 import phion.onlineexam.bean.Msg;
 import phion.onlineexam.bean.StaticResources;
 import phion.onlineexam.bean.Student;
 import phion.onlineexam.bean.Teacher;
+import phion.onlineexam.dao.ExamInfoMapper;
 import phion.onlineexam.service.ExamArrangeService;
 import phion.onlineexam.service.ExamService;
 import phion.onlineexam.service.StudentService;
@@ -147,6 +151,7 @@ public class StudentController {
 		ModelAndView mav = new ModelAndView();
 		//查询已经开始的考试
 		Exam exam = examService.queryById(eId);
+		//System.out.println(exam);
 		if(!exam.getStatus().equals(StaticResources.RUNNING_EXAM)) {
 			mav.setViewName("student/s_examBegin");
 			return mav;
@@ -230,6 +235,32 @@ public class StudentController {
 										.toString();
 		FileHelper.upload(anwserFile, request, path,null);
 		return Msg.success().setMsg("上传成功！");
+	}
+	
+	/**
+	 * student_s_paperDownload
+	 * 下载试卷
+	 * 此处应有学生信息及考试信息校验，判断是否能下载试卷
+	 */
+	@RequestMapping("/student_s_paperDownload")
+	public void download(Integer eId,HttpServletRequest request,
+			HttpServletResponse response) {
+		System.out.println("StudentControllor:进入文件下载！");
+		Exam exam = examService.selectByPrimaryKey(eId);
+		String paperPath = exam.getPaperPath();
+		String fileName = StaticResources.NEW_FILE_NAME;
+		
+		try {
+			Msg msg = FileHelper.download(request, response, paperPath,fileName);
+			if(msg.getCode()==StaticResources.FAIL_CODE) {
+				response.getWriter().println(FileHelper.getUTF8String("试卷还未上传，稍后请重试！"));
+			}
+			//response.getWriter().println("hello world!");
+		} catch (Exception e) {
+			System.out.println("StudentControllor:下载出错！");
+			e.printStackTrace();
+		}
+		
 	}
 	
 }

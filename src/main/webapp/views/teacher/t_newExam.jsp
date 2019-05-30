@@ -109,11 +109,13 @@
 	var formdata;
 	//正式保存考试
 	$("#save_as_exam_btn").click(function(){
-		var flag = false;
+		var flag = true;
 		<c:if test="${isEdit}">
 			 var msg = "更新考试表将删除原来的学生信息，是否继续？"; 
 			 if (confirm(msg)==true){ 
 			   	flag=true; 
+			 }else{
+				 flag = false;
 			 }
 		</c:if >
 		if(!flag) return;

@@ -23,14 +23,10 @@ public class Exam {
     private ExamInfo examInfo;
 	
     private List<Student> students;
-
-    
-    
     
     public Exam() {
 		super();
 	}
-    
     
     public Exam(Integer eId) {
 		super();
@@ -61,6 +57,7 @@ public class Exam {
 		super();
 		this.status = status;
 	}
+	
 	public Exam (Integer eId,String paperPath,
 			String paperAnwserPath) {
 		super();

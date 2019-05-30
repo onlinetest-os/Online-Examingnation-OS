@@ -66,6 +66,7 @@ public class DateUtil {
     public static LocalDateTime getLocalDateTimeByDateString(String dateString) {
     	DateTimeFormatter formatter =  
 				 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    	System.out.println(dateString);
     	return LocalDateTime.parse(dateString, formatter);
     }
     /**
@@ -132,8 +133,8 @@ public class DateUtil {
 	 * @return
 	 */
 	public static Duration getDuration(String dateStr1,String dateStr2) {
-		LocalDateTime date1 = getLocalDateTimeByDateString3(dateStr1);
-		LocalDateTime date2 = getLocalDateTimeByDateString3(dateStr2);
+		LocalDateTime date1 = getLocalDateTimeByDateString(dateStr1);
+		LocalDateTime date2 = getLocalDateTimeByDateString(dateStr2);
 		return Duration.between(date1, date2);
 	}
 	
@@ -141,4 +142,24 @@ public class DateUtil {
 		Duration duration = getDuration(dateStr1, dateStr2);
 		return (int) duration.toMinutes();
 	}
+
+	
+	/**
+	 * localtime 时间差
+	 * @param dateStr1
+	 * @param dateStr2
+	 * @return
+	 */
+	public static int getSeconds(LocalTime t1 ,LocalTime t2) {
+		Duration duration = Duration.between(t1, t2);
+		return (int) duration.getSeconds();
+	}
+	
+	public static int getSeconds(LocalDateTime t1 ,LocalDateTime t2) {
+		Duration duration = Duration.between(t1, t2);
+		return (int) duration.getSeconds();
+	}
+
+	
+	
 }

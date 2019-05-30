@@ -62,7 +62,7 @@ public class MapperTest {
 	 * 测试ExamMapper
 	 */
 	@SuppressWarnings("deprecation")
-	//@Test
+	@Test
 	public void testExamMapperCrud() {
 		/*	//1、创建SpringIOC容器
 		ApplicationContext ioc = new ClassPathXmlApplicationContext("applicationContext.xml");
@@ -84,11 +84,11 @@ public class MapperTest {
 		/*Exam exam = examMapper.selectByPrimaryKeyWithExamInfo(1);
 		System.out.println(exam.toString());*/
 		//主键查询所有考试，带考试信息
-		List<Exam> exams = examMapper.selectByExampleWithExamInfo(null);
+		/*List<Exam> exams = examMapper.selectByExampleWithExamInfo(null);
 		for(Exam e : exams) {
 			System.out.println(e);
 		}
-		
+		*/
 		/*//有选择的查询考试
 		List<Exam> exams = examMapper.selectWithExamInfoSelective(new Exam(null, null,
 				null, null, null, null, null,"creating",  null, null));
@@ -106,6 +106,11 @@ public class MapperTest {
 			LocalDateTime localDate = DateUtil.toLocalDateTime(startDate);
 			System.out.println(localDate);
 		}*/
+		
+		Exam examLike = new Exam(StaticResources.READY_TODAY_EXAM);
+		//List<Exam> exams = service.queryExamWithExamInfo(examLike);
+		List<Exam> exams = examMapper.selectWithExamInfoSelective(examLike);
+		System.out.println(exams);
 	}
 	
 	
@@ -162,7 +167,7 @@ public class MapperTest {
 	/**
 	 * 测试ExamArrangeMapper
 	 */
-	 @Test
+	 //@Test
 	 public void testExamArrangeMapperCrud() {
 		//插入考试安排到考试2
 		/*ExamArrangeMapper mapper = sqlSession.getMapper(ExamArrangeMapper.class);

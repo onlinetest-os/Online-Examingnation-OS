@@ -60,4 +60,10 @@ public class StaticResources {
 	//试卷名
 	public static final String NEW_FILE_NAME = "testPaper.txt";
 	
+	//系统定时任务的表达式
+	public static final String SYSTEM_DAILY_TASK_CRON = "0 0 0 1/1 * ? *";
+	
+	//测试用cron
+	public static final String TEST_SYSTEM_DAILY_TASK_CRON = "0/5 * * * * ?";
+	
 }

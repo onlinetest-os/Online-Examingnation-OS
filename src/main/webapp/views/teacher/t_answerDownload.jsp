@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -48,25 +49,21 @@ ul.pagination li a {
 						</tr>
 					</thead>
 					<tbody>
+					<c:if test="${exams!=null}" >
+					<c:forEach items="${exams}" var="exam" varStatus="st">
 						<tr>
-							<td>1</td>
-							<td><a class="btn" href="#">下载</a></td>
+							<td>${exam.eName}</td>
+							<td><a class="btn" href="teacher_t_getAnwsers?eId=${exam.eId}">下载</a></td>
 						</tr>
+					</c:forEach>
+						
+					</c:if>
+						
+						
+						
 					</tbody>
 				</table>
-				<div class="span12" style="text-align: center;">
-					<ul class="pagination">
-						<li><a href="#">«</a></li>
-						<li><a href="#">1</a></li>
-						<li><a class="active" href="#">2</a></li>
-						<li><a href="#">3</a></li>
-						<li><a href="#">4</a></li>
-						<li><a href="#">5</a></li>
-						<li><a href="#">6</a></li>
-						<li><a href="#">7</a></li>
-						<li><a href="#">»</a></li>
-					</ul>
-				</div>
+			
 			</div>
 		</div>
 	</div>
