@@ -50,17 +50,17 @@
 			</div>
 			<dl>
 				<dt>考试名称</dt>
-				<dd>XXXX考试</dd>
-				<dt>主考人</dt>
-				<dd>张磊</dd>
+				<dd>${exam.eName}</dd>
 				<dt>考试时间</dt>
-				<dd>八点到十点</dd>
+				<dd>${startTime}到${endTime}</dd>
 			</dl>
 		</div>
 		<div style="float: right; margin-right: 50px;">
 			<div class="hero-unit">
 				<h1>通知</h1>
-				<p>这是通知内容</p>
+				<div id="msg">
+				here
+				</div>
 			</div>
 		</div>
 		<div class="btn-group btn-group-justified m-b-10"
@@ -76,6 +76,47 @@
 	<c:if test="${exam==null}">
 		本场考试还未开始！
 	</c:if>
-
+	
+<script type="text/javascript">
+	var version = -1;
+	
+	refresh();
+	//开始执行自己
+	refreshOnTime();
+	
+	function refreshOnTime(){
+		//alert(count);
+		 //每隔5秒访问一次服务器
+		setInterval("refresh()",5000);	
+	}
+	function refresh(){
+		$.ajax({
+	    	url : "${APP_PATH}/message_getNewest?version="+version,
+			type : "GET",
+			success : function(result) {
+				//获取通知
+				if (result.code == 100) {
+					version = result.extend.version;
+					var msgQueue = result.extend.msgQueue;
+					var len = result.extend.length;
+					//alert(len);
+					$("#msg").text("");
+					for (var i = 0; i < len; i++) {
+						//alert(i);
+						var time = msgQueue[i].time;
+						//alert(time);
+						$("#msg").append(time.hour+":"+time.minute+":"+time.second);
+						$("#msg").append("&nbsp;&nbsp;&nbsp;&nbsp;");
+						$("#msg").append(msgQueue[i].msg);
+						$("#msg").append("<br>");
+					 }
+					 
+				}else{
+					 //$("#msg").append("<b>插入文本</b>.");
+				}
+			}
+	    });
+	}
+</script>
 </body>
 </html>

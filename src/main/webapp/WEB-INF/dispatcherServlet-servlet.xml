@@ -53,6 +53,7 @@
 			
 			<!-- 资源文件访问权限 -->
 			<mvc:exclude-mapping path="/static/**" />
+			<mvc:exclude-mapping path="/message*"/>
 								
 			<bean class="phion.onlineexam.interceptor.LoginInterceptor"></bean>			
 		</mvc:interceptor>

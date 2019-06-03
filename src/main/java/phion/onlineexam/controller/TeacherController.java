@@ -1,7 +1,10 @@
 package phion.onlineexam.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -528,6 +531,19 @@ public class TeacherController {
 	public String toPageAlertManage() {
 		return "teacher/t_alertManage";
 	}
+	
+	/**
+	 * 教师添加通知
+	 * @throws UnsupportedEncodingException 
+	 */
+	@RequestMapping("/teacher_t_alertManage_add")
+	@ResponseBody
+	public Msg addMsg(String msg){
+		if(msg==null||msg.length()<=3) return Msg.fail();
+		MessageController.addMsg(new ExamMsg(LocalTime.now(), msg));
+		return Msg.success();
+	}
+	
 	
 	/**
 	 *IP解绑页面

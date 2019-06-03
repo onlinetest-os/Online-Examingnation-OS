@@ -1,18 +1,16 @@
 package phion.onlineexam.controller;
 
-import java.nio.charset.Charset;
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.FileHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,12 +21,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import phion.onlineexam.bean.Exam;
 import phion.onlineexam.bean.ExamArrange;
-import phion.onlineexam.bean.ExamInfo;
 import phion.onlineexam.bean.Msg;
 import phion.onlineexam.bean.StaticResources;
 import phion.onlineexam.bean.Student;
-import phion.onlineexam.bean.Teacher;
-import phion.onlineexam.dao.ExamInfoMapper;
 import phion.onlineexam.service.ExamArrangeService;
 import phion.onlineexam.service.ExamService;
 import phion.onlineexam.service.StudentService;
@@ -162,6 +157,12 @@ public class StudentController {
 		if(count>0) {
 			System.out.println(exam);
 			mav.addObject("exam",exam);
+			Date date = exam.getStartTime();
+			LocalTime startTime = DateUtil.toLocalDateTime(date).toLocalTime();
+			date = exam.getEndTime();
+			LocalTime endTime = DateUtil.toLocalDateTime(date).toLocalTime();
+			mav.addObject("startTime", startTime);
+			mav.addObject("endTime", endTime);
 		}
 		mav.setViewName("student/s_examBegin");
 		return mav;
