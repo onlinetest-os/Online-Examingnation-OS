@@ -37,7 +37,7 @@
 			style="height: 440px;">
 			<div class="panel-heading bg-img">
 				<h3 class="text-center m-t-10 text-white">
-					Sign In to <strong>Exam System</strong>
+					<strong>Teacher</strong>
 				</h3>
 			</div>
 
