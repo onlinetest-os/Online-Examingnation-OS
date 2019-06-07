@@ -82,6 +82,18 @@ public class DateUtil {
     /**
      * 解析时间字符串yyyy-MM-ddTHH:mm:ss，返回LocalDateTime
      */
+    public static LocalDateTime getLocalDateTimeByDateString4(String dateStringWithT) {
+    	String dateString = dateStringWithT.replace('T', ' ');
+    	DateTimeFormatter formatter =  
+				 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    	return LocalDateTime.parse(dateString, formatter);
+    }
+    
+    
+    
+    /**
+     * 解析时间字符串yyyy-MM-ddTHH:mm:ss，返回LocalDateTime
+     */
     public static LocalDateTime getLocalDateTimeByDateString3(String dateStringWithT) {
     	String dateString = dateStringWithT.replace('T', ' ');
     	DateTimeFormatter formatter =  
@@ -133,8 +145,8 @@ public class DateUtil {
 	 * @return
 	 */
 	public static Duration getDuration(String dateStr1,String dateStr2) {
-		LocalDateTime date1 = getLocalDateTimeByDateString(dateStr1);
-		LocalDateTime date2 = getLocalDateTimeByDateString(dateStr2);
+		LocalDateTime date1 = getLocalDateTimeByDateString4(dateStr1);
+		LocalDateTime date2 = getLocalDateTimeByDateString4(dateStr2);
 		return Duration.between(date1, date2);
 	}
 	

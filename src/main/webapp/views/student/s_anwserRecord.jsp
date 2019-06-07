@@ -1,13 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
+	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Insert title here</title>
-<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<script src="../assets/js/jquery.min.js"></script>
-<script src="../assets/js/bootstrap.min.js"></script>
+<link href="${APP_PATH }/static/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<script src="${APP_PATH }/static/assets/js/jquery.min.js"></script>
+<script src="${APP_PATH }/static/assets/js/bootstrap.min.js"></script>
 </head>
 <style>
 ul.pagination {
@@ -35,34 +36,22 @@ ul.pagination li a {
 				<table class="table table-condensed">
 					<thead>
 						<tr>
-							<th>编号</th>
-							<th>考试名称</th>
-							<th>交付时间</th>
-							<th>状态</th>
+							<th>最后一次提交时间</th>
+							<th>文件名</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>1</td>
-							<td>TB - Monthly</td>
-							<td>01/04/2012</td>
-							<td>Default</td>
-						</tr>
+					<c:if test="${time==null}">
+						<tr><td>还未提交过！</td></tr>
+					</c:if>
+						<c:if test="${time!=null}">
+							<tr>
+								<td>${time}</td>
+								<td>${fileName}</td>
+							</tr>
+						</c:if>
 					</tbody>
 				</table>
-				<div class="span12" style="text-align: center;">
-					<ul class="pagination">
-						<li><a href="#">«</a></li>
-						<li><a href="#">1</a></li>
-						<li><a class="active" href="#">2</a></li>
-						<li><a href="#">3</a></li>
-						<li><a href="#">4</a></li>
-						<li><a href="#">5</a></li>
-						<li><a href="#">6</a></li>
-						<li><a href="#">7</a></li>
-						<li><a href="#">»</a></li>
-					</ul>
-				</div>
 			</div>
 		</div>
 	</div>

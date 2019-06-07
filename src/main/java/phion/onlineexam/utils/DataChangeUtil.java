@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import phion.onlineexam.bean.Exam;
+import phion.onlineexam.bean.StaticResources;
 
 /**
  * 将对象信息处理成前台需要的
@@ -52,5 +53,17 @@ public class DataChangeUtil {
 			examsInfos.add(map);
 		}
 		return examsInfos;
+	}
+	
+	public static String getLocalStatus(String status) {
+		switch(status) {
+		case StaticResources.RUNNING_EXAM:return "正在考试";
+		case StaticResources.COMPLETE_EXAM:return "已完成";
+		case StaticResources.COMPLETE_AND_CLEAN_EXAM:return "已删除";
+		case StaticResources.CREATING_EXAM:return "创建中";
+		case StaticResources.READY_EXAM:return "即将考试";
+		case StaticResources.READY_TODAY_EXAM:return "今天开考";
+		default: return "error";
+		}
 	}
 }

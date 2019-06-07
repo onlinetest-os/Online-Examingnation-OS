@@ -96,7 +96,7 @@
 		formdata.append("eId","${eId}");
 		alert("上传");
 		$.ajax({
-			url:"${APP_PATH }/student_uploadAnwser",
+			url:"${APP_PATH }/student_uploadAnwser?stuId=${student.stuId }",
 			data:formdata,
 			type:"POST",
 			processData:false,

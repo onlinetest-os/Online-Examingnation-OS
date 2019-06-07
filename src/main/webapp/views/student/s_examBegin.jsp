@@ -68,9 +68,9 @@
 			<a class="btn btn-primary waves-effect waves-light" role="button"
 				href="student_s_paperDownload?eId=${exam.eId}">下载试卷 »</a> <a
 				class="btn btn-warning waves-effect waves-light" role="button"
-				href="student_s_anwserUpload?eId=${exam.eId} ">上传答案 »</a> <a
+				href="student_s_anwserUpload?eId=${exam.eId}">上传答案 »</a> <a
 				class="btn btn-danger waves-effect waves-light" role="button"
-				href="student_s_anwserRecord">我的答案 »</a>
+				href="student_s_anwserRecord?stuId=${student.stuId }">我的答案 »</a>
 		</div>
 	</c:if>
 	<c:if test="${exam==null}">

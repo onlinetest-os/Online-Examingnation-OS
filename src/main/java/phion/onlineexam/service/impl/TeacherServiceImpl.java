@@ -39,7 +39,6 @@ public class TeacherServiceImpl implements TeacherService {
 
 	public void deleteTeacher(Integer teaId) {
 		teacherMapper.deleteByPrimaryKey(teaId);
-		
 	}
 	
 

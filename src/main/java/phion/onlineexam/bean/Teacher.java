@@ -2,6 +2,8 @@ package phion.onlineexam.bean;
 
 import java.util.List;
 
+import phion.onlineexam.utils.PWdHelper;
+
 public class Teacher {
     private Integer teaId;
 
@@ -26,7 +28,7 @@ public class Teacher {
 		this.teaId = teaId;
 		this.teaNumber = teaNumber;
 		this.teaName = teaName;
-		this.teaPassword = teaPassword;
+		this.teaPassword = PWdHelper.stringToMD5(teaPassword);
 		this.isAdmin = isAdmin;
 		this.exams = exams;
 	}
@@ -60,6 +62,7 @@ public class Teacher {
     }
 
     public void setTeaPassword(String teaPassword) {
+    	teaPassword = PWdHelper.stringToMD5(teaPassword);
         this.teaPassword = teaPassword == null ? null : teaPassword.trim();
     }
 

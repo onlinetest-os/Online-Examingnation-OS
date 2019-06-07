@@ -23,7 +23,7 @@
 		<ul class="nav pull-right" id="right">
 			<li><img src="${APP_PATH}/static/assets/images/users/avatar-1.jpg" style="width:50px;height:50px;border-radius:50%"/></li>
 			<li><a><strong>${student.stuName }</strong></a></li>
-			<li><a href="#">退出</a></li>
+			<li><a href="index.jsp">退出</a></li>
 		</ul>
 	</div>
 	</nav>

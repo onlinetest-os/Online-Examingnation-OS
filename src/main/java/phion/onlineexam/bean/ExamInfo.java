@@ -57,11 +57,11 @@ public class ExamInfo {
     }
 
     public Integer getIsDownload() {
-        return isDownload;
+        return isDownload==null?0:isDownload;
     }
 
     public void setIsDownload(Integer isDownload) {
-        this.isDownload = isDownload;
+        this.isDownload = isDownload==null?0:isDownload;
     }
 
     public String getInfo() {

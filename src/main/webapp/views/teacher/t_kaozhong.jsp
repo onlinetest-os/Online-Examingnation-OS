@@ -27,10 +27,10 @@
 			<div class="col-md-2">
 				<ul class="nav nav-list">
 					<li class="nav-header">考中操作</li>
-					<li><a href="teacher_t_viewExam" target="main_right">查看考试</a></li>
-					<li><a href="teacher_t_addStudent" target="main_right">添加学生</a></li>
-					<li><a href="teacher_t_alertManage" target="main_right">通知管理</a></li>
-					<li><a href="teacher_t_IPRelease" target="main_right">IP解绑</a></li>
+					<li><a href="teacher_t_viewExam?teaId=${teacher.teaId}" target="main_right">查看考试</a></li>
+					<%-- <li><a href="teacher_t_addStudent?teaId=${teacher.teaId}" target="main_right">添加学生</a></li> --%>
+					<li><a href="teacher_t_alertManage?teaId=${teacher.teaId}" target="main_right">通知管理</a></li>
+					<li><a href="teacher_t_IPRelease?teaId=${teacher.teaId}" target="main_right">IP解绑</a></li>
 				</ul>
 			</div>
 			<div class="col-md-10">

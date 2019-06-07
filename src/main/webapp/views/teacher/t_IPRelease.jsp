@@ -79,7 +79,7 @@ ul.pagination li a {
 		//此处暂时只获取id为1的考试的学生用于测试
 		function to_page(pn){
 			$.ajax({
-				url:"${APP_PATH}/teacher_get_students?eId=1",
+				url:"${APP_PATH}/teacher_get_students?eId=${eId}",
 				data:"pn="+pn,
 				type:"GET",
 				success:function(result){

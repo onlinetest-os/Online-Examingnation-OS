@@ -59,9 +59,8 @@
 	    </div>
 	  </div>
 	</div>
-
-
-
+	
+	
 	<!-- 学生添加的模态框 -->
 	<div class="modal fade" id="stuAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	  <div class="modal-dialog" role="document">

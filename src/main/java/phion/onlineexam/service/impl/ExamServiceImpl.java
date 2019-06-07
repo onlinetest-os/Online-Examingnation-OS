@@ -41,8 +41,7 @@ public class ExamServiceImpl implements ExamService{
 	}
 
 	public void deleteExam(Integer eId) {
-		// TODO Auto-generated method stub
-		
+		examMapper.deleteByPrimaryKey(eId);
 	}
 
 

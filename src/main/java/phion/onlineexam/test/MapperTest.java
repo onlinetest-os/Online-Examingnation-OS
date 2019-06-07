@@ -2,6 +2,7 @@ package phion.onlineexam.test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +26,6 @@ import phion.onlineexam.dao.ExamInfoMapper;
 import phion.onlineexam.dao.ExamMapper;
 import phion.onlineexam.dao.StudentMapper;
 import phion.onlineexam.dao.TeacherMapper;
-import phion.onlineexam.service.impl.StudentServiceImpl;
 import phion.onlineexam.utils.DateUtil;
 
 /**
@@ -62,7 +62,7 @@ public class MapperTest {
 	 * 测试ExamMapper
 	 */
 	@SuppressWarnings("deprecation")
-	@Test
+	//@Test
 	public void testExamMapperCrud() {
 		/*	//1、创建SpringIOC容器
 		ApplicationContext ioc = new ClassPathXmlApplicationContext("applicationContext.xml");
@@ -108,7 +108,7 @@ public class MapperTest {
 		}*/
 		
 		Exam examLike = new Exam(StaticResources.READY_TODAY_EXAM);
-		//List<Exam> exams = service.queryExamWithExamInfo(examLike);
+		//List<Exam> exams = Mapper.queryExamWithExamInfo(examLike);
 		List<Exam> exams = examMapper.selectWithExamInfoSelective(examLike);
 		System.out.println(exams);
 	}
@@ -218,7 +218,7 @@ public class MapperTest {
 	/**
 	 * 执行一些数据库操作
 	 */
-	//@Test
+	@Test
 	public void  mytest() {
 		/*Exam exam = examMapper.selectByPrimaryKey(1);
 		exam.setStatus(StaticResources.RUNNING_EXAM);
@@ -230,6 +230,11 @@ public class MapperTest {
 			System.out.println(exam);
 		}*/
 		
-		System.out.println(examInfoMapper.selectByExamID(1));
+		//System.out.println(examInfoMapper.selectByExamID(1));
+		//examArrangeMapper.deleteByEId(2);
+		//Exam e = examMapper.selectByPrimaryKeyWithExamInfo(2);
+		//System.out.println(e.getExamInfo());
+		Exam e = examMapper.selectByPrimaryKeyWithStudent(2);
+		System.out.println(e);
 	}
 }

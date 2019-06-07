@@ -50,7 +50,7 @@ display:none;
 
 </head>
 <body>
-
+	<h1>当前考试是：</h1>
 	<c:if test="${allNum!=null}">
 		<div class="bar">
 		<h3>在线比例</h3>

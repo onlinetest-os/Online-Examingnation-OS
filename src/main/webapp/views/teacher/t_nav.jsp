@@ -29,14 +29,14 @@
 				<li><a href="teacher_main">考前</a></li>
 				<li><a href="teacher_t_kaozhong">考中</a></li>
 				<li><a href="teacher_t_kaohou">考后</a></li>
-				<li><a href="teacher_t_Others">其他事务</a></li>
+				<!-- <li><a href="teacher_t_Others">其他事务</a></li> -->
 			</ul>
 		</div>
 		<ul class="nav pull-right" id="right">
 			<li><img src="${APP_PATH }/static/assets/images/users/avatar-1.jpg"
 				style="width: 50px; height: 50px; border-radius: 50%" /></li>
-			<li><a class="r" href="#"><strong>我的名字</strong></a></li>
-			<li><a class="r" href="#">退出</a></li>
+			<li><a class="r" href="#"><strong>${teacher.teaName}</strong></a></li>
+			<li><a class="r" href="index.jsp">退出</a></li>
 		</ul>
 	</div>
 	</nav>

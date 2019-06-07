@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.ss.util.SheetBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -116,16 +117,15 @@ public class StudentController {
 		List<Exam> nowExams = examService.queryExamWithExamInfo(new Exam(StaticResources.RUNNING_EXAM));
 		List<Map<String , Object>> examsInfos = new ArrayList<Map<String , Object>>();
 		
-		
 		//把简单的经过格式化处理的信息放到界面
 		examsInfos = DataChangeUtil.getSimpleExams(exams);
 		
 		//加入正在进行的考试
-		examsInfos.add(DataChangeUtil.getSimpleExams(nowExams).get(0));
+		examsInfos.addAll(DataChangeUtil.getSimpleExams(nowExams));
 		
 		
 		ModelAndView mav = new ModelAndView();
-		if(exams.size()>0) {
+		if(examsInfos.size()>0) {
 			//mav.addObject("exams", exams);
 			mav.addObject("examsInfos", examsInfos);
 			session.setAttribute("exams", exams);
@@ -188,11 +188,11 @@ public class StudentController {
 	 */
 	@RequestMapping("/student_uploadAnwser")
 	@ResponseBody
-	public Msg upload(@RequestParam("file")MultipartFile file,HttpServletRequest request) {
+	public Msg upload(@RequestParam("file")MultipartFile file,HttpServletRequest request,int stuId) {
 		if(file==null) return Msg.fail().setMsg("没有任何文件上传！");
 		System.out.println("上传文件名："+file.getOriginalFilename());
 		MultipartFile anwserFile = file;
-		
+		String fileName = file.getOriginalFilename();
 		
         //学生班级
         //String stuClass = request.getParameter("stuClass");
@@ -234,7 +234,11 @@ public class StudentController {
 		String path = new StringBuilder().append(papaerAnwserPath)
 										.append(studentAnwserPath)
 										.toString();
+		
 		FileHelper.upload(anwserFile, request, path,null);
+		Student s = studentService.queryStudentById(stuId);
+		s.setCommitinfo(LocalTime.now()+" "+fileName);
+		studentService.updateStudent(s);
 		return Msg.success().setMsg("上传成功！");
 	}
 	
@@ -262,6 +266,21 @@ public class StudentController {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	/**
+	 * student_s_anwserRecord
+	 * 查看提交记录
+	 */
+	@RequestMapping("/student_s_anwserRecord")
+	public String anwserRecord(Model model,int stuId) {
+		Student s = studentService.queryStudentById(stuId);
+		if(s.getCommitinfo()!=null) {
+			String[] commitInfo = s.getCommitinfo().split(" ");
+			model.addAttribute("time",commitInfo[0]);
+			model.addAttribute("fileName",commitInfo[1]);
+		}
+		return "student/s_anwserRecord";
 	}
 	
 }

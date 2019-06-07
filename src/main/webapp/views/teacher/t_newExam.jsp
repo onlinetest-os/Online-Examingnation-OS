@@ -66,9 +66,13 @@
 
 
 </head>
-
-<body>
-
+<script>
+        　　function checkLeave(){
+        	alert("???");
+        　　　　event.returnValue="确定离开当前页面吗？";
+        　　}
+ </script>
+<body unbeforeunload="return checkLeave()">
 	<c:if test="${isEdit}">
 		正在编辑考试...
 	</c:if >
@@ -181,6 +185,7 @@
 		var fileName = arr[arr.length - 1];
 		studentOrder.innerHTML = "<font id='studentOrder'>" + fileName + "</font>";
 	};
+	
 </script>
 
 </body>

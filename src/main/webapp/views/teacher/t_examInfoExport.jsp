@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
+	 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -40,33 +41,32 @@ ul.pagination li a {
 	<div class="container-fluid">
 		<div class="row-fluid">
 			<div class="span12">
+			<c:if test="${examsInfos==null}">
+				<div>暂无可导出的考试！</div>
+			</c:if>
+			
+			<c:if test="${examsInfos!=null}" >
 				<table class="table">
 					<thead>
 						<tr>
 							<th>考试名称</th>
+							<th>考试时间</th>
 							<th>导出信息</th>
 						</tr>
 					</thead>
 					<tbody>
+				<c:forEach items="${examsInfos}" var="exam" varStatus="st">
+					<div class="items">
 						<tr>
-							<td>1</td>
+							<td>${exam.eName}</td>
+							<td>${exam.startTime}到${exam.endTime}</td>
 							<td><a class="btn" href="#">导出</a></td>
 						</tr>
+					</div>
+				</c:forEach>
+			</c:if>
 					</tbody>
 				</table>
-				<div class="span12" style="text-align: center;">
-					<ul class="pagination">
-						<li><a href="#">«</a></li>
-						<li><a href="#">1</a></li>
-						<li><a class="active" href="#">2</a></li>
-						<li><a href="#">3</a></li>
-						<li><a href="#">4</a></li>
-						<li><a href="#">5</a></li>
-						<li><a href="#">6</a></li>
-						<li><a href="#">7</a></li>
-						<li><a href="#">»</a></li>
-					</ul>
-				</div>
 			</div>
 		</div>
 	</div>

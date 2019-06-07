@@ -1,9 +1,10 @@
 package phion.onlineexam.controller;
 
 
-import java.sql.Date;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,9 +87,13 @@ public class TaskController {
 	public synchronized void updateExamBegin(ExamService service) {
 		this.service = service;
 		
+		//更新所有考试状态
+		updateAllExam();
+		
 		//查询出当天开始的考试
 		Exam examLike = new Exam(StaticResources.READY_TODAY_EXAM);
 		List<Exam> exams = service.queryExamWithExamInfo(examLike);
+		if(exams.size()<=0) return;
 		Exam fisrtExam = exams.get(0);
 		for(Exam e :exams) {
 			if( DateUtil.getSeconds(DateUtil.toLocalDateTime(e.getStartTime())
@@ -127,7 +132,42 @@ public class TaskController {
 	}
 	
 	
+	/**
+	 * 更新考试状态
+	 * @param args
+	 */
 	
+	public void updateAllExam() {
+		 //查出今天的考试
+		//查询出当天开始的考试
+		Exam examLike = new Exam();
+		List<Exam> exams = service.queryExamWithExamInfo(examLike);
+		LocalDateTime now = LocalDateTime.now();
+		for(Exam e :exams) {
+			Date ds = e.getStartTime();
+			Date de = e.getEndTime();
+			LocalDateTime dateTimeS = DateUtil.toLocalDateTime(ds);
+			LocalDateTime dateTimeE = DateUtil.toLocalDateTime(de);
+			if(dateTimeS.getDayOfYear() == now.getDayOfYear()) {
+				e.setStatus(StaticResources.READY_TODAY_EXAM);
+				System.out.println("更新为当天考试");
+//				System.out.println(dateTimeE);
+//				System.out.println(dateTimeS);
+//				System.out.println(Duration.between(dateTimeE, now).toMinutes());
+//				System.out.println(Duration.between(dateTimeS, now).toMinutes());
+				if(Duration.between(dateTimeE, now).toMinutes()<0&&
+						Duration.between(dateTimeS, now).toMinutes()>0) {
+					e.setStatus(StaticResources.RUNNING_EXAM);	
+					System.out.println("更新为正在考试");
+				}
+				service.updateExam(e);
+			}
+			
+			
+		}
+		
+		
+	}
 	
 	public static void main(String[] args) {
 		LocalTime nowTime = DateUtil.getCurrentLocalTime();

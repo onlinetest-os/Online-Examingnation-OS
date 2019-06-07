@@ -46,47 +46,48 @@ ul.pagination li a {
 	<div class="container-fluid">
 		<div class="row-fluid">
 			<div class="span12">
+			<c:if test="${examsInfos==null}">
+				<div>暂无可导出的考试！</div>
+			</c:if>
+			
+			<c:if test="${examsInfos!=null}" >
 				<table class="table">
 					<thead>
 						<tr>
-							<td>编号</td>
 							<th>考试名称</th>
-							<th>创建人</th>
-							<th>详情</th>
-							<th>操作</th>
+							<th>考试时间</th>
+							<th>导出信息</th>
 						</tr>
 					</thead>
 					<tbody>
-						<form action="" method="get">
-							<tr>
-								<td>1</td>
-								<td>TB - Monthly</td>
-								<td>123456789</td>
-								<td><button class="btn" onclick="detail()">详情</button></td>
-								<td>
-									<button class="btn" type="submit">清除</button>
-								</td>
-							</tr>
-						</form>
+				<c:forEach items="${examsInfos}" var="exam" varStatus="st">
+					<div class="items">
+						<tr>
+							<td>${exam.eName}</td>
+							<td>${exam.startTime}到${exam.endTime}</td>
+							<td><a id="cleanBtn" class="btn" href="#">清理</a></td>
+						</tr>
+					</div>
+				</c:forEach>
+			</c:if>
 					</tbody>
 				</table>
-				<div class="span12" style="text-align: center;">
-					<ul class="pagination">
-						<li><a href="#">«</a></li>
-						<li><a href="#">1</a></li>
-						<li><a class="active" href="#">2</a></li>
-						<li><a href="#">3</a></li>
-						<li><a href="#">4</a></li>
-						<li><a href="#">5</a></li>
-						<li><a href="#">6</a></li>
-						<li><a href="#">7</a></li>
-						<li><a href="#">»</a></li>
-					</ul>
-				</div>
 			</div>
 		</div>
 	</div>
-	</div>
-
+<script type="text/javascript">
+	$(".cleanBtn").click(function(){
+		//发送ajax请求后台清理考试
+		$.ajax({
+			url:"${APP_PATH}/teacher_clean_exam?eId="+eId,
+			data:"",
+			type:"GET",
+			success:function(result){
+				alert("清理成功！");
+			}
+		});
+	}
+	
+</script>
 </body>
 </html>

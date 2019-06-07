@@ -20,14 +20,12 @@ public class ExamInfoServiceImpl implements ExamInfoService{
 
 	@Override
 	public void deleteExamInfoById(Integer inId) {
-		// TODO Auto-generated method stub
-		
+		examInfoMapper.deleteByPrimaryKey(inId);
 	}
 
 	@Override
 	public void updateExamBySelective(ExamInfo examInfo) {
-		// TODO Auto-generated method stub
-		
+		examInfoMapper.updateByPrimaryKeySelective(examInfo);
 	}
 	
 	@Override

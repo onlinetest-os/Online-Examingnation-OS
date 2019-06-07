@@ -37,7 +37,7 @@
 </head>
 <body>
 		<script type="text/javascript">
-			alert("${examsInfos}");
+			//alert("${examsInfos}");
 		</script>
 
 	<div class="container">

@@ -1,7 +1,5 @@
 package phion.onlineexam.interceptor;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -9,11 +7,9 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import phion.onlineexam.bean.Msg;
 import phion.onlineexam.bean.StaticResources;
 import phion.onlineexam.bean.Student;
 import phion.onlineexam.bean.Teacher;
-import phion.onlineexam.utils.JsonUtil;
 
 /**
  * 登录拦截器，返回false则不在继续访问其他拦截器
@@ -24,7 +20,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		System.out.println("调用LoginInterceptor-preHandle");
+		//////System.out.println("调用LoginInterceptor-preHandle");
 		HttpSession session = request.getSession();
 		// 从session中获取登录类型
 		String role = (String) session.getAttribute("role");
@@ -35,8 +31,8 @@ public class LoginInterceptor implements HandlerInterceptor {
 		}
 		//获取访问路径
 		String uri = request.getRequestURI();
-		System.out.println("uri:"+uri);
-		System.out.println(role);
+		//////System.out.println("uri:"+uri);
+		//////System.out.println(role);
 		
 		//类型截取
 		String[] strs = uri.split("/");
@@ -51,36 +47,38 @@ public class LoginInterceptor implements HandlerInterceptor {
 		if(type.contains("_")) {
 			type = type.split("_")[0];
 		}
-		System.out.println("type:"+type);
+		////System.out.println("type:"+type);
 		//每一种用户只能访问自己对应的界面
 		switch(type) {
 			case "student": {
-				System.out.println("case student");
+				////System.out.println("case student");
 				//如果是学生（role）访问学生相关界面（type）
 				if(role.equals(type)) {
 					return checkStudentInfo(request, response);
 				}
 				//String resStr = JsonUtil.toJson(new Msg().fail().setMsg(new String("没有访问权限！".getBytes(),"utf8")));
 				//response.getWriter().append(resStr);
-				response.getWriter().append(new String("没有访问权限！".getBytes(),"UTF-8"));
+				//response.getWriter().append(new String("没有访问权限！".getBytes(),"UTF-8"));
+				response.sendRedirect(request.getContextPath() + "/index.jsp");
 				return false;
 			}
 			case "teacher": {
-				System.out.println("case teacher");
+				////System.out.println("case teacher");
 				//如果是教师（role）访问教师相关界面（type）
 				if(role.equals(type)) {
 					return checkTeacherInfo(request, response);
 				}
 //				String resStr = JsonUtil.toJson(new Msg().fail().setMsg(new String("没有访问权限！".getBytes(),"utf8")));
 //				response.getWriter().append(resStr);
-				response.getWriter().append(new String("没有访问权限！".getBytes(),"UTF-8"));
+				//response.getWriter().append(new String("没有访问权限！".getBytes(),"UTF-8"));
+				response.sendRedirect(request.getContextPath() + "/index.jsp");
 				return false;
 			}
 			case "admin": {
-				System.out.println("case admin");
+				////System.out.println("case admin");
 				//如果是教师（role）访问教师相关界面（type）
 
-				System.out.println(role.equals(type));
+				////System.out.println(role.equals(type));
 				if(role.equals(type)) {
 					return checkAdminInfo(request, response);
 				}
@@ -97,12 +95,12 @@ public class LoginInterceptor implements HandlerInterceptor {
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
 		// TODO Auto-generated method stub
-		System.out.println("调用LoginInterceptor-postHandle");
+		////System.out.println("调用LoginInterceptor-postHandle");
 	}
 
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
-		System.out.println("调用LoginInterceptor-afterCompletion");
+		////System.out.println("调用LoginInterceptor-afterCompletion");
 		// TODO Auto-generated method stub
 
 	}
@@ -181,7 +179,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 		String teaNumber = teacher.getTeaNumber();
 		String teaPassword = teacher.getTeaPassword();
 		Integer isAdmin = teacher.getIsAdmin();
-		System.out.println("isAdmin="+isAdmin+"---isAdmin!=StaticResources.admin="+isAdmin!=StaticResources.admin+"");
+		//System.out.println("isAdmin="+isAdmin+"---isAdmin!=StaticResources.admin="+isAdmin!=StaticResources.admin+"");
 		//当教师是管理员是，才可以访问管理员用例
 		if (teaNumber == null || teaPassword == null|| isAdmin!=StaticResources.admin) {
 			response.sendRedirect(request.getContextPath() + "/index.jsp");

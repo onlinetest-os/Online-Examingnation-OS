@@ -50,16 +50,14 @@
 						<form>
 						
 						<h3>${exam.eName}</h3>
+						状态：${exam.status}
 						<p>
-							${exam.startTime}到${exam.endTime}
-						</p>
+						${exam.startTime}到${exam.endTime}
 						<p>
-								
 							<a class="btn" href="teacher_t_newExam?type=edit&eId=${exam.eId }"><font class="font">编辑</font></a>
 							<a class="btn" href="teacher_t_stuList?eId=${exam.eId }"><font class="font">学生列表</font></a>
 							<input  class="deleteBtn btn" type="button" id-attr="${exam.eId }" name-attr="${exam.eName }" value="删除">
 							<input  class="clearBtn btn" type="button" id-attr="${exam.eId }" name-attr="${exam.eName }" value="清理">
-					
 						</p>
 						</form>
 					</div>
@@ -80,7 +78,12 @@
 				data:"",
 				type:"GET",
 				success:function(result){
-					alert("清理成功！");
+					if(result.code==100){
+						alert("清理成功！");
+					}else{
+						alert(result.msg);
+					}
+					
 				}
 			});
 			
@@ -95,15 +98,17 @@
 		var r = confirm("确认删除考试 "+eName+"-"+eId+" ？确认将删除本场考试所有信息，且此操作不可逆转！");
 		if (r==true){
 			//发送ajax请求后台删除考试
-			/* $.ajax({
-				url:,
-				data:,
-				type:,
+			$.ajax({
+				url:"${APP_PATH}/teacher_del_exam?eId="+eId,
+				type:"GET",
 				success:function(result){
-					
+					if(result.code==100){
+						alert("删除成功！");
+					}else{
+						alert(result.msg);
+					}
 				}
-			}); */
-			alert("删除成功！");
+			});
 		}
 	});
 	</script>

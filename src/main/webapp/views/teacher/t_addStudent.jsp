@@ -60,6 +60,7 @@
 		姓名<input type="text" /> 学号<input type="text" /> <input class="btn"
 			type="submit" value="OK" />
 	</form>
+	
 	<h3 align="center">批量导入</h3>
 	<br />
 	<div style="margin: 0px, auto;">

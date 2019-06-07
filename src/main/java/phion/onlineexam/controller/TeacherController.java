@@ -99,6 +99,7 @@ public class TeacherController {
 	 * 开启考试
 	 */
 	public void openExam() {
+		System.out.println("开启考试");
 		TaskController.getInstance().updateExamBegin(examService);
 	}
 	
@@ -166,7 +167,8 @@ public class TeacherController {
 	@RequestMapping("/teacher_t_draftBox")
 	public String toPageDraftBox(Model model) {
 		List<Exam> exams = examService.queryExamWithExamInfo(new Exam(StaticResources.CREATING_EXAM));
-		model.addAttribute("exams",exams);
+		for(Exam e :exams) e.setStatus(DataChangeUtil.getLocalStatus(e.getStatus()));
+		model.addAttribute("exams",exams.size()>0?exams:null);
 		return "teacher/t_draftBox";
 	}
 	
@@ -199,6 +201,7 @@ public class TeacherController {
 		//1、查询该账号老师创建的考试
 		Teacher teacher = (Teacher) session.getAttribute("teacher");
 		List<Exam> exams = examService.queryExamWithExamInfo(new Exam(null,teacher.getTeaId(),null));
+		for(Exam e :exams) e.setStatus(DataChangeUtil.getLocalStatus(e.getStatus()));
 		model.addAttribute("exams", exams);
 		
 		List<Map<String, Object>> examsInfos = DataChangeUtil.getSimpleExams(exams);
@@ -408,6 +411,7 @@ public class TeacherController {
 		
 		//考试Id
 		Integer eId;
+		System.out.println("teaId："+teaId);
 		
 		//查询当前考试
 		List<Exam> exams = examService.queryExamWithExamInfo
@@ -449,7 +453,8 @@ public class TeacherController {
 			if(s.getCommitinfo()!=null)
 				submitNum++;
 		}
-		
+
+		result.put("name",exams.get(0).geteName());
 		result.put("allNum", allNum);
 		result.put("onlineNum", onlineNum);
 		result.put("submitNum", submitNum);
@@ -520,7 +525,16 @@ public class TeacherController {
 	 *添加学生页面
 	 */
 	@RequestMapping("/teacher_t_addStudent")
-	public String toPageAddStudent() {
+	public String toPageAddStudent(int teaId,Model model) {
+		List<Exam> exams = examService.queryExamWithExamInfo(
+				new Exam(StaticResources.RUNNING_EXAM));
+		model.addAttribute("exam",null);
+		if(exams!=null&&exams.size()>0) {
+			Exam e = exams.get(0);
+			if(e.getTeaId()==teaId)
+				model.addAttribute("exam",e);
+		}
+		
 		return "teacher/t_addStudent";
 	}
 	
@@ -549,8 +563,15 @@ public class TeacherController {
 	 *IP解绑页面
 	 */
 	@RequestMapping("/teacher_t_IPRelease")
-	public String toPageIPRelease() {
-		
+	public String toPageIPRelease(int teaId,Model model) {
+		List<Exam> exams = examService.queryExamWithExamInfo(
+				new Exam(StaticResources.RUNNING_EXAM));
+		model.addAttribute("exam",null);
+		if(exams!=null&&exams.size()>0) {
+			Exam e = exams.get(0);
+			if(e.getTeaId()==teaId)
+				model.addAttribute("eId",e.geteId());
+		}
 		return "teacher/t_IPRelease";
 	}
 	
@@ -588,10 +609,8 @@ public class TeacherController {
 	 *下载答案页面
 	 */
 	@RequestMapping("/teacher_t_answerDownload")
-	public String toPageAnswerDownload(HttpSession session,Model model) {
+	public String toPageAnswerDownload(int teaId,Model model) {
 		System.out.println("下载答案页面");
-		Teacher teacher = (Teacher) session.getAttribute("teacher");
-		int teaId = teacher.getTeaId();
 		Exam parse = new Exam(null,teaId,StaticResources.COMPLETE_EXAM);
 		List<Exam> exams = examService.queryExamWithExamInfo(parse);
 		System.out.println("教师id"+teaId);
@@ -606,10 +625,14 @@ public class TeacherController {
 	@RequestMapping("/teacher_t_getAnwsers")
 	public void getAnwsers(int eId,HttpServletResponse response,
 			HttpServletRequest request) {
-		Exam exam = examService.queryById(eId);
+		Exam exam = examService.queryExamWithExamInfoByEId(eId);
 		String folderPath = exam.getPaperAnwserPath();
 		try {
 			FileHelper.downloadZip(request, response, folderPath);
+			//将考试设置为已下载
+			ExamInfo info = new ExamInfo(exam.getExamInfo().getInId(),eId);
+			info.setIsDownload(StaticResources.IS_DOWNLOAD);
+			examInfoService.updateExamBySelective(info);
 		} catch (IOException e) {
 			System.out.println("下载学生答案失败！");
 			e.printStackTrace();
@@ -622,7 +645,17 @@ public class TeacherController {
 	 *导出信息页面
 	 */
 	@RequestMapping("/teacher_t_examInfoExport")
-	public String toPageExamInfoExport() {
+	public String toPageExamInfoExport(int teaId,Model model) {
+		List<Exam> exams = examService.queryExamWithExamInfo(
+				new Exam(null,teaId,StaticResources.COMPLETE_EXAM));
+		
+		List<Map<String, Object>> examsInfos = new ArrayList<Map<String , Object>>();
+
+		//把简单的经过格式化处理的信息放到界面
+		examsInfos = DataChangeUtil.getSimpleExams(exams);
+		if(exams.size()>0) {
+			model.addAttribute("examsInfos",examsInfos);
+		}
 		return "teacher/t_examInfoExport";	
 	}
 	
@@ -639,12 +672,12 @@ public class TeacherController {
 		System.out.println("清理考试中...");
 		Exam exam = examService.queryExamWithExamInfoByEId(eId);
 		//1、判断是否已下载 
-		int isDownload = StaticResources.IS_NOT_DOWNLOAD;
+		//int isDownload = StaticResources.IS_NOT_DOWNLOAD;
 		ExamInfo info = null;
-		if(exam.getExamInfo()!=null) {
+		int isDownload = 0;
+		if(exam!=null) {
+			System.out.println(exam);
 			info = exam.getExamInfo();
-			System.out.println(eId);
-			System.out.println(info);
 			isDownload = info.getIsDownload();
 			if(isDownload==StaticResources.IS_NOT_DOWNLOAD)
 				return Msg.fail().setMsg("考试还未下载，不能清理！");
@@ -671,9 +704,23 @@ public class TeacherController {
 	
 	
 	/**
+	 * teacher_del_exam
 	 * 删除考试
 	 */
-	
+	@RequestMapping("/teacher_del_exam")
+	@ResponseBody
+	public Msg delExam(HttpServletRequest request,int eId) {
+		List<Exam> exams = examService.queryExamWithExamInfo(new Exam(eId));
+		if(exams!=null&&exams.size()>0) {
+			Exam e = exams.get(0);
+			clearExam(request, eId);//手动清理考试
+			examInfoService.deleteExamInfoById(e.getExamInfo().getInId());
+			examService.deleteExam(eId);
+			return Msg.success().setMsg("删除成功");
+		}else{
+			return Msg.fail().setMsg("考试不存在");
+		}
+	}
 	
 
 	/**
@@ -863,28 +910,27 @@ public class TeacherController {
     		//更新启动考试
        	 	openExam();
     		return Msg.success().setMsg("更新考试成功！");
-    	}
-    	
-         
-        
+    	}     
 	}
 
 	/**
 	 * 根据考试id删除所有学生及考试安排表的信息
 	 */
 	private void deleteStudentsWithEId(int eId) {
-		//删除学生表学生
-		List<Student> students = studentService.queryStudentByEId(eId);
-		List<Integer> ids = new ArrayList<>();
-		for(Student s :students) ids.add(s.getStuId());
-		if(ids.size()>0) {
-			studentService.deleteStudentBatch(ids);
-			System.out.println("删除之前的学生成功！");
-		}		
+		Exam e = examService.selectByPrimaryKeyWithStudent(eId);
+		if(e!=null) {
+			//删除学生表学生
+			List<Student> students = e.getStudents();
+			List<Integer> ids = new ArrayList<>();
+			for(Student s :students) ids.add(s.getStuId());
+			if(ids.size()>0) {
+				studentService.deleteStudentBatch(ids);
+				System.out.println("删除之前的学生成功！");
+			}	
+		}
 		//删除考试表信息
 		examArrangeService.deleteExamArrangesByEId(eId);
 		System.out.println("删除考试表信息成功！");
-		
 	}
 
 	/**

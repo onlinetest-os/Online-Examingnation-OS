@@ -42,6 +42,9 @@ ul.pagination li a {
 		<div class="row-fluid">
 			<div class="span12">
 				<table class="table">
+				<c:if test="${exams==null}" >
+					暂无可下载的考试
+				</c:if>
 					<thead>
 						<tr>
 							<th>考试名称</th>
@@ -49,18 +52,15 @@ ul.pagination li a {
 						</tr>
 					</thead>
 					<tbody>
-					<c:if test="${exams!=null}" >
-					<c:forEach items="${exams}" var="exam" varStatus="st">
-						<tr>
-							<td>${exam.eName}</td>
-							<td><a class="btn" href="teacher_t_getAnwsers?eId=${exam.eId}">下载</a></td>
-						</tr>
-					</c:forEach>
-						
-					</c:if>
-						
-						
-						
+						<c:if test="${exams!=null}" >
+							<c:forEach items="${exams}" var="exam" varStatus="st">
+								<tr>
+									<td>${exam.eName}</td>
+									<td><a class="btn" href="teacher_t_getAnwsers?eId=${exam.eId}">下载</a></td>
+								</tr>
+							</c:forEach>
+								
+						</c:if>
 					</tbody>
 				</table>
 			

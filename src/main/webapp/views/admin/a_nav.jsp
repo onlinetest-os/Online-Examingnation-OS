@@ -23,7 +23,7 @@
 	<nav class="navbar navbar-inverse" role="navigation">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a href="Admin_main.jsp" class="navbar-brand">ExamSystem</a>
+			<a href="admin_manage_account" class="navbar-brand">ExamSystem</a>
 		</div>
 		<div>
 			<ul class="nav navbar-nav">
