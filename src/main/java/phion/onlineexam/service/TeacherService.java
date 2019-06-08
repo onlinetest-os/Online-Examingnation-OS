@@ -46,6 +46,12 @@ public interface TeacherService {
 	 */
 	public void updateTeacher(Teacher teacher);
 	
+	/**
+	 * 有选择的更新教师信息
+	 * @param Teacher
+	 */
+	public void updateTeacherSelective(Teacher teacher);
+	
 	 
 	/**
 	 * 根据主键删除教师

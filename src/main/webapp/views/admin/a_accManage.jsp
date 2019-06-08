@@ -62,7 +62,8 @@ ul.pagination li a {
 			  <div class="form-group">
 			    <label class="col-sm-2 control-label">密码</label>
 			    <div class="col-sm-10">
-			      <input type="text" name="teaPassword" class="form-control" id="teaPassword_update_input" placeholder="teaPassword">
+			   	<span>不可修改</span>
+			      <input type="hidden" name="teaPassword" class="form-control" id="teaPassword_update_input" placeholder="teaPassword">
 			      <span class="help-block"></span>
 			    </div>
 			  </div>

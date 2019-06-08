@@ -99,7 +99,7 @@ display:none;
 	<script type="text/javascript">
 		//开始考试
 		$("#startBtn").click(function() {
-			//alert("start");
+			alert("start");
 			$.ajax({
 				url:"${APP_PATH}/teacher_start_exam?eId=${eId}",
 				type:"GET",
@@ -110,7 +110,7 @@ display:none;
 		});
 		//结束考试
 		$("#endBtn").click(function() {
-			//alert("end");
+			alert("end");
 			$.ajax({
 				url:"${APP_PATH}/teacher_end_exam?eId=${eId}",
 				type:"GET",

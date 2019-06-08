@@ -49,11 +49,11 @@ public class ExamInfo {
     }
 
     public Integer getAllNumber() {
-        return allNumber;
+        return allNumber==null?0:allNumber;
     }
 
     public void setAllNumber(Integer allNumber) {
-        this.allNumber = allNumber;
+        this.allNumber = allNumber==null?0:allNumber;
     }
 
     public Integer getIsDownload() {

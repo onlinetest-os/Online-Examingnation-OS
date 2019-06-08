@@ -24,6 +24,12 @@ public interface ExamArrangeService {
 	
 	
 	/**
+	 * 查找考试安排记录
+	 */
+	public List<ExamArrange> queryExamArrange(ExamArrange examArrange);
+	
+	
+	/**
 	 * 根据考试id删除考试安排
 	 */
 	public void deleteExamArrangesByEId(Integer eId);

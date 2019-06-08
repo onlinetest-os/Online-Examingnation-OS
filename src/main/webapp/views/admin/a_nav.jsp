@@ -27,14 +27,18 @@
 		</div>
 		<div>
 			<ul class="nav navbar-nav">
-				<li><a href="a_myAcc.jsp">我的口令</a></li>
 				<li><a href="admin_manage_account">账户管理</a></li>
-				<li><a href="a_examClean.jsp">考试清理</a></li>
-				<li><a href="a_config.jsp">全局配置</a></li>
+				<li><a href="admin_a_examClean">考试清理</a></li>
+				<li><a href="admin_a_config">全局配置</a></li>
 			</ul>
 		</div>
 		<ul class="nav pull-right">
-			<li><a href="admin_cancel">退出</a></li>
+			<li style="float:left;">
+			<a href="#">${teacher.teaName }</a>
+			</li>
+			<li style="float:left;">
+			<a href="admin_cancel">退出</a>
+			</li>
 		</ul>
 	</div>
 	</nav>

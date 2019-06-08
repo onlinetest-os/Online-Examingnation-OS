@@ -15,9 +15,9 @@
 	<div class="tab" style="margin-top: 0px;">
 	<div class="box" style="color: white;">
 		<ul class="menus" style="height:auto;margin-top: 100px;background: white">
-			<li class="bg">I am a student</li>
-			<li >I am a teacher</li>
-			<li>I am a administrator</li>
+			<li class="bg">学生登录</li>
+			<li >教师登录</li>
+			<li>管理员登录</li>
 		</ul>
 		<div class="right" style="height:600px;background: #ccccff">
 			<div class="scroll" style="margin-top: -900px;">

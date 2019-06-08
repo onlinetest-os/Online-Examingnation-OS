@@ -146,13 +146,14 @@ public class StudentController {
 		ModelAndView mav = new ModelAndView();
 		//查询已经开始的考试
 		Exam exam = examService.queryById(eId);
-		//System.out.println(exam);
+		System.out.println(exam);
 		if(!exam.getStatus().equals(StaticResources.RUNNING_EXAM)) {
+			//System.out.println("没有正在运行的考试");
 			mav.setViewName("student/s_examBegin");
 			return mav;
 		}
 		
-		int count = examArrangeService.queryExamArrangeCount(new ExamArrange(null,stuId,eId));
+		int count = examArrangeService.queryExamArrangeCount(new ExamArrange(null,null,eId));
 		
 		if(count>0) {
 			System.out.println(exam);

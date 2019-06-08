@@ -36,6 +36,10 @@ public class TeacherServiceImpl implements TeacherService {
 	public void updateTeacher(Teacher teacher) {
 		teacherMapper.updateByPrimaryKey(teacher);
 	}
+	
+	public void updateTeacherSelective(Teacher teacher) {
+		teacherMapper.updateByPrimaryKeySelective(teacher);
+	}
 
 	public void deleteTeacher(Integer teaId) {
 		teacherMapper.deleteByPrimaryKey(teaId);

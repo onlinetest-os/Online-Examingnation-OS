@@ -4,43 +4,68 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Insert title here</title>
-<style type="text/css">
-.container {
-	display: grid;
-	grid-template-areas: "main";
-	justify-items: center;
-}
-.main {
-	width: 100px;
-	height: 100px;
-	background: #ccccff;
-	border-radius: 50%;
-	text-decoration: none;
-	cusor: pointer;
-	background: #0066ff;
-	border-radius: 4px;
-	text-align: center;
-}
-.btn {
-	color: white;
-	text-decoration: none;
-	cusor: pointer;
-	background: #0066ff;
-	border-radius: 4px;
-	padding: 5px;
-}
-</style>
+
 </head>
 <body>
 	<%@include file="a_nav.jsp" %>
 	<div class="container">
-	<form calss="main">
-		分页记录数<input type="text" /><br /> <br /> 
-		手动开启考试时间阈值<input type="text" />分钟<br /><br /> 
-		是否允许主考教师清理删除&nbsp;&nbsp;&nbsp;<input type="checkbox" /><br /><br /> 
-		<button class="btn" type="submit">OK</button>
-	</form>
+		<form id="dataForm" class="main">
+		
+			 <div class="form-group">
+			    <label for="spiltPageCount">分页记录数（页）</label>
+			    <input name="spiltPageCount" type="text" class="form-control" id="spiltPageCount"
+			     value="${spiltPageCount}">
+		  	</div>
+		  	
+		  	<div class="form-group">
+			    <label for="manualStartExamRange">手动开启考试时间阈值（分钟）</label>
+			    <input name="manualStartExamRange" type="text" class="form-control" id="manualStartExamRange" 
+			    value="${manualStartExamRange}">
+		  	</div>
+		  	
+		  	<div class="checkbox">
+			    <label>
+			      <input name="haveDeletePower" id="haveDeletePower" type="checkbox">允许主考教师清理删除 
+			    </label>
+		 	 </div>
+		  	
+		  	<div class="form-group">
+			    <label for=maxUploadSize>最大上传文件大小（字节）</label>
+			    <input name="maxUploadSize" type="text" class="form-control" id="maxUploadSize" 
+			    value="${maxUploadSize}">
+		  	</div>
+		  	
+		  	<div class="checkbox">
+			    <label>
+			    <input name="autoStartExam" id="autoStartExam" type="checkbox">  自动开启考试
+			    </label>
+		 	 </div>
+		 <button id="submit" type="submit" class="btn btn-default">提交修改</button>
+		</form>
 	</div>
-
+	<script type="text/javascript">
+		//初始化
+		$("#haveDeletePower").attr('checked',${haveDeletePower});
+		$("#autoStartExam").attr('checked',${autoStartExam});
+		
+		$("#submit").click(function(){
+			$.ajax({
+				url:"${APP_PATH}/admin_save_configs",
+				type:"POST",
+				data:$("#dataForm").serialize(),
+				success:function(result){
+					//alert(result.msg);
+					//alert($("#dataForm").serialize());
+					if(result.code == 100){
+						alert(result.msg);
+					}else{
+						alert(result.msg);
+					}
+				}
+			});
+		});
+	</script>
+	
+	
 </body>
 </html>

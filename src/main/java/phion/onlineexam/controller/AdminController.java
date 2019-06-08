@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,10 +22,19 @@ import org.springframework.web.servlet.ModelAndView;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
+import phion.onlineexam.bean.Exam;
+import phion.onlineexam.bean.ExamInfo;
 import phion.onlineexam.bean.Msg;
 import phion.onlineexam.bean.StaticResources;
+import phion.onlineexam.bean.Student;
 import phion.onlineexam.bean.Teacher;
+import phion.onlineexam.service.ExamArrangeService;
+import phion.onlineexam.service.ExamService;
+import phion.onlineexam.service.StudentService;
 import phion.onlineexam.service.TeacherService;
+import phion.onlineexam.utils.ConfigHelper;
+import phion.onlineexam.utils.DataChangeUtil;
+import phion.onlineexam.utils.FileHelper;
 
 @RequestMapping("")
 @Controller
@@ -34,7 +42,15 @@ public class AdminController {
 
 	@Autowired
 	TeacherService teacherService;
+	
+	@Autowired
+	ExamService examService;
 
+	@Autowired
+	StudentService studentService;
+	
+	@Autowired
+	ExamArrangeService examArrangeService;
 	/**
 	 * 管理员登录
 	 * @return
@@ -213,8 +229,9 @@ public class AdminController {
 	@RequestMapping("/admin_update_teacher")
 	@ResponseBody
 	public Msg updateTeacher(Teacher teacher) {
+		teacher.setTeaPassword(null);
 		System.out.println("将要更新的员工数据："+teacher);
-		teacherService.updateTeacher(teacher);;
+		teacherService.updateTeacherSelective(teacher);
 		return Msg.success();
 	}
 	
@@ -247,4 +264,106 @@ public class AdminController {
 		teacherService.deleteTeacherBatch(del_ids);
 		return Msg.success().setMsg("删除成功！");
 	}
+	
+	/**
+	 * admin_a_examClean
+	 * 考试清理页面
+	 */
+	@RequestMapping("/admin_a_examClean")
+	public String toPageCleanExam(Model model) {
+		List<Exam> exams = examService.queryExamWithExamInfo(
+				new Exam(StaticResources.COMPLETE_EXAM));
+		
+		List<Map<String, Object>> examsInfos = new ArrayList<Map<String , Object>>();
+
+		//把简单的经过格式化处理的信息放到界面
+		examsInfos = DataChangeUtil.getSimpleExams(exams);
+		if(exams.size()>0) {
+			model.addAttribute("examsInfos",examsInfos);
+		}
+		return "admin/a_examClean";
+	}
+	
+	/**
+	 * 清理考试
+	 * 答案下载完成后（is_download为true），
+	 * 清理包括答案与试卷，答案与试卷。
+	 */
+	@RequestMapping("admin_clean_exam")
+	@ResponseBody
+	public Msg clearExam(HttpServletRequest request,Integer eId) {
+		System.out.println("管理员清理考试中...");
+		Exam exam = examService.queryExamWithExamInfoByEId(eId);
+		//1、判断是否已下载 
+		//int isDownload = StaticResources.IS_NOT_DOWNLOAD;
+		ExamInfo info = null;
+		int isDownload = 0;
+		if(exam!=null) {
+			System.out.println(exam);
+			info = exam.getExamInfo();
+			isDownload = info.getIsDownload();
+			if(isDownload==StaticResources.IS_NOT_DOWNLOAD)
+				return Msg.fail().setMsg("考试还未下载，不能清理！");
+		}
+		//2、判断是否有权限清理
+		//读取配置文件
+		boolean havePower = Boolean.TRUE;
+		if(!havePower) return Msg.fail().setMsg("没有权限删除，请联系管理员！");
+		
+		//3、清理答案与试卷
+		String paperAnwserPath = exam.getPaperAnwserPath();
+		String paperPath = exam.getPaperPath();
+		System.out.println("答案路径："+paperAnwserPath);
+		System.out.println("试卷路径："+paperPath);
+		
+		FileHelper.deleteFile(request, paperAnwserPath);
+		FileHelper.deleteFile(request, paperPath);
+		
+		//4、清理考试安排表，学生表
+		deleteStudentsWithEId(eId);
+		
+		return Msg.success().setMsg("清理完成！");
+	}
+	
+	/**
+	 * 根据考试id删除所有学生及考试安排表的信息
+	 */
+	private void deleteStudentsWithEId(int eId) {
+		Exam e = examService.selectByPrimaryKeyWithStudent(eId);
+		if(e!=null) {
+			//删除学生表学生
+			List<Student> students = e.getStudents();
+			List<Integer> ids = new ArrayList<>();
+			for(Student s :students) ids.add(s.getStuId());
+			if(ids.size()>0) {
+				studentService.deleteStudentBatch(ids);
+				System.out.println("删除之前的学生成功！");
+			}	
+		}
+		//删除考试表信息
+		examArrangeService.deleteExamArrangesByEId(eId);
+		System.out.println("删除考试表信息成功！");
+	}
+	
+	
+	/**
+	 * admin_a_config
+	 * 全局配置信息
+	 */
+	@RequestMapping("/admin_a_config")
+	public String toPageConfig(Model model,HttpServletRequest request) {
+		Map configs = ConfigHelper.getConfig(request);
+		model.addAllAttributes(configs);
+		return "admin/a_config";
+	}
+	
+	/**
+	 * admin_save_configs
+	 */
+	@RequestMapping("admin_save_configs")
+	@ResponseBody
+	public Msg adminSaveConfigs() {
+		return Msg.success().setMsg("修改设置成功！");
+	}
+	
 }

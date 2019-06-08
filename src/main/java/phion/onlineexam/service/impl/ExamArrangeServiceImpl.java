@@ -42,4 +42,9 @@ public class ExamArrangeServiceImpl implements ExamArrangeService{
 		}
 	}
 
+	@Override
+	public List<ExamArrange> queryExamArrange(ExamArrange examArrange) {
+		return examArrangeMapper.selectByExampleSelective(examArrange, null);
+	}
+
 }

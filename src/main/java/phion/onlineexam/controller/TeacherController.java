@@ -297,9 +297,16 @@ public class TeacherController {
 	 */
 	@RequestMapping("/teacher_check_student")
 	@ResponseBody
-	public Msg checkStudent(@RequestParam(value="stuNumber",defaultValue="000")String stuNumber) {
-		int count = studentService.queryStudentCount(new Student(stuNumber,null,null,null));
-		if(count>0) return Msg.fail().add("va_msg", "该学号学生已存在！");
+	public Msg checkStudent(@RequestParam(value="stuNumber",defaultValue="000")String stuNumber,int eId) {
+		Exam e = examService.selectByPrimaryKeyWithStudent(eId);
+		List<Student> stus;
+		if(e!=null &&(stus = e.getStudents())!=null && stus.size()>0 ) {
+			for(Student s :stus) 
+				if(s.getStuNumber().equals(stuNumber)) 
+					return Msg.fail().add("va_msg", "该学号学生已存在！");
+			
+		}
+
 		return Msg.success();
 	}
 	
@@ -324,6 +331,8 @@ public class TeacherController {
 			studentService.addStudent(student);
 			int stuId = studentService.queryStudent(student).get(0).getStuId();
 			examArrangeService.addExamArrange(new ExamArrange(null,stuId,eId));
+			System.out.println("更新考试安排表！");
+			System.out.println(examArrangeService.queryExamArrange(new ExamArrange(null,stuId,eId)));
 			return Msg.success();
 		}
 	}

@@ -332,7 +332,7 @@
 			//发送ajax请求校验学号是否可用
 			var stuNumber = this.value;
 			$.ajax({
-				url:"${APP_PATH}/teacher_check_student",
+				url:"${APP_PATH}/teacher_check_student?eId=${eId}",
 				data:"stuNumber="+stuNumber,
 				type:"POST",
 				success:function(result){

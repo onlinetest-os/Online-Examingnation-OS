@@ -7,5 +7,8 @@
 	<autoStartExam>false</autoStartExam>
 	<!-- 提前手动开启考试范围 -->
 	<manualStartExamRange>15</manualStartExamRange>
-
+	<!-- 分页记录数 -->
+	<spiltPageCount>5</spiltPageCount>
+	<!-- 是否允许主考教师删除考试 -->
+	<haveDeletePower>true</haveDeletePower>
 </config>

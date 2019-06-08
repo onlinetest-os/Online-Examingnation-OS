@@ -85,7 +85,7 @@
 			}else{
 				type="all";
 			}
-			alert(type);
+			//alert(type);
 			$.ajax({
 				url:"${APP_PATH}/teacher_get_students?eId=${eId}&type="+type,
 				data:"pn="+pn,
