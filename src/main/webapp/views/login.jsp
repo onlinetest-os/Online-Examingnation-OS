@@ -19,7 +19,7 @@
 			<li >教师登录</li>
 			<li>管理员登录</li>
 		</ul>
-		<div class="right" style="height:600px;background: #ccccff">
+		<div class="right" style="height:600px;background: #75afc1">
 			<div class="scroll" style="margin-top: -900px;">
 			<div class="tab_right">
 					<%@include file="student/s_login.jsp"%>
