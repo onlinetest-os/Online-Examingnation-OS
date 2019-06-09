@@ -18,7 +18,7 @@
 <nav class="navbar navbar-inverse" role="navigation">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a href="Student_main.jsp" class="navbar-brand">ExamSystem</a>
+			<a href="#" class="navbar-brand">ExamSystem</a>
 		</div>
 		<ul class="nav pull-right" id="right">
 			<li><img src="${APP_PATH}/static/assets/images/users/avatar-1.jpg" style="width:50px;height:50px;border-radius:50%"/></li>

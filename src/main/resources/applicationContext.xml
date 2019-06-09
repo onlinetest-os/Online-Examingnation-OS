@@ -28,7 +28,7 @@
 
 	<!-- Spring的配置文件，这里主要配置和业务逻辑有关的 -->
 	<!--=================== 数据源，事务控制，xxx ================-->
-	<context:property-placeholder location="classpath:dbconfig3.properties" />
+	<context:property-placeholder location="classpath:dbconfig2.properties" />
 	<bean id="pooledDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
 		<property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
 		<property name="driverClass" value="${jdbc.driverClass}"></property>
