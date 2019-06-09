@@ -4,20 +4,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import phion.onlineexam.bean.StaticResources;
 import phion.onlineexam.bean.Student;
 import phion.onlineexam.bean.Teacher;
+import phion.onlineexam.service.StudentService;
 
 /**
  * 登录拦截器，返回false则不在继续访问其他拦截器
  * @author 15037
  *
  */
+@Component
 public class LoginInterceptor implements HandlerInterceptor {
 
+	@Autowired
+	StudentService studentService;
+	
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		//////System.out.println("调用LoginInterceptor-preHandle");
@@ -119,14 +126,17 @@ public class LoginInterceptor implements HandlerInterceptor {
 		HttpSession session = request.getSession();
 	
 		Student student = (Student) session.getAttribute("student");
-		if(student==null){
+		System.out.println(student);
+		if(student==null||student.getIp()==null){
 			response.sendRedirect(request.getContextPath() + "/index.jsp");
 			return false;
 		}
 		
-		String stuNumber = student.getStuNumber();
-		String stuName = student.getStuName();
-		if (stuNumber == null || stuName == null) {
+		/*String stuNumber = student.getStuNumber();
+		String stuName = student.getStuName();*/
+		String ip = student.getIp();
+		Student temp = studentService.queryStudentById(student.getStuId());
+		if (temp==null||temp.getIp()==null||!temp.getIp().equals(ip)) {
 			response.sendRedirect(request.getContextPath() + "/index.jsp");
 			return false;
 		}

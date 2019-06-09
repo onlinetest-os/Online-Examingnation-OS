@@ -58,7 +58,7 @@ display:none;
 			<div
 				class="progress-bar progress-bar-info progress-bar-striped active"
 				role="progressbar" aria-valuenow="${submitNum}" aria-valuemin="0"
-				aria-valuemax="${allNum}" style="width: ${onlineNum }%">
+				aria-valuemax="${allNum}" style="width: ${(onlineNum/allNum)*100 }%">
 			</div>
 		</div>
 
@@ -71,7 +71,7 @@ display:none;
 			<div
 				class="progress-bar progress-bar-info progress-bar-striped active"
 				role="progressbar" aria-valuenow="${submitNum}" aria-valuemin="0"
-				aria-valuemax="${allNum}" style="width: ${submitNum}%">
+				aria-valuemax="${allNum}" style="width: ${(allNum/submitNum)*100}%">
 				
 			</div>
 		</div>

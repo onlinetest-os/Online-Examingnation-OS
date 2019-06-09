@@ -61,15 +61,61 @@ public class StudentController {
 	@ResponseBody
 	public Msg login(@RequestParam(value="stuNumber",defaultValue="0")String stuNumber,
 			String stuName,HttpServletRequest request){
+
+		HttpSession session = request.getSession();
 		System.out.println(request.getRequestURI());
 		System.out.println(stuNumber+"---"+stuName);
 		System.out.println("StudentController被访问");
 		//只要学生在数据库纯在即可登录
 		Student studentLike = new Student(null,stuNumber,stuName,null,null,null,null);
 		List<Student> students = studentService.queryStudent(studentLike);
+		List<Exam> exams = examService.queryExamWithExamInfo(new Exam(StaticResources.RUNNING_EXAM));
+	
+		Student student = students.get(0); 
+		
+		//没有正在进行的考试
+		if(exams.size()<=0) {
+			//声明登录类型为学生，方便拦截器判断
+			/*session.setAttribute("role", "student");
+			session.setAttribute("student", student);
+			return Msg.success().add("student", student);*/
+			return Msg.fail().setMsg("当前没有您的考试！");
+		} 
+		
+		Exam e = exams.get(0);
+		List<ExamArrange> arrange = examArrangeService.queryExamArrange(
+				new ExamArrange(null,null,e.geteId()));
+		//不属于正在进行的考试的学生
+		if(arrange.size()<0) {
+			//声明登录类型为学生，方便拦截器判断
+			/*session.setAttribute("role", "student");
+			session.setAttribute("student", student);
+			return Msg.success().add("student", student);*/
+
+			return Msg.fail().setMsg("当前没有您的考试！");
+		}
+		
 		//校验信息
 		if(students.size()<=0) return Msg.fail().setMsg("姓名错误或学号错误!");
-		Student student = students.get(0); 
+		//学生存在于当前考试
+		boolean exits = false;
+		for(Student s :students) {
+			if(s.getStuId()==arrange.get(0).getStuId()) {
+				exits = true;
+				break;
+			}
+		}
+		
+		//如果学生不存在，则不用锁ip
+		if(!exits) {
+			//声明登录类型为学生，方便拦截器判断
+			/*session.setAttribute("role", "student");
+			session.setAttribute("student", student);
+			return Msg.success().add("student", student);*/
+			return Msg.fail().setMsg("当前没有您的考试！");
+		}
+		
+		//若存在
 		System.out.println(student);
 		//如果ip不为空，则比较当前ip
 		if(student.getIp()!=null&&!student.getIp().equals("")) {
@@ -83,7 +129,6 @@ public class StudentController {
 		//ip绑定
 		studentService.updateStudent(student);
 		
-		HttpSession session = request.getSession();
 		System.out.println(student);
 		
 		//声明登录类型为学生，方便拦截器判断
