@@ -139,7 +139,7 @@
 		//formdata.append("studentOrder");
 		//2、验证并保存考试
 		$.ajax({
-			url	 :"${APP_PATH}/teacher_validate_exam",
+			url	 :"${APP_PATH}/teacher_validate_exam?isEditStr=${isEdit}",
 			type : "POST",
 			data :formdata,
 			processData:false,

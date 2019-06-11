@@ -330,10 +330,14 @@ public class TeacherController {
 			}
 			return Msg.fail().add("errorFields", map);
 		}else{
+			//学生表中更新学生
 			studentService.addStudent(student);
+			
 			int stuId = studentService.queryStudent(student).get(0).getStuId();
+			//更新考试安排表
 			examArrangeService.addExamArrange(new ExamArrange(null,stuId,eId));
 			System.out.println("更新考试安排表！");
+			
 			System.out.println(examArrangeService.queryExamArrange(new ExamArrange(null,stuId,eId)));
 			return Msg.success();
 		}
@@ -357,7 +361,7 @@ public class TeacherController {
 	@RequestMapping("/teacher_update_student")
 	@ResponseBody
 	public Msg updateStudent(Student student) {
-		System.out.println("将要更新的员工数据："+student);
+		System.out.println("将要更新的学生数据："+student);
 		studentService.updateStudent(student);
 		return Msg.success();
 	}
@@ -399,6 +403,8 @@ public class TeacherController {
 	<li><a href="teacher_t_IPRelease" target="main_right">IP解绑</a></li>
 	 */
 	
+	
+
 	/**
 	 * 考中
 	 */
@@ -767,13 +773,14 @@ public class TeacherController {
 	 */
 	@RequestMapping("/teacher_validate_exam")
 	@ResponseBody
-	public Msg validateExam(String startTimeStr,String endTimeStr,boolean isEdit) {
+	public Msg validateExam(String startTimeStr,String endTimeStr,String isEditStr) {
 		//1、查询时间是否冲突，即是否所有考试均满足st>newSt
 		//如新考试是8:00-10:00,就是合理的
 		//*0:00-2:00***4:00-6:00********11:00-13:00******************
 		//System.out.println(exam);
 		Msg msg = new Msg();
-		
+		System.out.println(isEditStr);
+		boolean isEdit = isEditStr.equals("true")?true:false;
 		LocalDateTime startTime;
 		LocalDateTime endTime;
 		try{
@@ -937,7 +944,7 @@ public class TeacherController {
     	}else {
     		System.out.println(StaticResources.TEACHERLOG+"更新考试！");
     		//校验更新考试的时间
-    		Msg msg = validateExam(startTimeString, endTimeString,true);
+    		Msg msg = validateExam(startTimeString, endTimeString,"true");
     		if(msg.getCode()==200) {
     			return msg;
     		}
@@ -1052,6 +1059,32 @@ public class TeacherController {
 		for(Integer stuId: stuIds)
 			examArranges.add(new ExamArrange(null,stuId,eId));
 		examArrangeService.addExamArrangeBatch(examArranges);
+		
+	}
+	
+	/**
+	 * teacher_s_export
+	 * 导出信息
+	 * 此处应有学生信息及考试信息校验，判断是否能下载试卷
+	 */
+	@RequestMapping("/teacher_s_export")
+	public void export(Integer eId,HttpServletRequest request,
+			HttpServletResponse response) {
+		System.out.println("StudentControllor:进入导出！");
+		Exam exam = examService.selectByPrimaryKey(eId);
+		String paperPath = exam.getPaperPath();
+		//String fileName = StaticResources.NEW_FILE_NAME;
+		
+		try {
+			Msg msg = FileHelper.downloadZip(request, response, paperPath);
+			if(msg.getCode()==StaticResources.FAIL_CODE) {
+				response.getWriter().println(FileHelper.getUTF8String("试卷还未上传，稍后请重试！"));
+			}
+			//response.getWriter().println("hello world!");
+		} catch (Exception e) {
+			System.out.println("StudentControllor:下载出错！");
+			e.printStackTrace();
+		}
 		
 	}
 	
