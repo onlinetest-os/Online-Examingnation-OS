@@ -488,13 +488,13 @@ public class TeacherController {
 	@RequestMapping("teacher_start_exam")
 	@ResponseBody
 	public Msg startExam(Integer eId) {
-		Exam exam = examService.queryById(eId);
-		
+		//Exam exam = examService.queryById(eId);
 		//设置状态为开始考试
-		exam.setStatus(StaticResources.RUNNING_EXAM);
-		examService.updateExam(exam);
+		//exam.setStatus(StaticResources.RUNNING_EXAM);
+		//examService.updateExam(exam);
 		
-		return Msg.success().setMsg("考试开始成功！");
+		//return Msg.success().setMsg("考试开始成功！");
+		return Msg.fail().setMsg("考试已设置为自动开启，无法手动开启！");
 	}
 	
 	
