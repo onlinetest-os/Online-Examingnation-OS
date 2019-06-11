@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="" %>
+	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -47,17 +47,20 @@ display:none;
 	padding: 5px;
 }
 </style>
-
 </head>
 <body>
-	<h1>当前考试是：</h1>
-	<c:if test="${allNum!=null}">
+	<c:if test="${!ready}">
+		请先添加学生！
+	</c:if>
+
+	<h1>当前考试是：${name}</h1>
+	<c:if test="${ready}">
 		<div class="bar">
 			<h3>在线比例</h3>
 			<div class="progress">
 				<div
 					class="progress-bar progress-bar-info progress-bar-striped active"
-					role="progressbar" aria-valuenow="${submitNum}" aria-valuemin="0"
+					role="progressbar" aria-valuenow="${onlineNum}" aria-valuemin="0"
 					aria-valuemax="${allNum}" style="width: ${(onlineNum/allNum)*100 }%">
 				</div>
 			</div>
@@ -71,7 +74,7 @@ display:none;
 				<div
 					class="progress-bar progress-bar-info progress-bar-striped active"
 					role="progressbar" aria-valuenow="${submitNum}" aria-valuemin="0"
-					aria-valuemax="${allNum}" style="width: ${(allNum/submitNum)*100}%">
+					aria-valuemax="${allNum}" style="width: ${(submitNum/allNum)*100}%">
 					
 				</div>
 			</div>

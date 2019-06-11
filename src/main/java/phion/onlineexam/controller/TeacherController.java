@@ -443,19 +443,25 @@ public class TeacherController {
 		
 		//本场考试全体考生
 		Exam exam = examService.selectByPrimaryKeyWithStudent(eId);
+		if(exam==null) {
+			model.addAttribute("ready", false);
+			return "teacher/t_viewExam";
+		}
 		List<Student> students = exam.getStudents();
+		System.out.println("exme.getStudents:"+students);
 		
 		//考试信息
 		ExamInfo info = examInfoService.queryExamInfoByeId(eId);
-		allNum = info.getAllNumber();
 		
-		//如果考试信息表未记录，则更新考试信息表
-		if(allNum == 0) {
-			allNum = students.size();
-			//更新
-			info.setAllNumber(allNum);
-			examInfoService.updateExamBySelective(info);
-		}
+		
+		//更新考试信息表
+		
+		allNum = students.size();
+		//更新
+		info.setAllNumber(allNum);
+		examInfoService.updateExamBySelective(info);
+		
+		//allNum = info.getAllNumber();
 		
 		//查询在线人数与提交人数
 		for(Student s:students) {
@@ -464,7 +470,7 @@ public class TeacherController {
 			if(s.getCommitinfo()!=null)
 				submitNum++;
 		}
-
+		result.put("ready", true);
 		result.put("name",exams.get(0).geteName());
 		result.put("allNum", allNum);
 		result.put("onlineNum", onlineNum);
