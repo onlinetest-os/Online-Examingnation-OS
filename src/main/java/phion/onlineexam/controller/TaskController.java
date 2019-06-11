@@ -25,8 +25,8 @@ public class TaskController {
 
 	private ExamService service;
 
-	private volatile boolean success = true;
-
+	private volatile boolean success = true;//用来判断开启考试线程是否是被中断的
+	
 	private TaskController() {
 
 	}
@@ -78,10 +78,49 @@ public class TaskController {
 
 		// 设置考试为开启状态
 		fisrtExam.setStatus(StaticResources.RUNNING_EXAM);
+		
 		// 更新
 		service.updateExam(fisrtExam);
 		System.out.println("考试开启成功");
+		//开启关闭考试线程
+		
+		LocalTime nowTime = DateUtil.getCurrentLocalTime();
+		LocalTime endTime = DateUtil.toLocalDateTime(
+				fisrtExam.getEndTime()).toLocalTime();
+		int seconds = 1000;
+		int temp = DateUtil.getSeconds(nowTime, endTime);
+		if (temp > 0) seconds = temp;
+		
+		//waitToStopExam(seconds, fisrtExam);
 	}
+	
+	
+	/**
+	 * 关闭考试线程
+	 */
+	public void waitToStopExam(int seconds,Exam fisrtExam) {
+		//开启关闭考试线程
+		new Thread(new Runnable() {			
+			@Override
+			public void run() {
+				try {
+					System.out.println("关闭考试线程："+"休眠时间:" + seconds * SECOND_UNIT + "毫秒");
+					Thread.sleep(seconds * SECOND_UNIT);
+				} catch (InterruptedException e) {
+					System.out.println("关闭考试线程被中断！");
+				}
+			}
+		}).start();
+		
+		// 设置考试为开启状态
+		fisrtExam.setStatus(StaticResources.COMPLETE_EXAM);
+		// 更新
+		service.updateExam(fisrtExam);
+		System.out.println("考试关闭成功");
+		
+	}
+	
+	
 
 	/**
 	 * 更新考试状态
@@ -181,5 +220,5 @@ public class TaskController {
 			}
 		}
 	}
-
+	
 }

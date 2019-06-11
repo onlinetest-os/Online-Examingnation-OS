@@ -80,6 +80,11 @@ public class MessageController {
 		version++;
 	}
 	
+	public static synchronized void clear() {
+		msgQueue.clear();
+		version++;
+	}
+	
 }
 
 class ExamMsg implements Serializable{

@@ -575,6 +575,18 @@ public class TeacherController {
 		return Msg.success();
 	}
 	
+	/**
+	 * 教师删除通知
+	 * teacher_t_alertManage_clear
+	 */
+	@RequestMapping("/teacher_t_alertManage_clear")
+	@ResponseBody
+	public Msg clearMsg(){
+		MessageController.clear();
+		return Msg.success();
+	}
+	
+	
 	
 	/**
 	 *IP解绑页面
