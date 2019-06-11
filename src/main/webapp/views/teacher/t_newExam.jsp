@@ -110,6 +110,9 @@
 		</form>
 	</div>
 <script type="text/javascript">
+	//更新日期
+	refresh();
+	
 	var formdata;
 	//正式保存考试
 	$("#save_as_exam_btn").click(function(){
@@ -123,8 +126,9 @@
 			 }
 		</c:if >
 		if(!flag) return;
-		alert("save btn");
+		alert("正在更新，，，请稍等！5秒后没有回应请重新提交！");
 		//1、获取当前已有考试的值
+		if(!check()) return;
 		formdata = new FormData(document.getElementById("form1"));
 		formdata.append("eName",$("#eName").val());
 		formdata.append("stuClass",$("#stuClass").val());
@@ -141,7 +145,8 @@
 			processData:false,
             contentType:false,
 			success : function(result) {
-				if(result.msg.code="100"){
+				if(result.code==100){
+					//alert(result.msg);
 					//信息有效，保存考试
 					saveExam();
 				}else{
@@ -150,6 +155,30 @@
 			}
 		});
 	});
+	//检查信息
+	function check() {
+		var res = true;
+		var resMsg = "";
+		var len;
+		if((len=$("#eName").val().length)<2||$("#eName").val.length>6) {
+			res = false;
+			text = $("#eName").val;
+			resMsg +="考试名称长度不能小于2，不能大于6:"+len+'\n';
+		}
+		if((len=$("#stuClass").val.length)<1||$("#stuClass").val.length>6) {
+			res = false;
+			resMsg +="班级名称长度不能小于1不能大于6:"+len+'\n';
+		}
+		var sLen = $("#startTime").val.length;
+		var eLen = $("#endTime").val.length;
+		if(sLen<=0||eLen<=0||sLen>20||eLen>20) {
+			res = false;
+			resMsg +="考试时间有误！"+'\n';
+		}
+		resMsg+="请重新输入！";
+		if(!res) alert(resMsg);
+		return res;
+	}
 	
 	//保存考试
 	function saveExam() {
@@ -167,7 +196,7 @@
 	
 	//提示信息
 	function showInfos(result) {
-		alert("showInfos");
+		alert(result.msg);
 	}
 	
 	//上传试卷与学生名单
@@ -185,6 +214,31 @@
 		var fileName = arr[arr.length - 1];
 		studentOrder.innerHTML = "<font id='studentOrder'>" + fileName + "</font>";
 	};
+	
+	function refresh() {
+		//希望每次打开都要默认为今天日期+00:00
+		//默认时间
+		var myDate = new Date(); 
+		var Y = myDate.getFullYear();
+		var	M = myDate.getMonth() + 1; 
+		var	D = myDate.getDate();
+		var H = myDate.getHours();
+		var m = myDate.getMinutes();
+		//处理月是一位的情况
+		if((M + '').length == 1){
+			M = '0' + (M + '');
+		}
+		//处理日是一位的情况
+		if((D + '').length == 1){
+			D = '0' + (D + '')
+		}
+		var curDay = Y + '-' + M + '-' + D;
+		var curTime = H+':'+m;
+		$('#startTime').val(curDay +'T'+curTime);
+		$('#endTime').val(curDay +'T'+curTime);
+		
+		//alert(curTime);
+	}
 	
 </script>
 

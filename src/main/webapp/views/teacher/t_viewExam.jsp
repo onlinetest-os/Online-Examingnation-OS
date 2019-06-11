@@ -53,48 +53,48 @@ display:none;
 	<h1>当前考试是：</h1>
 	<c:if test="${allNum!=null}">
 		<div class="bar">
-		<h3>在线比例</h3>
-		<div class="progress">
-			<div
-				class="progress-bar progress-bar-info progress-bar-striped active"
-				role="progressbar" aria-valuenow="${submitNum}" aria-valuemin="0"
-				aria-valuemax="${allNum}" style="width: ${(onlineNum/allNum)*100 }%">
+			<h3>在线比例</h3>
+			<div class="progress">
+				<div
+					class="progress-bar progress-bar-info progress-bar-striped active"
+					role="progressbar" aria-valuenow="${submitNum}" aria-valuemin="0"
+					aria-valuemax="${allNum}" style="width: ${(onlineNum/allNum)*100 }%">
+				</div>
 			</div>
+	
+		在线：${onlineNum }人 &nbsp; 离线：${allNum-onlineNum }人
 		</div>
-
-	在线：${onlineNum }人 &nbsp; 离线：${allNum-onlineNum }人
-	</div>
-
-	<div class="bar">
-		<h3>提交比例</h3>
-		<div class="progress">
-			<div
-				class="progress-bar progress-bar-info progress-bar-striped active"
-				role="progressbar" aria-valuenow="${submitNum}" aria-valuemin="0"
-				aria-valuemax="${allNum}" style="width: ${(allNum/submitNum)*100}%">
-				
+	
+		<div class="bar">
+			<h3>提交比例</h3>
+			<div class="progress">
+				<div
+					class="progress-bar progress-bar-info progress-bar-striped active"
+					role="progressbar" aria-valuenow="${submitNum}" aria-valuemin="0"
+					aria-valuemax="${allNum}" style="width: ${(allNum/submitNum)*100}%">
+					
+				</div>
 			</div>
+		已提交：${submitNum}人 &nbsp; 未提交：${allNum-submitNum }人
 		</div>
-	已提交：${submitNum}人 &nbsp; 未提交：${allNum-submitNum }人
-	</div>
-
-
-	<div class="container">
-		<p class="items btn">
-			<a style="color: white;"  id="startBtn">开始考试</a>
-		</p>
-		<p class="items btn">
-			<a style="color: white;"  id="endBtn">结束考试</a>
-		</p>
-		<p class="items btn">
-			<a style="color: white;" href="teacher_showLoginOrder?eId=${eId}" 
-			id="loginOrderBtn">登录名单</a>
-		</p>
-		<p class="items btn">
-			<a style="color: white;" href="teacher_showSubmitOrder?eId=${eId}" 
-			id="submitOrderBtn">提交名单</a>
-		</p>
-	</div>
+	
+	
+		<div class="container">
+			<p class="items btn">
+				<a style="color: white;"  id="startBtn">开始考试</a>
+			</p>
+			<p class="items btn">
+				<a style="color: white;"  id="endBtn">结束考试</a>
+			</p>
+			<p class="items btn">
+				<a style="color: white;" href="teacher_showLoginOrder?eId=${eId}" 
+				id="loginOrderBtn">登录名单</a>
+			</p>
+			<p class="items btn">
+				<a style="color: white;" href="teacher_showSubmitOrder?eId=${eId}" 
+				id="submitOrderBtn">提交名单</a>
+			</p>
+		</div>
 	</c:if> 
 	<script type="text/javascript">
 		//开始考试
