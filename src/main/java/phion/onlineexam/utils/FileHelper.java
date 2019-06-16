@@ -131,13 +131,16 @@ public class FileHelper {
 		 //生成需要下载的文件，存放在临时文件夹内
 		 File srcFile = folder;
 		 File desFile = new File(temDir.getAbsolutePath()+File.separator+srcFile.getName()+".zip");
+		 System.out.println("srcFileName="+srcFile.getName());
+		 System.out.println("desFileName"+desFile.getName());
 		 FileOutputStream fos = new FileOutputStream(desFile);
 		 ZipUtils.toZip(srcFile.getAbsolutePath(), fos, true);
 		 
-		// 设置文件下载头
-		response.addHeader("Content-Disposition", "attachment;filename=anwsers.zip");
+		// 设置文件下载头						  
+		response.addHeader("Content-Disposition", "attachment;filename=data.zip");
 		// 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
 		response.setContentType("multipart/form-data");
+		
 		
 		ZipUtils.toZip(temDir.getAbsolutePath(), response.getOutputStream(),true);
 

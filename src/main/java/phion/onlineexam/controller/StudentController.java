@@ -312,7 +312,7 @@ public class StudentController {
 		String fileName = StaticResources.NEW_FILE_NAME;
 		
 		try {
-			Msg msg = FileHelper.download(request, response, paperPath,fileName);
+			Msg msg = FileHelper.downloadZip(request, response, paperPath);
 			if(msg.getCode()==StaticResources.FAIL_CODE) {
 				response.getWriter().println(FileHelper.getUTF8String("试卷还未上传，稍后请重试！"));
 			}

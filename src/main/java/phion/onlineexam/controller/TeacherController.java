@@ -918,7 +918,7 @@ public class TeacherController {
         		//上传试卷
             	String paperPath = PathHelper.getPaperPath(eId,teaId,
             			teaName,stuClass,eName);
-            	boolean result = FileHelper.upload(paper, request, paperPath,StaticResources.NEW_FILE_NAME);
+            	boolean result = FileHelper.upload(paper, request, paperPath,paperName);
         		System.out.println("上传结果："+result);
             	String paparAnwserPath = PathHelper.getPaperAnwserPath(eId, 
             			teaId, teaName, stuClass, eName);

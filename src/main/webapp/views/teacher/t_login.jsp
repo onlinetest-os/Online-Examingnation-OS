@@ -48,14 +48,14 @@
 					<div class="form-group">
 						<div class="col-xs-12">
 							<input id="teaNumber" class="form-control input-lg" type="text" required=""
-								placeholder="Username">
+								placeholder="工号">
 						</div>
 					</div>
 
 					<div class="form-group">
 						<div class="col-xs-12">
 							<input id="teaPassword" class="form-control input-lg" type="password" required=""
-								placeholder="Password">
+								placeholder="密码">
 						</div>
 					</div>
 

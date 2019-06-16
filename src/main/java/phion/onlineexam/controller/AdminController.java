@@ -66,6 +66,7 @@ public class AdminController {
 		System.out.println("TeacherController被访问");
 		
 		Teacher teacherLike = new Teacher(null,adminNumber,null,adminPassword,1,null);
+		//System.out.println(teacherLike);
 		List<Teacher> teachers = teacherService.queryTeacher(teacherLike);
 		if(teachers.size()<=0) {
 			//检查是否使用默认账号登录
