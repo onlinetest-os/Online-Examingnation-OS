@@ -162,10 +162,10 @@ ul.pagination li a {
 						<tr>
 							<th><input type="checkbox" id="check_all" /></th>
 							<th>#</th>
-							<th>teaName</th>
-							<th>teaNumber</th>
-							<th>teaPassword</th>
-							<th>type</th>
+							<th>姓名</th>
+							<th>工号</th>
+							<th>密码(不可修改)</th>
+							<th>类型</th>
 							<th>操作</th>
 						</tr>
 					</thead>
