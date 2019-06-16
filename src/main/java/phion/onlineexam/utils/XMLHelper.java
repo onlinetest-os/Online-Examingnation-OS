@@ -1,6 +1,8 @@
 package phion.onlineexam.utils;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -11,6 +13,9 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.dom4j.io.XMLWriter;
+
+import phion.onlineexam.bean.StaticResources;
 
 public class XMLHelper {
 	public static String path  ;
@@ -65,10 +70,72 @@ public class XMLHelper {
         
 		return res;
 	}
+	
+	
+	
+	public static boolean updateXml(String xmlFilePath,Map<String,String> config) throws IOException {
+        System.out.println("开始更新配置文件");
+		File f = new File(xmlFilePath);
+		if(config==null||!f.exists()) return false;
+		//遍历需要修改的值
+		Document doc = getDocument(f.getPath());
+		Element root = doc.getRootElement();
+		Iterator<Element> itor = root.elementIterator();
+        while(itor.hasNext()) {
+        	root = itor.next();
+        	String text = "";
+        	if((text=config.get(root.getName()))!=null) {
+        		root.setText(text);
+        		System.out.println("更新"+root.getName()+"的值为："+text);
+        	}
+        }
+        XMLWriter output = new XMLWriter(
+        	      new FileWriter(f));
+        	     output.write(doc);
+        	     output.close();
+        System.out.println("更新配置完成");
+		return true;
+	}
+	
+	
+	/**
+     * 得到XML文档
+     * 
+     * @param xmlFile
+     *            文件名（路径）
+     * @return XML文档对象
+     * @throws DocumentException
+     */
+    public static Document getDocument(String xmlFilePath) {
+        SAXReader reader = new SAXReader();
+        reader.setEncoding("UTF-8");
+        File file = new File(xmlFilePath);
+        try {
+            if (!file.exists()) {
+                return null;
+            } else {
+                return reader.read(file);
+            }
+        } catch (DocumentException e) {
+            throw new RuntimeException(e + "->指定文件【" + xmlFilePath + "】读取错误");
+        }
+    }
 
 	
 	public static void main(String[] args) {
-		Map m = xmlToMap("file/books.xml");
-		System.out.println(m);
+		path = System.getProperty("user.dir")+"/src/files/config.xml";
+		Map m = xmlToMap("files/books.xml");
+		//System.out.println(m);
+		Map<String,String> config = new HashMap<>();
+		config.put(StaticResources.MAX_UPLOAD_SIZE, 1+"");
+		try {
+			updateXml(path, config);
+		} catch (IOException e) {
+			System.out.println("更新配置文件失败");
+			e.printStackTrace();
+		}
+		
 	}
+
+	
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+
+	<!-- 上传文件大小，最大为5m -->
+	<maxUploadSize>1</maxUploadSize>
+	<!-- 是否允许自动开启考试 -->
+	<autoStartExam>false</autoStartExam>
+	<!-- 提前手动开启考试范围 -->
+	<manualStartExamRange>15</manualStartExamRange>
+	<!-- 分页记录数 -->
+	<spiltPageCount>5</spiltPageCount>
+	<!-- 是否允许主考教师删除考试 -->
+	<haveDeletePower>true</haveDeletePower>
+</config>

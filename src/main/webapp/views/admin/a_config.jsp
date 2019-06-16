@@ -47,14 +47,14 @@
 		//初始化
 		$("#haveDeletePower").attr('checked',${haveDeletePower});
 		$("#autoStartExam").attr('checked',${autoStartExam});
-		
+		//alert("click");
 		$("#submit").click(function(){
 			$.ajax({
 				url:"${APP_PATH}/admin_save_configs",
 				type:"POST",
 				data:$("#dataForm").serialize(),
 				success:function(result){
-					//alert(result.msg);
+					//lert(result.msg);
 					//alert($("#dataForm").serialize());
 					if(result.code == 100){
 						alert(result.msg);

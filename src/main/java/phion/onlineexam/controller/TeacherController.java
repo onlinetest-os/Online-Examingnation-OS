@@ -1,5 +1,6 @@
 package phion.onlineexam.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -727,10 +728,12 @@ public class TeacherController {
 		String paperPath = exam.getPaperPath();
 		System.out.println("答案路径："+paperAnwserPath);
 		System.out.println("试卷路径："+paperPath);
-		
-		FileHelper.deleteFile(request, paperAnwserPath);
-		FileHelper.deleteFile(request, paperPath);
-		
+		try {
+			FileHelper.deleteFile(request, paperAnwserPath);
+			FileHelper.deleteFile(request, paperPath);
+		}catch (Exception e) {
+			System.out.println("试卷或答案删除失败");
+		}
 		//4、清理考试安排表，学生表
 		deleteStudentsWithEId(eId);
 		
@@ -1071,14 +1074,14 @@ public class TeacherController {
 	public void export(Integer eId,HttpServletRequest request,
 			HttpServletResponse response) {
 		System.out.println("StudentControllor:进入导出！");
-		Exam exam = examService.selectByPrimaryKey(eId);
-		String paperPath = exam.getPaperPath();
-		//String fileName = StaticResources.NEW_FILE_NAME;
-		
+		Exam exam = examService.selectByPrimaryKeyWithStudent(eId);
+		List<Student> students  = exam.getStudents();
+		File file = new File("export_msg.txt");
+		FileHelper.dataToXmlFile(students, file);
 		try {
-			Msg msg = FileHelper.downloadZip(request, response, paperPath);
+			Msg msg = FileHelper.downloadZipForExport(request, response, file);
 			if(msg.getCode()==StaticResources.FAIL_CODE) {
-				response.getWriter().println(FileHelper.getUTF8String("试卷还未上传，稍后请重试！"));
+				response.getWriter().println(FileHelper.getUTF8String("考试信息下载是失败！"));
 			}
 			//response.getWriter().println("hello world!");
 		} catch (Exception e) {

@@ -1,5 +1,6 @@
 package phion.onlineexam.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
+import phion.onlineexam.bean.Config;
 import phion.onlineexam.bean.Exam;
 import phion.onlineexam.bean.ExamInfo;
 import phion.onlineexam.bean.Msg;
@@ -362,7 +364,33 @@ public class AdminController {
 	 */
 	@RequestMapping("admin_save_configs")
 	@ResponseBody
-	public Msg adminSaveConfigs() {
+	public Msg adminSaveConfigs(HttpServletRequest request,Config config) {
+		System.out.println(config);
+		Map<String,String> configMap = new HashMap<>();
+		if(config.getAutoStartExam()!=null) 
+			configMap.put(StaticResources.AUTO_START_EXAM,"true");
+		else
+			configMap.put(StaticResources.AUTO_START_EXAM,"false");
+		
+		if(config.getHaveDeletePower()!=null) 
+			configMap.put(StaticResources.HAVE_DELETE_POWER,"true");
+		else
+			configMap.put(StaticResources.HAVE_DELETE_POWER,"false");
+		
+		if(config.getManualStartExamRange()!=null) 
+			configMap.put(StaticResources.MANUAL_START_EXAM_RANGE,config.getManualStartExamRange());
+		
+		if(config.getMaxUploadSize()!=null) 
+			configMap.put(StaticResources.MAX_UPLOAD_SIZE,config.getMaxUploadSize());
+		
+		if(config.getSpiltPageCount()!=null) 
+			configMap.put(StaticResources.SPILIT_PAGE_COUNT,config.getSpiltPageCount());
+		try {
+			ConfigHelper.setConfig(request, configMap);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return Msg.fail().setMsg("修改设置失敗！");
+		}
 		return Msg.success().setMsg("修改设置成功！");
 	}
 	
