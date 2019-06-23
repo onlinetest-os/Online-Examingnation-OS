@@ -1,6 +1,5 @@
 package phion.onlineexam.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
-import phion.onlineexam.bean.Config;
 import phion.onlineexam.bean.Exam;
 import phion.onlineexam.bean.ExamInfo;
 import phion.onlineexam.bean.Msg;
@@ -66,7 +64,6 @@ public class AdminController {
 		System.out.println("TeacherController被访问");
 		
 		Teacher teacherLike = new Teacher(null,adminNumber,null,adminPassword,1,null);
-		//System.out.println(teacherLike);
 		List<Teacher> teachers = teacherService.queryTeacher(teacherLike);
 		if(teachers.size()<=0) {
 			//检查是否使用默认账号登录
@@ -141,24 +138,13 @@ public class AdminController {
 	 */
 	@RequestMapping("/admin_get_teachers")
 	@ResponseBody
-	public Msg getTeachers(@RequestParam(value="pn",defaultValue="1")Integer pn
-			,HttpServletRequest request) {
+	public Msg getTeachers(@RequestParam(value="pn",defaultValue="1")Integer pn) {
 		System.out.println("访问查询教师");
 		Map<String, Object> map = new HashMap<>();
 		//这不是一个分页查询
 		//引入Pagehelper
 		//在查询之前只需要调用,传入页码，以及每页的大小
-		
-		
-		Map config = ConfigHelper.getConfig(request);
-		System.out.println(config);
-		
-		int spiltPageCount = config.get(StaticResources.SPILIT_PAGE_COUNT)==null?5:
-			Integer.parseInt((String) config.get(StaticResources.SPILIT_PAGE_COUNT));
-		//int spiltPageCount = 5;
-		System.out.println("分页数："+spiltPageCount);
-		
-		PageHelper.startPage(pn,spiltPageCount);
+		PageHelper.startPage(pn,5);
 		//startPage后面紧跟的查询就是一个分页查询
 		List<Teacher> teachers = teacherService.queryTeacher(new Teacher());
 		for(Teacher teacher:teachers) {
@@ -166,8 +152,7 @@ public class AdminController {
 		}
 		// 使用pageInfo包装查询后的结果，只需要将pageInfo交给页面就行了。
 		// 封装了详细的分页信息,包括有我们查询出来的数据，传入连续显示的页数
-		
-		PageInfo<Teacher> page = new PageInfo<Teacher>(teachers,spiltPageCount); 
+		PageInfo<Teacher> page = new PageInfo<Teacher>(teachers,5); 
 		System.out.println("总页码："+page.getPages());
 		System.out.println("总记录数："+page.getTotal());
 		return Msg.success().add("pageInfo",page);
@@ -377,33 +362,7 @@ public class AdminController {
 	 */
 	@RequestMapping("admin_save_configs")
 	@ResponseBody
-	public Msg adminSaveConfigs(HttpServletRequest request,Config config) {
-		System.out.println(config);
-		Map<String,String> configMap = new HashMap<>();
-		if(config.getAutoStartExam()!=null) 
-			configMap.put(StaticResources.AUTO_START_EXAM,"true");
-		else
-			configMap.put(StaticResources.AUTO_START_EXAM,"false");
-		
-		if(config.getHaveDeletePower()!=null) 
-			configMap.put(StaticResources.HAVE_DELETE_POWER,"true");
-		else
-			configMap.put(StaticResources.HAVE_DELETE_POWER,"false");
-		
-		if(config.getManualStartExamRange()!=null) 
-			configMap.put(StaticResources.MANUAL_START_EXAM_RANGE,config.getManualStartExamRange());
-		
-		if(config.getMaxUploadSize()!=null) 
-			configMap.put(StaticResources.MAX_UPLOAD_SIZE,config.getMaxUploadSize());
-		
-		if(config.getSpiltPageCount()!=null) 
-			configMap.put(StaticResources.SPILIT_PAGE_COUNT,config.getSpiltPageCount());
-		try {
-			ConfigHelper.setConfig(request, configMap);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return Msg.fail().setMsg("修改设置失敗！");
-		}
+	public Msg adminSaveConfigs() {
 		return Msg.success().setMsg("修改设置成功！");
 	}
 	

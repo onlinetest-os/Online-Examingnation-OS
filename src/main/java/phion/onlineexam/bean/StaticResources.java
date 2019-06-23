@@ -79,9 +79,4 @@ public class StaticResources {
 	//手动开启考试的范围
 	public static final String MANUAL_START_EXAM_RANGE = "manualStartExamRange";
 	
-	//手动开启考试的范围
-	public static final String SPILIT_PAGE_COUNT = "spiltPageCount";
-	
-	//手动开启考试的范围
-	public static final String HAVE_DELETE_POWER = "haveDeletePower";
 }

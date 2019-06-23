@@ -1,14 +1,11 @@
 package phion.onlineexam.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,7 +84,9 @@ public class TeacherController {
 		System.out.println("TeacherController被访问");
 		
 		Teacher teacherLike = new Teacher(null,teaNumber,null,teaPassword,null,null);
+		System.out.println(teacherLike);
 		List<Teacher> teachers = teacherService.queryTeacher(teacherLike);
+		System.out.println(teachers);
 		if(teachers.size()<=0) return Msg.fail();
 		
 		HttpSession session = request.getSession();
@@ -331,14 +330,10 @@ public class TeacherController {
 			}
 			return Msg.fail().add("errorFields", map);
 		}else{
-			//学生表中更新学生
 			studentService.addStudent(student);
-			
 			int stuId = studentService.queryStudent(student).get(0).getStuId();
-			//更新考试安排表
 			examArrangeService.addExamArrange(new ExamArrange(null,stuId,eId));
 			System.out.println("更新考试安排表！");
-			
 			System.out.println(examArrangeService.queryExamArrange(new ExamArrange(null,stuId,eId)));
 			return Msg.success();
 		}
@@ -362,7 +357,7 @@ public class TeacherController {
 	@RequestMapping("/teacher_update_student")
 	@ResponseBody
 	public Msg updateStudent(Student student) {
-		System.out.println("将要更新的学生数据："+student);
+		System.out.println("将要更新的员工数据："+student);
 		studentService.updateStudent(student);
 		return Msg.success();
 	}
@@ -404,8 +399,6 @@ public class TeacherController {
 	<li><a href="teacher_t_IPRelease" target="main_right">IP解绑</a></li>
 	 */
 	
-	
-
 	/**
 	 * 考中
 	 */
@@ -450,25 +443,19 @@ public class TeacherController {
 		
 		//本场考试全体考生
 		Exam exam = examService.selectByPrimaryKeyWithStudent(eId);
-		if(exam==null) {
-			model.addAttribute("ready", false);
-			return "teacher/t_viewExam";
-		}
 		List<Student> students = exam.getStudents();
-		System.out.println("exme.getStudents:"+students);
 		
 		//考试信息
 		ExamInfo info = examInfoService.queryExamInfoByeId(eId);
+		allNum = info.getAllNumber();
 		
-		
-		//更新考试信息表
-		
-		allNum = students.size();
-		//更新
-		info.setAllNumber(allNum);
-		examInfoService.updateExamBySelective(info);
-		
-		//allNum = info.getAllNumber();
+		//如果考试信息表未记录，则更新考试信息表
+		if(allNum == 0) {
+			allNum = students.size();
+			//更新
+			info.setAllNumber(allNum);
+			examInfoService.updateExamBySelective(info);
+		}
 		
 		//查询在线人数与提交人数
 		for(Student s:students) {
@@ -477,7 +464,7 @@ public class TeacherController {
 			if(s.getCommitinfo()!=null)
 				submitNum++;
 		}
-		result.put("ready", true);
+
 		result.put("name",exams.get(0).geteName());
 		result.put("allNum", allNum);
 		result.put("onlineNum", onlineNum);
@@ -495,13 +482,13 @@ public class TeacherController {
 	@RequestMapping("teacher_start_exam")
 	@ResponseBody
 	public Msg startExam(Integer eId) {
-		//Exam exam = examService.queryById(eId);
-		//设置状态为开始考试
-		//exam.setStatus(StaticResources.RUNNING_EXAM);
-		//examService.updateExam(exam);
+		Exam exam = examService.queryById(eId);
 		
-		//return Msg.success().setMsg("考试开始成功！");
-		return Msg.fail().setMsg("考试已设置为自动开启，无法手动开启！");
+		//设置状态为开始考试
+		exam.setStatus(StaticResources.RUNNING_EXAM);
+		examService.updateExam(exam);
+		
+		return Msg.success().setMsg("考试开始成功！");
 	}
 	
 	
@@ -581,18 +568,6 @@ public class TeacherController {
 		MessageController.addMsg(new ExamMsg(LocalTime.now(), msg));
 		return Msg.success();
 	}
-	
-	/**
-	 * 教师删除通知
-	 * teacher_t_alertManage_clear
-	 */
-	@RequestMapping("/teacher_t_alertManage_clear")
-	@ResponseBody
-	public Msg clearMsg(){
-		MessageController.clear();
-		return Msg.success();
-	}
-	
 	
 	
 	/**
@@ -728,12 +703,10 @@ public class TeacherController {
 		String paperPath = exam.getPaperPath();
 		System.out.println("答案路径："+paperAnwserPath);
 		System.out.println("试卷路径："+paperPath);
-		try {
-			FileHelper.deleteFile(request, paperAnwserPath);
-			FileHelper.deleteFile(request, paperPath);
-		}catch (Exception e) {
-			System.out.println("试卷或答案删除失败");
-		}
+		
+		FileHelper.deleteFile(request, paperAnwserPath);
+		FileHelper.deleteFile(request, paperPath);
+		
 		//4、清理考试安排表，学生表
 		deleteStudentsWithEId(eId);
 		
@@ -776,79 +749,36 @@ public class TeacherController {
 	 */
 	@RequestMapping("/teacher_validate_exam")
 	@ResponseBody
-	public Msg validateExam(String startTimeStr,String endTimeStr,String isEditStr) {
+	public Msg validateExam(String startTimeStr,String endTimeStr) {
 		//1、查询时间是否冲突，即是否所有考试均满足st>newSt
 		//如新考试是8:00-10:00,就是合理的
 		//*0:00-2:00***4:00-6:00********11:00-13:00******************
 		//System.out.println(exam);
 		Msg msg = new Msg();
-		System.out.println(isEditStr);
-		boolean isEdit = isEditStr.equals("true")?true:false;
-		LocalDateTime startTime;
-		LocalDateTime endTime;
-		try{
-			startTime= DateUtil.
-				getLocalDateTimeByDateString2(startTimeStr);
-		
-			endTime = DateUtil.
-				getLocalDateTimeByDateString2(endTimeStr);
-		}catch (Exception e) {
-			return Msg.fail().setMsg("时间格式有误");
-		}
-//		String newStartTimeStr = startTimeStr+":00";
-//		String newEndTimeStr = endTimeStr+":00";
-		System.out.println(startTime);
-		System.out.println(endTime);
-		LocalDateTime curTime = LocalDateTime.now();
-		int timeInterval = (int) Duration.between(startTime, endTime).toMinutes();
-		System.out.println("逆转："+Duration.between(endTime,startTime).toMinutes());
-		long timeVSnow = Duration.between(curTime,startTime).toMinutes();
-		//int timeInterval = DateUtil.Minus(newStartTimeStr, newEndTimeStr);
-		System.out.println("timeVSnow"+timeVSnow);
-		System.out.println("timeInterval"+timeInterval);
-		if(timeInterval<30||timeInterval>240||timeVSnow<=0) {
-			System.out.println("考试时间有误！");
+//		LocalDateTime startTime = DateUtil.
+//				getLocalDateTimeByDateString2(startTimeStr);
+//		
+//		LocalDateTime endTime = DateUtil.
+//				getLocalDateTimeByDateString2(endTimeStr);
+		String newStartTimeStr = startTimeStr+":00";
+		String newEndTimeStr = endTimeStr+":00";
+		int timeInterval = DateUtil.Minus(newStartTimeStr, newEndTimeStr);
+		if(timeInterval<30&&timeInterval>240) {
 			return Msg.fail().setMsg("考试时间有误！");
 		}
-		
-		//查询出正在考试的考试与未开考考试逐一比较
-		List<Exam> exams = examService.queryExamWithExamInfo(new Exam(
-				StaticResources.READY_TODAY_EXAM));
-		exams.addAll(examService.queryExamWithExamInfo(new Exam(
-				StaticResources.RUNNING_EXAM)));
-		exams.addAll(examService.queryExamWithExamInfo(new Exam(
-				StaticResources.READY_EXAM)));
-		
-		//如果所有考试，满足：
-		//1、开始结束+15均小于新考试的开始，ok
-		//2、开始结束均晚于新考试的结束+15，ok
-		//否则，考试冲突，创建失败
+		//查询出所有考试逐一比较
+		/*List<Exam> exams = examService.queryExam(null);
 		for(Exam e : exams) {
-			System.out.println(e);
-			LocalDateTime oldSTiem = DateUtil.toLocalDateTime(e.getStartTime());
-			LocalDateTime oldETiem = DateUtil.toLocalDateTime(e.getEndTime());
-			
-			if(startTime.getDayOfYear()!=oldSTiem.getDayOfYear()) continue;
-			
-			int ss = (int) Duration.between(oldSTiem,startTime ).toMinutes();
-			int se = (int) Duration.between(oldETiem,startTime ).toMinutes();
-			//System.out.println(ss);
-			//System.out.println(se);
-			//据上一场考试结束时间15分钟以下，fail
-			if(ss<0&&se<15&&!isEdit) return Msg.fail().setMsg("考试时间重叠,请查看考试安排！"
-					+ "冲突考试名称:"+e.geteName());
-			
-			int oss = (int) Duration.between(startTime,oldSTiem).toMinutes();
-			int ose = (int) Duration.between(endTime,oldSTiem).toMinutes();
-			//System.out.println(oss);
-			//System.out.println(ose);
-			//据下一场考试开始时间15分钟以下，fail
-			if(oss<0&&ose<15&&!isEdit) return Msg.fail().setMsg("考试时间重叠,请查看考试安排！"
-					+ "冲突考试名称:"+e.geteName());
-		}
-		
+			String oldStartTimeStr = DateUtil.formateDate(e.getStartTime());
+			String oldEndTimeStr = DateUtil.formateDate(e.getEndTime());
+			int startInterval = DateUtil.Minus(newStartTimeStr, oldStartTimeStr);
+			int endInterval = DateUtil.Minus(newEndTimeStr, oldEndTimeStr);
+			if(!(startInterval>0&&endInterval>0||startInterval<0&&endInterval<0)) {
+				return Msg.fail().setMsg("考试时间重叠,请查看考试安排！");
+			}
+		}*/
 		//暂时搁置信息校验
-		return Msg.success().setMsg("校验成功！");
+		return Msg.success();
 	}
 	
 	
@@ -884,7 +814,6 @@ public class TeacherController {
         String endTimeString = request.getParameter("endTimeStr");
         LocalDateTime endTime = DateUtil.getLocalDateTimeByDateString2(endTimeString);   
         System.out.println(endTime);
-        
         //教师id  
         Teacher teacher = (Teacher) request.getSession().getAttribute("teacher");
         Integer teaId = teacher.getTeaId();
@@ -918,7 +847,7 @@ public class TeacherController {
         		//上传试卷
             	String paperPath = PathHelper.getPaperPath(eId,teaId,
             			teaName,stuClass,eName);
-            	boolean result = FileHelper.upload(paper, request, paperPath,paperName);
+            	boolean result = FileHelper.upload(paper, request, paperPath,StaticResources.NEW_FILE_NAME);
         		System.out.println("上传结果："+result);
             	String paparAnwserPath = PathHelper.getPaperAnwserPath(eId, 
             			teaId, teaName, stuClass, eName);
@@ -946,20 +875,12 @@ public class TeacherController {
         	return Msg.success().setMsg("创建考试成功！");
     	}else {
     		System.out.println(StaticResources.TEACHERLOG+"更新考试！");
-    		//校验更新考试的时间
-    		Msg msg = validateExam(startTimeString, endTimeString,"true");
-    		if(msg.getCode()==200) {
-    			return msg;
-    		}
-    		
     		String eIdStr = request.getParameter("eId");
     		Integer eId = Integer.parseInt(eIdStr);
     		System.out.println(eId);
     		
     		//更新考试
     		Exam exam = examService.queryById(eId);
-    		Exam updateExam = new Exam();
-    		updateExam.seteId(eId);
     		eName = exam.geteName();
     		
     		if(!paperName.equals("")) {
@@ -975,10 +896,8 @@ public class TeacherController {
             			teaId, teaName, stuClass, eName);
     			
         		//更新试卷	
-            	//examService.updateExam(new Exam(eId,paperPath,paparAnwserPath));
-            	//updateExam.seteId(eId);
-            	updateExam.setPaperPath(paperPath);
-            	updateExam.setPaperAnwserPath(paparAnwserPath);
+            	examService.updateExam(new Exam(eId,paperPath,paparAnwserPath));
+
     		}
     		
     		ExamInfo info = examInfoService.queryExamInfoByeId(eId);
@@ -999,12 +918,6 @@ public class TeacherController {
                 parseStudentOrder(studentOrder,eId);
                 
         	}
-    		System.out.println(startTime);
-    		System.out.println(startTimeString);
-    		updateExam.setStartTime(DateUtil.toDate(startTime));
-       		updateExam.setEndTime(DateUtil.toDate(endTime));
-       		System.out.println(updateExam);
-       		examService.updateExam(updateExam);
     		//更新启动考试
        	 	openExam();
     		return Msg.success().setMsg("更新考试成功！");
@@ -1062,32 +975,6 @@ public class TeacherController {
 		for(Integer stuId: stuIds)
 			examArranges.add(new ExamArrange(null,stuId,eId));
 		examArrangeService.addExamArrangeBatch(examArranges);
-		
-	}
-	
-	/**
-	 * teacher_s_export
-	 * 导出信息
-	 * 此处应有学生信息及考试信息校验，判断是否能下载试卷
-	 */
-	@RequestMapping("/teacher_s_export")
-	public void export(Integer eId,HttpServletRequest request,
-			HttpServletResponse response) {
-		System.out.println("StudentControllor:进入导出！");
-		Exam exam = examService.selectByPrimaryKeyWithStudent(eId);
-		List<Student> students  = exam.getStudents();
-		File file = new File("export_msg.txt");
-		FileHelper.dataToXmlFile(students, file);
-		try {
-			Msg msg = FileHelper.downloadZipForExport(request, response, file);
-			if(msg.getCode()==StaticResources.FAIL_CODE) {
-				response.getWriter().println(FileHelper.getUTF8String("考试信息下载是失败！"));
-			}
-			//response.getWriter().println("hello world!");
-		} catch (Exception e) {
-			System.out.println("StudentControllor:下载出错！");
-			e.printStackTrace();
-		}
 		
 	}
 	

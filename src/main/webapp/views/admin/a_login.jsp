@@ -47,14 +47,14 @@
 					<div class="form-group">
 						<div class="col-xs-12">
 							<input id="adminNumber" class="form-control input-lg" type="text" required=""
-								placeholder=工号>
+								placeholder="Username">
 						</div>
 					</div>
 
 					<div class="form-group">
 						<div class="col-xs-12">
 							<input id="adminPassword" class="form-control input-lg" type="password" required=""
-								placeholder="密码">
+								placeholder="Password">
 						</div>
 					</div>
 

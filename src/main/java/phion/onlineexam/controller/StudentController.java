@@ -79,21 +79,19 @@ public class StudentController {
 			/*session.setAttribute("role", "student");
 			session.setAttribute("student", student);
 			return Msg.success().add("student", student);*/
-			System.out.println("找不到考试");
 			return Msg.fail().setMsg("当前没有您的考试！");
 		} 
 		
 		Exam e = exams.get(0);
 		List<ExamArrange> arrange = examArrangeService.queryExamArrange(
 				new ExamArrange(null,null,e.geteId()));
-		System.out.println(arrange);
 		//不属于正在进行的考试的学生
-		if(arrange.size()<=0) {
+		if(arrange.size()<0) {
 			//声明登录类型为学生，方便拦截器判断
 			/*session.setAttribute("role", "student");
 			session.setAttribute("student", student);
 			return Msg.success().add("student", student);*/
-			System.out.println("考试安排表找不到");
+
 			return Msg.fail().setMsg("当前没有您的考试！");
 		}
 		
@@ -101,19 +99,12 @@ public class StudentController {
 		if(students.size()<=0) return Msg.fail().setMsg("姓名错误或学号错误!");
 		//学生存在于当前考试
 		boolean exits = false;
-		//int i = 0;
 		for(Student s :students) {
-			for(ExamArrange ea : arrange) {
-				//System.out.println(s.getStuId());
-				//System.out.println(ea.getStuId());
-				if(s.getStuId().equals(ea.getStuId())) {
-					exits = true;
-					break;
-				}
+			if(s.getStuId()==arrange.get(0).getStuId()) {
+				exits = true;
+				break;
 			}
-			if(exits) break;
 		}
-		System.out.println(students);
 		
 		//如果学生不存在，则不用锁ip
 		if(!exits) {
@@ -121,7 +112,6 @@ public class StudentController {
 			/*session.setAttribute("role", "student");
 			session.setAttribute("student", student);
 			return Msg.success().add("student", student);*/
-			System.out.println("学生不纯在");
 			return Msg.fail().setMsg("当前没有您的考试！");
 		}
 		
@@ -312,7 +302,7 @@ public class StudentController {
 		String fileName = StaticResources.NEW_FILE_NAME;
 		
 		try {
-			Msg msg = FileHelper.downloadZip(request, response, paperPath);
+			Msg msg = FileHelper.download(request, response, paperPath,fileName);
 			if(msg.getCode()==StaticResources.FAIL_CODE) {
 				response.getWriter().println(FileHelper.getUTF8String("试卷还未上传，稍后请重试！"));
 			}

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
-	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -47,62 +47,59 @@ display:none;
 	padding: 5px;
 }
 </style>
+
 </head>
 <body>
-	<c:if test="${!ready}">
-		请先添加学生！
-	</c:if>
+	<h1>当前考试是：</h1>
+	<c:if test="${allNum!=null}">
+		<div class="bar">
+		<h3>在线比例</h3>
+		<div class="progress">
+			<div
+				class="progress-bar progress-bar-info progress-bar-striped active"
+				role="progressbar" aria-valuenow="${submitNum}" aria-valuemin="0"
+				aria-valuemax="${allNum}" style="width: ${(onlineNum/allNum)*100 }%">
+			</div>
+		</div>
 
-	<h1>当前考试是：${name}</h1>
-	<c:if test="${ready}">
-		<div class="bar">
-			<h3>在线比例</h3>
-			<div class="progress">
-				<div
-					class="progress-bar progress-bar-info progress-bar-striped active"
-					role="progressbar" aria-valuenow="${onlineNum}" aria-valuemin="0"
-					aria-valuemax="${allNum}" style="width: ${(onlineNum/allNum)*100 }%">
-				</div>
+	在线：${onlineNum }人 &nbsp; 离线：${allNum-onlineNum }人
+	</div>
+
+	<div class="bar">
+		<h3>提交比例</h3>
+		<div class="progress">
+			<div
+				class="progress-bar progress-bar-info progress-bar-striped active"
+				role="progressbar" aria-valuenow="${submitNum}" aria-valuemin="0"
+				aria-valuemax="${allNum}" style="width: ${(allNum/submitNum)*100}%">
+				
 			</div>
-	
-		在线：${onlineNum }人 &nbsp; 离线：${allNum-onlineNum }人
 		</div>
-	
-		<div class="bar">
-			<h3>提交比例</h3>
-			<div class="progress">
-				<div
-					class="progress-bar progress-bar-info progress-bar-striped active"
-					role="progressbar" aria-valuenow="${submitNum}" aria-valuemin="0"
-					aria-valuemax="${allNum}" style="width: ${(submitNum/allNum)*100}%">
-					
-				</div>
-			</div>
-		已提交：${submitNum}人 &nbsp; 未提交：${allNum-submitNum }人
-		</div>
-	
-	
-		<div class="container">
-			<p class="items btn">
-				<a style="color: white;"  id="startBtn">开始考试</a>
-			</p>
-			<p class="items btn">
-				<a style="color: white;"  id="endBtn">结束考试</a>
-			</p>
-			<p class="items btn">
-				<a style="color: white;" href="teacher_showLoginOrder?eId=${eId}" 
-				id="loginOrderBtn">登录名单</a>
-			</p>
-			<p class="items btn">
-				<a style="color: white;" href="teacher_showSubmitOrder?eId=${eId}" 
-				id="submitOrderBtn">提交名单</a>
-			</p>
-		</div>
+	已提交：${submitNum}人 &nbsp; 未提交：${allNum-submitNum }人
+	</div>
+
+
+	<div class="container">
+		<p class="items btn">
+			<a style="color: white;"  id="startBtn">开始考试</a>
+		</p>
+		<p class="items btn">
+			<a style="color: white;"  id="endBtn">结束考试</a>
+		</p>
+		<p class="items btn">
+			<a style="color: white;" href="teacher_showLoginOrder?eId=${eId}" 
+			id="loginOrderBtn">登录名单</a>
+		</p>
+		<p class="items btn">
+			<a style="color: white;" href="teacher_showSubmitOrder?eId=${eId}" 
+			id="submitOrderBtn">提交名单</a>
+		</p>
+	</div>
 	</c:if> 
 	<script type="text/javascript">
 		//开始考试
 		$("#startBtn").click(function() {
-			//alert("start");
+			alert("start");
 			$.ajax({
 				url:"${APP_PATH}/teacher_start_exam?eId=${eId}",
 				type:"GET",
@@ -113,7 +110,7 @@ display:none;
 		});
 		//结束考试
 		$("#endBtn").click(function() {
-			//alert("end");
+			alert("end");
 			$.ajax({
 				url:"${APP_PATH}/teacher_end_exam?eId=${eId}",
 				type:"GET",

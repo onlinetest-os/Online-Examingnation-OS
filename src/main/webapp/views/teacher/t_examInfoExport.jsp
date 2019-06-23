@@ -60,7 +60,7 @@ ul.pagination li a {
 						<tr>
 							<td>${exam.eName}</td>
 							<td>${exam.startTime}到${exam.endTime}</td>
-							<td><a class="btn" href="teacher_s_export?eId=${exam.eId}">导出</a></td>
+							<td><a class="btn" href="#">导出</a></td>
 						</tr>
 					</div>
 				</c:forEach>

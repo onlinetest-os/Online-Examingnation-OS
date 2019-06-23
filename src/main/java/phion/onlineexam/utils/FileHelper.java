@@ -4,14 +4,13 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Iterator;
-import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import phion.onlineexam.bean.Msg;
-import phion.onlineexam.bean.Student;
 
 /**
  * 实现上传与下载文件的功能
@@ -131,53 +129,11 @@ public class FileHelper {
 		 //生成需要下载的文件，存放在临时文件夹内
 		 File srcFile = folder;
 		 File desFile = new File(temDir.getAbsolutePath()+File.separator+srcFile.getName()+".zip");
-		 System.out.println("srcFileName="+srcFile.getName());
-		 System.out.println("desFileName"+desFile.getName());
-		 FileOutputStream fos = new FileOutputStream(desFile);
-		 ZipUtils.toZip(srcFile.getAbsolutePath(), fos, true);
-		 
-		// 设置文件下载头						  
-		response.addHeader("Content-Disposition", "attachment;filename=data.zip");
-		// 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
-		response.setContentType("multipart/form-data");
-		
-		
-		ZipUtils.toZip(temDir.getAbsolutePath(), response.getOutputStream(),true);
-
-		//删除临时文件和文件夹
-		File[] listFiles = temDir.listFiles();
-        for (int i = 0; i < listFiles.length; i++) {
-            listFiles[i].delete();
-        }
-        temDir.delete();
-        
-        
-        return Msg.success();
-	}
-	
-	/**
-	 * 提供文件，下载压缩文件夹
-	 * @throws IOException 
-	 */
-	
-	public static Msg downloadZipForExport(HttpServletRequest request, HttpServletResponse response,File file) throws IOException {
-		
-		String rootPath = file.getParent();
-		System.out.println(rootPath);
-		//创建临时文件夹用于存放压缩文件
-		 File temDir = new File(rootPath + "/" + UUID.randomUUID().toString().replaceAll("-", ""));
-		 if(!temDir.exists()){
-			  temDir.mkdirs();
-		 }
-		 
-		 //生成需要下载的文件，存放在临时文件夹内
-		 File srcFile = file;
-		 File desFile = new File(temDir.getAbsolutePath()+File.separator+srcFile.getName()+".zip");
 		 FileOutputStream fos = new FileOutputStream(desFile);
 		 ZipUtils.toZip(srcFile.getAbsolutePath(), fos, true);
 		 
 		// 设置文件下载头
-		response.addHeader("Content-Disposition", "attachment;filename=export.zip");
+		response.addHeader("Content-Disposition", "attachment;filename=datas.zip");
 		// 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
 		response.setContentType("multipart/form-data");
 		
@@ -193,7 +149,6 @@ public class FileHelper {
         
         return Msg.success();
 	}
-	
 	
 
 	/**
@@ -269,41 +224,6 @@ public class FileHelper {
 		}
 	}
 	
-	
-	/**
-	 * 学生提交信息导出到文件
-	 * @param ins
-	 * @param file
-	 */
-	public static void dataToXmlFile(List students, File file) {
-		StringBuilder dataSb = new StringBuilder();
-		Iterator<Student> itor = students.iterator();
-		dataSb.append("学号").append("\t")
-			.append("姓名").append("\t")
-			.append("班级").append("\t")
-			.append("最后提交时间").append("\r\n");
-		
-		while(itor.hasNext()) {
-			Student s = itor.next();
-			String[] infos = s.getCommitinfo()==null?new String[]{"未提交"}:
-				s.getCommitinfo().split(" ");
-			String info = infos[0];
-			
-			dataSb.append(s.getStuNumber()).append("\t")
-				.append(s.getStuName()).append("\t")
-				.append(s.getStuClass()).append("\t")
-				.append(info).append("\t")
-				.append("\r\n");
-		}
-		try {
-			FileWriter writer = new FileWriter(file);
-			writer.write(dataSb.toString());
-			writer.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
 	/**
 	 * 获得utf8字符串
 	 * @param str
@@ -318,7 +238,6 @@ public class FileHelper {
 	}
 	
 	public static void main(String[] args) {
-		String in = "大王叫我來巡山！";
 		
 	}
 

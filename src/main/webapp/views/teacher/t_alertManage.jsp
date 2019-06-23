@@ -31,14 +31,14 @@
 								<legend>通知</legend>
 								<label>通知内容</label> 
 								<input id="addMsg" type="text" placeholder="这里填写通知信息" />
-								<button id="sentBtn" class="btn" type="submit" class="btn">发送</button>	
+								<button id="sentBtn" class="btn" type="submit" class="btn">发送</button>
 							</fieldset>
 						</form>
 					</div>
 					<br /> <br />
 					<div class="col-md-6">
-						<h3>通知内容 <input class="btn" type="button" id="clearBtn" value="清空"></h3>
-						<div id="msg"> 
+						<h3>通知内容</h3>
+						<div id="msg">
 						....
 						</div>
 					</div>
@@ -90,7 +90,7 @@
 	$("#sentBtn").click(function(){
 		var msg = $("#addMsg").val();
 		
-		//alert("增加："+msg);
+		alert("增加："+msg);
 		$.ajax({
 			url : "${APP_PATH}/teacher_t_alertManage_add",
 			contentType: "application/x-www-form-urlencoded; charset=utf-8",
@@ -99,26 +99,10 @@
 			success : function(result) {
 				alert(result.msg);
 				if(result.code==100){
-					//alert("更新成功！");
+					alert("更新成功！");
 					refresh();
 				}else{
 					alert("信息太短！");
-				}
-			}
-		});
-	});
-	
-	$("#clearBtn").click(function(){
-		alert("清空msg");
-		$.ajax({
-			url : "${APP_PATH}/teacher_t_alertManage_clear",
-			type : "GET",
-			success : function(result) {
-				alert(result.msg);
-				if(result.code==100){
-					refresh();
-				}else{
-					alert("清空失败！");
 				}
 			}
 		});
